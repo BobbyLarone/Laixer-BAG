@@ -9,7 +9,9 @@ namespace GMLTest.BAG_Objects
     //TODO: Transform this into an singleton class
     class BAGObjectFactory
     {
-
+        /// <summary>
+        /// Factory to create new BAG objects
+        /// </summary>
         public BAGObjectFactory()
         {   
         }
@@ -102,14 +104,55 @@ namespace GMLTest.BAG_Objects
                     {
                         return new TownResidenceRelation();
                     }
-
-
-
                 default:
                     return null;
             }
         }
 
+        /// <summary>
+        /// Get a BAG object by identification number
+        /// </summary>
+        /// <param name="id">The Identification number</param>
+        /// <returns></returns>
+        public BAGObject GetBagObjectByIdentificationNumber(int id)
+        {
+            string stringId = id.ToString();
+            if(stringId.Length == 4)
+            {
+                return new Residence();
+            }
+
+            string temp = stringId.Substring(3, 2);
+            switch (temp)
+            {
+                case "30":
+                    {
+                        return new PublicSpace();
+                    }
+                case "20":
+                    {
+                        return new NumberIndication();
+                    }
+                case "10":
+                    {
+                        return new Premises();
+                    }
+                case "03":
+                    {
+                        return new Location();
+                    }
+                case "02":
+                    {
+                        return new Berth();
+                    }
+                case "01":
+                    {
+                        return new Accommodation();
+                    }
+                default:
+                    return null;
+            }
+        }
 
         /// <summary>
         /// Generate a list of BAG objects.
@@ -128,9 +171,7 @@ namespace GMLTest.BAG_Objects
                     list.Add(bagObject);
                 }
             }
-
             return list;
-
         }
     }
 }

@@ -6,7 +6,8 @@ namespace GMLTest.BAG_Attributes
 {
     class BAGenumRelationAttribute : BAGrelationAttribute
     {
-        public BAGenumRelationAttribute(int length, string name, string tag) : base(length, name, tag)
+        public BAGenumRelationAttribute(string relationName, int length, string name, string tag, string exraAttributes, List<BAGrelationAttribute> list) 
+            : base(relationName, list.Count, name, tag, exraAttributes)
         {
 
         }

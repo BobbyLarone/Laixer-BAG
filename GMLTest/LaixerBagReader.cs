@@ -52,6 +52,9 @@ namespace GMLTest
             manager.AddNamespace("selecties-extract", "http://www.kadaster.nl/schemas/bag-verstrekkingen/extract-selecties/v20090901");
         }
 
+        /// <summary>
+        /// Test Function to check if the namespaces are correctly places inside the XML namespace manager
+        /// </summary>
         public void TheNameSpaces()
         {
             Console.WriteLine("The namespace reader is called :");
@@ -66,6 +69,7 @@ namespace GMLTest
         }
 
 
+        //TODO: check for 
         /// <summary>
         /// This can read the Whole XML file within +-35 seconds
         /// </summary>
@@ -98,11 +102,17 @@ namespace GMLTest
                         {
                                 Console.WriteLine($"Start Element {reader.Name} with prefix: {reader.Prefix}");
                                 Console.WriteLine(manager.LookupNamespace(reader.Prefix)); 
+                                if(reader.LocalName == "identificatie")
+                                {
+                                    Console.WriteLine("***************************************");
+                                    Console.WriteLine("I FOUND THE IDENTIFACATION NUMBER !!!");
+                                    Console.WriteLine("***************************************");
+                                }
                                 break;
                         }
                         case XmlNodeType.Text:
                         {
-                                Console.WriteLine($"Text Node: {await reader.GetValueAsync()}");
+                                Console.WriteLine($"Text Node: {await reader.GetValueAsync().ConfigureAwait(false)}");
                                 break;
                         }
                         case XmlNodeType.EndElement:
@@ -110,11 +120,10 @@ namespace GMLTest
                                 Console.WriteLine($"End Element {reader.Name} \n");
                                 break;
                         }
-
                         default:
                         {
                                 Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
-                            break;
+                                break;
                         }
                     }
                 }
