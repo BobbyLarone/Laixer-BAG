@@ -113,7 +113,7 @@ namespace GMLTest.BAG_Objects
         /// Get a BAG object by identification number
         /// </summary>
         /// <param name="id">The Identification number</param>
-        /// <returns></returns>
+        /// <returns>A Bag object</returns>
         public BAGObject GetBagObjectByIdentificationNumber(int id)
         {
             string stringId = id.ToString();
@@ -121,7 +121,8 @@ namespace GMLTest.BAG_Objects
             {
                 return new Residence();
             }
-
+            
+            // Split the string at the 3th index and after 2 characters split the string.
             string temp = stringId.Substring(3, 2);
             switch (temp)
             {
