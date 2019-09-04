@@ -49,8 +49,7 @@ namespace GMLTest
                     var splitFile = file.Split(".");
                     var result = splitFile[0];
                     Console.WriteLine($"    Found: {splitFile[0]}");
-                    Console.WriteLine($"    " +
-                        $"File has the following extension: {splitFile[1]}");
+                    Console.WriteLine($"    File has the following extension: {splitFile[1]}");
 
 
                 }
