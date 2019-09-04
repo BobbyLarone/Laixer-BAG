@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,19 +29,30 @@ namespace GMLTest
         {
             if(Directory.Exists(filePath))
             {
-                var listOfDirectories = Directory.EnumerateDirectories(filePath);
-                var listOfFiles = Directory.EnumerateFiles(filePath);
+                //List<string>
+                var listOfDirectories = Directory.EnumerateDirectories(filePath).ToList();
+                var listOfFiles = Directory.EnumerateFiles(filePath).ToList();
+
+                Console.WriteLine($"Found: {listOfDirectories.Count} Directories and {listOfFiles.Count} Files");
+                Console.WriteLine("These are the directories found in the current directory: ");
 
                 foreach(var path in listOfDirectories)
                 {
-                    Console.WriteLine($"Found: {path}");
+                    Console.WriteLine($"    Found: {path}");
                 }
 
-                Console.WriteLine("These are the files found in the current directory");
+                Console.WriteLine("\nThese are the files found in the current directory:");
 
                 foreach (var file in listOfFiles)
                 {
-                    Console.WriteLine($"Found: {file}");
+                    var length = file.Length;
+                    var splitFile = file.Split(".");
+                    var result = splitFile[0];
+                    Console.WriteLine($"    Found: {splitFile[0]}");
+                    Console.WriteLine($"    " +
+                        $"File has the following extension: {splitFile[1]}");
+
+
                 }
             }
         }
