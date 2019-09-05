@@ -5,9 +5,10 @@ using System.Text;
 namespace GMLTest.BAG_Objects
 {
     /// <summary>
-    /// In Dutch this is also called: Ligplaats
+    /// Translation to Dutch: Ligplaats
     /// </summary>
     class Berth : BAGObject
     {
+        private string abbreviation = "LIG";
     }
 }

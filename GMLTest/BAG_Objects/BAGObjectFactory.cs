@@ -7,11 +7,13 @@ using System.Xml;
 namespace GMLTest.BAG_Objects
 {
     //TODO: Transform this into an singleton class
+
+    /// <summary>
+    /// Factory to create new BAG objects
+    /// </summary>
     class BAGObjectFactory
     {
-        /// <summary>
-        /// Factory to create new BAG objects
-        /// </summary>
+
         public BAGObjectFactory()
         {   
         }

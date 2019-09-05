@@ -19,6 +19,10 @@ namespace GMLTest
 
         }
 
+        /// <summary>
+        /// Read the content of an directory and show the amount of files and directories found
+        /// </summary>
+        /// <param name="filePath">The path to the directory</param>
         public void readFolder(string filePath)
         {
 
@@ -50,10 +54,10 @@ namespace GMLTest
                     var result = splitFile[0];
                     Console.WriteLine($"    Found: {splitFile[0]}");
                     Console.WriteLine($"    File has the following extension: {splitFile[1]}");
-
-
                 }
             }
         }
+
+
     }
 }

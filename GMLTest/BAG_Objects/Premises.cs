@@ -5,9 +5,10 @@ using System.Text;
 namespace GMLTest.BAG_Objects
 {
     /// <summary>
-    /// In Dutch: Pand
+    /// Translation to Dutch: Pand
     /// </summary>
     class Premises : BAGObject
     {
+        public string abbreviation = "PND";
     }
 }

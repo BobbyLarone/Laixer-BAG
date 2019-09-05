@@ -5,6 +5,9 @@ using System.Text;
 
 namespace GMLTest.BAG_Attributes
 {
+    /// <summary>
+    /// Base class for all the other attributes
+    /// </summary>
     class BAGAttribute
     {
         private int _length;

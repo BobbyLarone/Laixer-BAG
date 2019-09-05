@@ -9,5 +9,6 @@ namespace GMLTest.BAG_Objects
     /// </summary>
     class Accommodation : BAGObject
     {
+        private string abreviation = "VBO";
     }
 }

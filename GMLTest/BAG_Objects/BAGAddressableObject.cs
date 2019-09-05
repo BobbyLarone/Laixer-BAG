@@ -8,6 +8,7 @@ namespace GMLTest.BAG_Objects
     {
         public BAGAddressableObject()
         {
+            Console.WriteLine("Created a new Adressable Object");
             var bagObject = new BAGObject();
         }
     }

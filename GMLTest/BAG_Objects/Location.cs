@@ -5,10 +5,11 @@ using System.Text;
 namespace GMLTest.BAG_Objects
 {
     /// <summary>
-    /// In dutch: plaats
+    /// Translation to Dutch: standplaats
     /// </summary>
     class Location : BAGObject
     {
+        private string abbreviation = "STA";
         enum LocationStatusType
         {
             LocationAppointed,

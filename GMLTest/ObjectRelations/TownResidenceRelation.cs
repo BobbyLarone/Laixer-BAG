@@ -10,5 +10,6 @@ namespace GMLTest.ObjectRelations
     /// </summary>
     class TownResidenceRelation : BAGObject
     {
+        private string abbreviation = "GWR";
     }
 }

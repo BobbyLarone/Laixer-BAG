@@ -5,6 +5,9 @@ using System.Text;
 
 namespace GMLTest.BAG_Objects
 {
+    /// <summary>
+    /// Base class for all the other objects
+    /// </summary>
     class BAGObject
     {
         private Dictionary<string, BAGAttribute> dictionaryBAGObjects;

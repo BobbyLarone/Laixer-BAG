@@ -5,9 +5,10 @@ using System.Text;
 namespace GMLTest.BAG_Objects
 {
     /// <summary>
-    /// In Dutch: Openbare ruimte
+    /// Translation to Dutch: Openbare ruimte
     /// </summary>
     class PublicSpace : BAGObject
     {
+        private string abbreviation = "OPR";
     }
 }

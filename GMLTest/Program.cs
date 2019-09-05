@@ -6,12 +6,12 @@ namespace GMLTest
 {
     class Program
     {
-        static LaixerBagReader justRead;
         static string filePath = @"C:\Users\Workstation\Documents\MyProjects\Documents\XML";
         static string filePath2 = @"C:\Users\Workstation\Documents\Fundermaps\Documents\BAG data\inspireadressen";
+
         static void Main(string[] args)
         {
-            justRead = new LaixerBagReader();
+            var justRead = new LaixerBagReader();
             var reader = new DirectoryReader();
 
             var timer = new Stopwatch();
@@ -20,10 +20,10 @@ namespace GMLTest
             //justRead.TheFkingFile();
             //justRead.TheScopes();
             //justRead.TheNameSpaces();
-            //justRead.withXML();
+            justRead.withXML();
 
             //reader.readFolder(filePath);
-            reader.readFolder(filePath2);
+            //reader.readFolder(filePath2);
 
             timer.Stop();
 

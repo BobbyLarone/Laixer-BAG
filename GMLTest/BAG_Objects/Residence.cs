@@ -9,6 +9,6 @@ namespace GMLTest.BAG_Objects
     /// </summary>
     class Residence : BAGObject
     {
-
+        private string abbreviation = "WPL";
     }
 }
