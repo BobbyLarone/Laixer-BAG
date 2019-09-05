@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GMLTest.ObjectRelations
+namespace GMLTest.Object_Relations
 {
     /// <summary>
     /// Relation from BAG to BAG objects

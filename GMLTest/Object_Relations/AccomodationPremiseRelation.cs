@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GMLTest.ObjectRelations
+namespace GMLTest.Object_Relations
 {
     /// <summary>
     /// In Dutch : Verblijfsobject pand relatie

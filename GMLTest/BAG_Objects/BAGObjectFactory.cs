@@ -1,4 +1,4 @@
-﻿using GMLTest.ObjectRelations;
+﻿using GMLTest.Object_Relations;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -57,7 +57,7 @@ namespace GMLTest.BAG_Objects
                     }
                 case "GWR":
                     {
-                        return new TownResidenceRelation();
+                        return new MunicipalityResidenceRelation();
                     }
 
                 default:
@@ -104,7 +104,7 @@ namespace GMLTest.BAG_Objects
                     }
                 case "GemeenteWoonplaatsRelatie":
                     {
-                        return new TownResidenceRelation();
+                        return new MunicipalityResidenceRelation();
                     }
                 default:
                     return null;

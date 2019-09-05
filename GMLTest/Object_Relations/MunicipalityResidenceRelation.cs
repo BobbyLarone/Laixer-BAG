@@ -3,12 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GMLTest.ObjectRelations
+namespace GMLTest.Object_Relations
 {
     /// <summary>
     /// In Dutch : Gemeente woonplaats relatie
     /// </summary>
-    class TownResidenceRelation : BAGObject
+    class MunicipalityResidenceRelation : BAGObject
     {
         private string abbreviation = "GWR";
     }
