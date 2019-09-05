@@ -113,7 +113,7 @@ namespace GMLTest
 
             // Make some room in the console
             Console.WriteLine("\n\n\n\n\n");
-            myReader.withXML(filePath);
+            myReader.ReadXML(filePath);
 
         }
     }

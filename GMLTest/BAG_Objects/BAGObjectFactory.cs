@@ -168,7 +168,7 @@ namespace GMLTest.BAG_Objects
 
             foreach(var node in nodeList)
             {
-                var bagObject = GetBagObjectByXML(node.Name);
+                var bagObject = GetBagObjectByXML(node.LocalName);
                 if(bagObject != null)
                 {
                     list.Add(bagObject);

@@ -1,4 +1,5 @@
-﻿using NetTopologySuite.IO.GML2;
+﻿using GMLTest.BAG_Objects;
+using NetTopologySuite.IO.GML2;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,10 +22,14 @@ namespace GMLTest
         public string logText = "";
         public string xmlOutput = "";
 
+        List<BAGObject> listOfBAGObjects;
+        BAGObjectFactory BAGObjectFactory = new BAGObjectFactory();
+
         public LaixerBagReader()
         {
             Console.WriteLine("Starting to open the file...........");
-            gmlReader = new GMLReader();
+            //gmlReader = new GMLReader();
+            listOfBAGObjects = new List<BAGObject>();
 
             XmlReaderSettings settings = new XmlReaderSettings
             {
@@ -33,6 +38,7 @@ namespace GMLTest
             reader = XmlReader.Create(filename, settings);
 
             var table = reader.NameTable;
+
             manager = new XmlNamespaceManager(table);
             FillXMLNSManager();
         }
@@ -75,8 +81,7 @@ namespace GMLTest
         /// <summary>
         /// This can read the Whole XML file within +-35 seconds
         /// </summary>
-        /// <returns></returns>
-        public void withXML()
+        public void ReadXML()
         {
             WithXMLReaderAsync(filename).Wait();
         }
@@ -85,7 +90,7 @@ namespace GMLTest
         /// Reads an XML file
         /// </summary>
         /// <param name="filePath">The path to the file</param>
-        public void withXML(string filePath)
+        public void ReadXML(string filePath)
         {
             //read the xml file Async
             WithXMLReaderAsync(filePath).Wait();
@@ -104,6 +109,7 @@ namespace GMLTest
                 IgnoreWhitespace = true,
             };
 
+            // used to start reading the file from top to bottom. 
             using (XmlReader reader = XmlReader.Create(xmlFile, settings))
             {
                 while (await reader.ReadAsync())
@@ -112,21 +118,7 @@ namespace GMLTest
                     {
                         case XmlNodeType.Element:
                         {
-                                //Console.WriteLine($"Start Element {reader.Name} with prefix: {reader.Prefix}");
-                                //Console.WriteLine(manager.LookupNamespace(reader.Prefix)); 
-
-                                PrefixReader(reader);
-
-                                break;
-                        }
-                        case XmlNodeType.Text:
-                        {
-                                Console.WriteLine($"Text Node: {await reader.GetValueAsync().ConfigureAwait(false)}");
-                                break;
-                        }
-                        case XmlNodeType.EndElement:
-                        {
-                                Console.WriteLine($"End Element {reader.Name} \n");
+                                await CheckRootElement(reader).ConfigureAwait(false);
                                 break;
                         }
                         default:
@@ -139,11 +131,78 @@ namespace GMLTest
             }
         }
 
+        /// <summary>
+        /// Checks the roottype of the XML file
+        /// </summary>
+        /// <param name="reader">The xml reader</param>
+        /// <returns></returns>
+        private async Task CheckRootElement(XmlReader reader)
+        {
+            Console.WriteLine($"Root element: {reader.LocalName}");
+            switch (reader.LocalName)
+            {
+                case "BAG-Extract-Deelbestand-LVC":
+                    {
+                        await ReadXMLBody(reader).ConfigureAwait(false);
+                        break;
+                    }
+                case "BAG-Mutaties-Deelbestand-LVC":
+                    {
+
+                        break;
+                    }
+                case "BAG-Extract-Levering":
+                    {
+
+                        break;
+                    }
+
+                default:
+                    break;
+            }
+        }
+
+
+        private async Task ReadXMLBody(XmlReader reader)
+        {
+            while (await reader.ReadAsync())
+            {
+                switch (reader.NodeType)
+                {
+                    case XmlNodeType.Element:
+                        {
+                            Console.WriteLine("reading the element now: ");
+                            PrefixReader(reader);
+                            break;
+                        }
+                    case XmlNodeType.Text:
+                        {
+                            Console.WriteLine($"Text Node: {await reader.GetValueAsync().ConfigureAwait(false)}");
+                            break;
+                        }
+                    case XmlNodeType.EndElement:
+                        {
+                            Console.WriteLine($"End Element {reader.Name} \n");
+                            break;
+                        }
+                    default:
+                        {
+                            Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
+                            break;
+                        }
+                }
+            }
+        }
 
         public void PrefixReader(XmlReader reader)
         {
             switch (reader.Prefix)
             {
+                case "xb - remove this to use it -":
+                    {
+                        Console.WriteLine($"Root element: {reader.LocalName}");
+                        break;
+                    }
                 case "selecties-extract":
                     {
                         Console.WriteLine("I found the prefix: selectief-extract");
@@ -155,11 +214,19 @@ namespace GMLTest
                     {
                         Console.WriteLine("I found the prefix: bag_LVC");
                         Console.WriteLine($"Start Element {reader.Name}");
-                        if (reader.LocalName == "identificatie")
+                        if (reader.LocalName == "Ligplaats")
                         {
+                            //Console.WriteLine("***************************************");
+                            //Console.WriteLine("I FOUND THE IDENTIFACATION NUMBER !!!");
+                            //Console.WriteLine("***************************************");
                             Console.WriteLine("***************************************");
-                            Console.WriteLine("I FOUND THE IDENTIFACATION NUMBER !!!");
+                            Console.WriteLine("I FOUND THE BERTH !!!");
                             Console.WriteLine("***************************************");
+
+                            Console.WriteLine($"Creating a new berth object");
+                            listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(reader.LocalName));
+                            var a = 3;
+                            var b = 4;
                         }
                         break;
                     }
@@ -180,12 +247,88 @@ namespace GMLTest
             }
         }
 
-        public void StartingElementReader(XmlReader reader)
+
+
+
+        public void BAGObjectGenerator(XmlReader reader)
         {
             switch (reader.LocalName)
             {
-                case "GebiedNaam":
-                    break;
+                case "Ligplaats":
+                    {
+                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(reader.LocalName));
+                        // fill the object with al the stuff that we can find in the xml file
+                        while(reader.Read())
+                        {
+                            switch (reader.NodeType)
+                            {
+                                case XmlNodeType.Element:
+                                    {
+                                        Console.WriteLine("reading the element now: ");
+                                        PrefixReader(reader);
+                                        break;
+                                    }
+                                case XmlNodeType.Text:
+                                    {
+                                        Console.WriteLine($"Text Node: {reader.GetValueAsync()}");
+                                        break;
+                                    }
+                                case XmlNodeType.EndElement:
+                                    {
+                                        Console.WriteLine($"End Element {reader.Name} \n");
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
+                                        break;
+                                    }
+                            }
+                        }
+                        break;
+                    }
+                case "Woonplaats":
+                    {
+                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(reader.LocalName));
+                        // fill the object with al the stuff that we can find in the xml file
+                        break;
+                    }
+                case "Verblijfsobject":
+                    {
+                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(reader.LocalName));
+                        // fill the object with al the stuff that we can find in the xml file
+                        break;
+                    }
+                case "OpenbareRuimte":
+                    {
+                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(reader.LocalName));
+                        // fill the object with al the stuff that we can find in the xml file
+                        break;
+                    }
+                case "Nummeraanduiding":
+                    {
+                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(reader.LocalName));
+                        // fill the object with al the stuff that we can find in the xml file
+                        break;
+                    }
+                case "Standplaats":
+                    {
+                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(reader.LocalName));
+                        // fill the object with al the stuff that we can find in the xml file
+                        break;
+                    }
+                case "Pand":
+                    {
+                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(reader.LocalName));
+                        // fill the object with al the stuff that we can find in the xml file
+                        break;
+                    }
+                case "GemeenteWoonplaatsRelatie":
+                    {
+                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(reader.LocalName));
+                        // fill the object with al the stuff that we can find in the xml file
+                        break;
+                    }
 
                 default:
                     break;

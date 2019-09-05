@@ -33,7 +33,7 @@ namespace GMLTest.BAG_Objects
         }
 
 
-        public void AddToList(BAGAttribute attribute)
+        public void Add(BAGAttribute attribute)
         {
             // Add to the dictionary to acces it later as an key value pair
             dictionaryBAGObjects.Add(attribute.GetName(), attribute);
