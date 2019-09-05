@@ -20,10 +20,10 @@ namespace GMLTest
             //justRead.TheFkingFile();
             //justRead.TheScopes();
             //justRead.TheNameSpaces();
-            justRead.withXML();
+            //justRead.withXML();
 
             //reader.readFolder(filePath);
-            //reader.readFolder(filePath2);
+            reader.readFolder(filePath2);
 
             timer.Stop();
 

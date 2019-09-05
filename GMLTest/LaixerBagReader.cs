@@ -7,14 +7,16 @@ using System.Xml;
 
 namespace GMLTest
 {
+    /// <summary>
+    /// A custom reader for BAG XML Files
+    /// </summary>
     class LaixerBagReader
     {
-        static int maxDepth = 1;
         const string filename = @"C:\Users\Workstation\Documents\MyProjects\Documents\XML\9999LIG08082019-000001-reformatted.xml";
 
-        XmlReader reader;
-        XmlNamespaceManager manager;
-        GMLReader gmlReader; // its here... just for testing purpouses
+        private XmlReader reader;
+        private XmlNamespaceManager manager;
+        private GMLReader gmlReader; // its here... just for testing purpouses
 
         public string logText = "";
         public string xmlOutput = "";
@@ -80,7 +82,17 @@ namespace GMLTest
         }
 
         /// <summary>
-        /// Reads a XML document Async
+        /// Reads an XML file
+        /// </summary>
+        /// <param name="filePath">The path to the file</param>
+        public void withXML(string filePath)
+        {
+            //read the xml file Async
+            WithXMLReaderAsync(filePath).Wait();
+        }
+
+        /// <summary>
+        /// Reads a XML document in a async way
         /// </summary>
         /// <param name="xmlFile">Path to the XML file</param>
         /// <returns></returns>
@@ -100,14 +112,11 @@ namespace GMLTest
                     {
                         case XmlNodeType.Element:
                         {
-                                Console.WriteLine($"Start Element {reader.Name} with prefix: {reader.Prefix}");
-                                Console.WriteLine(manager.LookupNamespace(reader.Prefix)); 
-                                if(reader.LocalName == "identificatie")
-                                {
-                                    Console.WriteLine("***************************************");
-                                    Console.WriteLine("I FOUND THE IDENTIFACATION NUMBER !!!");
-                                    Console.WriteLine("***************************************");
-                                }
+                                //Console.WriteLine($"Start Element {reader.Name} with prefix: {reader.Prefix}");
+                                //Console.WriteLine(manager.LookupNamespace(reader.Prefix)); 
+
+                                PrefixReader(reader);
+
                                 break;
                         }
                         case XmlNodeType.Text:
@@ -129,6 +138,66 @@ namespace GMLTest
                 }
             }
         }
+
+
+        public void PrefixReader(XmlReader reader)
+        {
+            switch (reader.Prefix)
+            {
+                case "selecties-extract":
+                    {
+                        Console.WriteLine("I found the prefix: selectief-extract");
+                        Console.WriteLine($"Start Element {reader.Name}");
+                        break;
+                    }
+
+                case "bag_LVC":
+                    {
+                        Console.WriteLine("I found the prefix: bag_LVC");
+                        Console.WriteLine($"Start Element {reader.Name}");
+                        if (reader.LocalName == "identificatie")
+                        {
+                            Console.WriteLine("***************************************");
+                            Console.WriteLine("I FOUND THE IDENTIFACATION NUMBER !!!");
+                            Console.WriteLine("***************************************");
+                        }
+                        break;
+                    }
+                case "gml":
+                    {
+                        Console.WriteLine("I found a GML element !!!");
+                        break;
+                    }
+
+                case "bagtype":
+                    {
+                        Console.WriteLine("I found a BagType");
+                        break;
+                    }
+
+                default:
+                    break;
+            }
+        }
+
+        public void StartingElementReader(XmlReader reader)
+        {
+            switch (reader.LocalName)
+            {
+                case "GebiedNaam":
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+
+        public void ProductTraveler()
+        {
+
+        }
+
 
         /// <summary>
         /// Still WIP, loads Doc in mem i think
