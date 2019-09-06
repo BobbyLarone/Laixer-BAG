@@ -22,7 +22,7 @@ namespace GMLTest
         public string logText = "";
         public string xmlOutput = "";
 
-        List<BAGObject> listOfBAGObjects;
+        public List<BAGObject> listOfBAGObjects;
         BAGObjectFactory BAGObjectFactory = new BAGObjectFactory();
 
         public LaixerBagReader()
@@ -148,12 +148,10 @@ namespace GMLTest
                     }
                 case "BAG-Mutaties-Deelbestand-LVC":
                     {
-
                         break;
                     }
                 case "BAG-Extract-Levering":
                     {
-
                         break;
                     }
 
@@ -172,7 +170,7 @@ namespace GMLTest
                     case XmlNodeType.Element:
                         {
                             Console.WriteLine("reading the element now: ");
-                            PrefixReader(reader);
+                            await PrefixReader(reader).ConfigureAwait(false);
                             break;
                         }
                     case XmlNodeType.Text:
@@ -194,7 +192,7 @@ namespace GMLTest
             }
         }
 
-        public void PrefixReader(XmlReader reader)
+        public async Task PrefixReader(XmlReader reader)
         {
             switch (reader.Prefix)
             {
@@ -205,40 +203,26 @@ namespace GMLTest
                     }
                 case "selecties-extract":
                     {
-                        Console.WriteLine("I found the prefix: selectief-extract");
                         Console.WriteLine($"Start Element {reader.Name}");
                         break;
                     }
 
                 case "bag_LVC":
                     {
-                        Console.WriteLine("I found the prefix: bag_LVC");
                         Console.WriteLine($"Start Element {reader.Name}");
-                        if (reader.LocalName == "Ligplaats")
-                        {
-                            //Console.WriteLine("***************************************");
-                            //Console.WriteLine("I FOUND THE IDENTIFACATION NUMBER !!!");
-                            //Console.WriteLine("***************************************");
-                            Console.WriteLine("***************************************");
-                            Console.WriteLine("I FOUND THE BERTH !!!");
-                            Console.WriteLine("***************************************");
 
-                            Console.WriteLine($"Creating a new berth object");
-                            listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(reader.LocalName));
-                            var a = 3;
-                            var b = 4;
-                        }
+                        await BAGObjectGenerator(reader).ConfigureAwait(false);
                         break;
                     }
                 case "gml":
                     {
-                        Console.WriteLine("I found a GML element !!!");
+                        //Console.WriteLine("I found a GML element !!!");
                         break;
                     }
 
                 case "bagtype":
                     {
-                        Console.WriteLine("I found a BagType");
+                        //Console.WriteLine("I found a BagType");
                         break;
                     }
 
@@ -248,15 +232,15 @@ namespace GMLTest
         }
 
 
-
-
-        public void BAGObjectGenerator(XmlReader reader)
+        public async Task BAGObjectGenerator(XmlReader reader)
         {
             switch (reader.LocalName)
             {
                 case "Ligplaats":
                     {
-                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(reader.LocalName));
+                        var nameOfelement = reader.LocalName;
+                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(nameOfelement));
+
                         // fill the object with al the stuff that we can find in the xml file
                         while(reader.Read())
                         {
@@ -264,18 +248,24 @@ namespace GMLTest
                             {
                                 case XmlNodeType.Element:
                                     {
-                                        Console.WriteLine("reading the element now: ");
-                                        PrefixReader(reader);
+                                        Console.WriteLine($"reading the element now: {reader.Name}");
                                         break;
                                     }
                                 case XmlNodeType.Text:
                                     {
-                                        Console.WriteLine($"Text Node: {reader.GetValueAsync()}");
+                                        // retrieve the value in the node
+                                        Console.WriteLine($"Text Node: {await reader.GetValueAsync().ConfigureAwait(false)}");
                                         break;
                                     }
                                 case XmlNodeType.EndElement:
                                     {
+                                        // write the end element name. For testing purpouse
                                         Console.WriteLine($"End Element {reader.Name} \n");
+                                        if(reader.LocalName == nameOfelement)
+                                        {
+                                            // We can get out of this function, because we reached the end tag of this element
+                                            return;
+                                        }
                                         break;
                                     }
                                 default:
@@ -289,44 +279,289 @@ namespace GMLTest
                     }
                 case "Woonplaats":
                     {
-                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(reader.LocalName));
+                        var nameOfelement = reader.LocalName;
+                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(nameOfelement));
+
                         // fill the object with al the stuff that we can find in the xml file
+                        while (reader.Read())
+                        {
+                            switch (reader.NodeType)
+                            {
+                                case XmlNodeType.Element:
+                                    {
+                                        Console.WriteLine($"reading the element now: {reader.Name}");
+                                        break;
+                                    }
+                                case XmlNodeType.Text:
+                                    {
+                                        // retrieve the value in the node
+                                        Console.WriteLine($"Text Node: {await reader.GetValueAsync().ConfigureAwait(false)}");
+                                        break;
+                                    }
+                                case XmlNodeType.EndElement:
+                                    {
+                                        // write the end element name. For testing purpouse
+                                        Console.WriteLine($"End Element {reader.Name} \n");
+                                        if (reader.LocalName == nameOfelement)
+                                        {
+                                            // We can get out of this function, because we reached the end tag of this element
+                                            return;
+                                        }
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
+                                        break;
+                                    }
+                            }
+                        }
                         break;
                     }
                 case "Verblijfsobject":
                     {
-                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(reader.LocalName));
+                        var nameOfelement = reader.LocalName;
+                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(nameOfelement));
+
                         // fill the object with al the stuff that we can find in the xml file
+                        while (reader.Read())
+                        {
+                            switch (reader.NodeType)
+                            {
+                                case XmlNodeType.Element:
+                                    {
+                                        Console.WriteLine($"reading the element now: {reader.Name}");
+                                        break;
+                                    }
+                                case XmlNodeType.Text:
+                                    {
+                                        // retrieve the value in the node
+                                        Console.WriteLine($"Text Node: {await reader.GetValueAsync().ConfigureAwait(false)}");
+                                        break;
+                                    }
+                                case XmlNodeType.EndElement:
+                                    {
+                                        // write the end element name. For testing purpouse
+                                        Console.WriteLine($"End Element {reader.Name} \n");
+                                        if (reader.LocalName == nameOfelement)
+                                        {
+                                            // We can get out of this function, because we reached the end tag of this element
+                                            return;
+                                        }
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
+                                        break;
+                                    }
+                            }
+                        }
                         break;
                     }
                 case "OpenbareRuimte":
                     {
-                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(reader.LocalName));
+                        var nameOfelement = reader.LocalName;
+                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(nameOfelement));
+
                         // fill the object with al the stuff that we can find in the xml file
+                        while (reader.Read())
+                        {
+                            switch (reader.NodeType)
+                            {
+                                case XmlNodeType.Element:
+                                    {
+                                        Console.WriteLine($"reading the element now: {reader.Name}");
+                                        break;
+                                    }
+                                case XmlNodeType.Text:
+                                    {
+                                        // retrieve the value in the node
+                                        Console.WriteLine($"Text Node: {await reader.GetValueAsync().ConfigureAwait(false)}");
+                                        break;
+                                    }
+                                case XmlNodeType.EndElement:
+                                    {
+                                        // write the end element name. For testing purpouse
+                                        Console.WriteLine($"End Element {reader.Name} \n");
+                                        if (reader.LocalName == nameOfelement)
+                                        {
+                                            // We can get out of this function, because we reached the end tag of this element
+                                            return;
+                                        }
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
+                                        break;
+                                    }
+                            }
+                        }
                         break;
                     }
                 case "Nummeraanduiding":
                     {
-                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(reader.LocalName));
+                        var nameOfelement = reader.LocalName;
+                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(nameOfelement));
+
                         // fill the object with al the stuff that we can find in the xml file
+                        while (reader.Read())
+                        {
+                            switch (reader.NodeType)
+                            {
+                                case XmlNodeType.Element:
+                                    {
+                                        Console.WriteLine($"reading the element now: {reader.Name}");
+                                        break;
+                                    }
+                                case XmlNodeType.Text:
+                                    {
+                                        // retrieve the value in the node
+                                        Console.WriteLine($"Text Node: {await reader.GetValueAsync().ConfigureAwait(false)}");
+                                        break;
+                                    }
+                                case XmlNodeType.EndElement:
+                                    {
+                                        // write the end element name. For testing purpouse
+                                        Console.WriteLine($"End Element {reader.Name} \n");
+                                        if (reader.LocalName == nameOfelement)
+                                        {
+                                            // We can get out of this function, because we reached the end tag of this element
+                                            return;
+                                        }
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
+                                        break;
+                                    }
+                            }
+                        }
                         break;
                     }
                 case "Standplaats":
                     {
-                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(reader.LocalName));
+                        var nameOfelement = reader.LocalName;
+                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(nameOfelement));
+
                         // fill the object with al the stuff that we can find in the xml file
+                        while (reader.Read())
+                        {
+                            switch (reader.NodeType)
+                            {
+                                case XmlNodeType.Element:
+                                    {
+                                        Console.WriteLine($"reading the element now: {reader.Name}");
+                                        break;
+                                    }
+                                case XmlNodeType.Text:
+                                    {
+                                        // retrieve the value in the node
+                                        Console.WriteLine($"Text Node: {await reader.GetValueAsync().ConfigureAwait(false)}");
+                                        break;
+                                    }
+                                case XmlNodeType.EndElement:
+                                    {
+                                        // write the end element name. For testing purpouse
+                                        Console.WriteLine($"End Element {reader.Name} \n");
+                                        if (reader.LocalName == nameOfelement)
+                                        {
+                                            // We can get out of this function, because we reached the end tag of this element
+                                            return;
+                                        }
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
+                                        break;
+                                    }
+                            }
+                        }
                         break;
                     }
                 case "Pand":
                     {
-                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(reader.LocalName));
+                        var nameOfelement = reader.LocalName;
+                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(nameOfelement));
+
                         // fill the object with al the stuff that we can find in the xml file
+                        while (reader.Read())
+                        {
+                            switch (reader.NodeType)
+                            {
+                                case XmlNodeType.Element:
+                                    {
+                                        Console.WriteLine($"reading the element now: {reader.Name}");
+                                        break;
+                                    }
+                                case XmlNodeType.Text:
+                                    {
+                                        // retrieve the value in the node
+                                        Console.WriteLine($"Text Node: {await reader.GetValueAsync().ConfigureAwait(false)}");
+                                        break;
+                                    }
+                                case XmlNodeType.EndElement:
+                                    {
+                                        // write the end element name. For testing purpouse
+                                        Console.WriteLine($"End Element {reader.Name} \n");
+                                        if (reader.LocalName == nameOfelement)
+                                        {
+                                            // We can get out of this function, because we reached the end tag of this element
+                                            return;
+                                        }
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
+                                        break;
+                                    }
+                            }
+                        }
                         break;
                     }
                 case "GemeenteWoonplaatsRelatie":
                     {
-                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(reader.LocalName));
+                        var nameOfelement = reader.LocalName;
+                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(nameOfelement));
+
                         // fill the object with al the stuff that we can find in the xml file
+                        while (reader.Read())
+                        {
+                            switch (reader.NodeType)
+                            {
+                                case XmlNodeType.Element:
+                                    {
+                                        Console.WriteLine($"reading the element now: {reader.Name}");
+                                        break;
+                                    }
+                                case XmlNodeType.Text:
+                                    {
+                                        // retrieve the value in the node
+                                        Console.WriteLine($"Text Node: {await reader.GetValueAsync().ConfigureAwait(false)}");
+                                        break;
+                                    }
+                                case XmlNodeType.EndElement:
+                                    {
+                                        // write the end element name. For testing purpouse
+                                        Console.WriteLine($"End Element {reader.Name} \n");
+                                        if (reader.LocalName == nameOfelement)
+                                        {
+                                            // We can get out of this function, because we reached the end tag of this element
+                                            return;
+                                        }
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
+                                        break;
+                                    }
+                            }
+                        }
                         break;
                     }
 

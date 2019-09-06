@@ -6,7 +6,7 @@ namespace GMLTest.BAG_Objects
 {
     class BAGAddressableObject : BAGObject
     {
-        public BAGAddressableObject()
+        public BAGAddressableObject(string tag, string name, string objectType)
         {
             Console.WriteLine("Created a new Adressable Object");
             var bagObject = new BAGObject();

@@ -6,7 +6,7 @@ namespace GMLTest.BAG_Attributes
 {
     class BAGdatetimeAttribute : BAGAttribute
     {
-        public BAGdatetimeAttribute(int length, string name, string tag) : base(length, name, tag)
+        public BAGdatetimeAttribute(string name, string tag) : base(0, name, tag)
         {
 
         }

@@ -92,7 +92,7 @@ namespace GMLTest
                 if(readFirst)
                 {
                     // Read the first map in the directory and make a list of the files
-                    var filesInDirectory = Directory.EnumerateFiles(listOfDirectories[0]).ToList();
+                    var filesInDirectory = Directory.EnumerateFiles(listOfDirectories[3]).ToList();
 
                     // Read the first file in the list
                     ReadFileAsync(filesInDirectory[0]);

@@ -7,7 +7,7 @@ namespace GMLTest.Object_Relations
     /// <summary>
     /// In dutch : Verblijfsobjecten gebruiktdoel
     /// </summary>
-    class AccomodationPurpouseRelation : BAGRelation
+    class AccomodationPurposeRelation : BAGRelation
     {
     }
 }

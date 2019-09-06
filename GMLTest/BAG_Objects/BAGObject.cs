@@ -21,15 +21,38 @@ namespace GMLTest.BAG_Objects
         private string originalObj = "";
         private string processId = "";
 
+
         public BAGObject(string tag ="",string name ="", string objecType = "")
         {
+            // The XML tag of this object
             _tag = tag;
+
+            // The name of this object
             _name = name;
+
+            // the object type of this object
             _objectType = objecType;
 
+            // Dictionary to acces the attributes based on key pair values
             dictionaryBAGObjects = new Dictionary<string, BAGAttribute>();
+
+            // list of all the attributes that this object contains
             attributeList = new List<BAGAttribute>();
+
+
+            // This holds the relations to other attributes
             relations = new List<BAGrelationAttribute>();
+
+            Add(new BAGstringAttribute  (16, "identificatie", "identificatie"));
+            Add(new BAGbooleanAttribute ("aanduidingRecordInactief", "bag_LVC:aanduidingRecordInactief"));
+            Add(new BAGintegerAttribute ("aanduidingRecordCorrectie", "bag_LVC:aanduidingRecordCorrectie"));
+            Add(new BAGbooleanAttribute ("officieel", "bag_LVC:officieel"));
+            Add(new BAGbooleanAttribute ("inOnderzoek", "bag_LVC:inOnderzoek"));
+            Add(new BAGdatetimeAttribute("begindatumTijdvakGeldigheid", "bag_LVC:tijdvakgeldigheid/bagtype:begindatumTijdvakGeldigheid"));
+            Add(new BAGdatetimeAttribute("einddatumTijdvakGeldigheid", "bag_LVC:tijdvakgeldigheid/bagtype:einddatumTijdvakGeldigheid"));
+            Add(new BAGstringAttribute  (20, "documentnummer", "bag_LVC:bron/bagtype:documentnummer"));
+            Add(new BAGdatetimeAttribute("documentdatum", "bag_LVC:bron/bagtype:documentdatum"));
+
         }
 
 

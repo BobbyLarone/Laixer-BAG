@@ -6,7 +6,7 @@ namespace GMLTest.BAG_Attributes
 {
     class BAGintegerAttribute : BAGAttribute
     {
-        public BAGintegerAttribute(int length, string name, string tag) : base(length, name, tag)
+        public BAGintegerAttribute(string name, string tag) : base(_ ,name, tag)
         {
 
         }

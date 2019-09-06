@@ -6,7 +6,7 @@ namespace GMLTest.BAG_Attributes
 {
     class BAGbooleanAttribute : BAGAttribute
     {
-        public BAGbooleanAttribute(int length, string name, string tag) : base(length,name,tag)
+        public BAGbooleanAttribute(string name, string tag) : base(0,name,tag)
         {
 
         }

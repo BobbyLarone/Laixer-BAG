@@ -26,7 +26,7 @@ namespace GMLTest
             reader.readFolder(filePath2);
 
             timer.Stop();
-
+            Console.WriteLine($"Made {justRead.listOfBAGObjects.Count} objects!");
             Console.WriteLine($"Read within {timer.Elapsed.TotalSeconds} seconds");
             Console.ReadLine();
         }
