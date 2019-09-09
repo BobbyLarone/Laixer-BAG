@@ -10,5 +10,10 @@ namespace GMLTest.BAG_Attributes
         {
 
         }
+
+        public string GetType()
+        {
+            return "MULTIPOLYGON";
+        }
     }
 }

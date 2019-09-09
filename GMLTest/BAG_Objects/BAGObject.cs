@@ -138,14 +138,23 @@ namespace GMLTest.BAG_Objects
             return null;
         }
 
-
-        public void FillObjectAttributes()
+        public List<BAGAttribute> GetListOfAttributes()
         {
-            string fields = "";
-            string values = "";
+            return attributeList;
+        }
 
-            for
-
+        public void SetAttribute(string attributeName, string value)
+        {
+            if (HasAttribute(attributeName))
+            {
+                foreach(var item in attributeList)
+                {
+                    if(item.GetName() == attributeName)
+                    {
+                        item.SetValue(value);
+                    }
+                }
+            }
         }
 
     }

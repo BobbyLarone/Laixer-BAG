@@ -10,19 +10,15 @@ namespace GMLTest.BAG_Objects
     /// </summary>
     class Berth : BAGAddressableObject
     {
-        private string abbreviation = "LIG";
-
-        public string mainAddress = "";
-        public string relatedAddress = "";
-        public string relatedAddress_Identification = "";
-        public string indicationRecordInactive = "";
-        public string indicationRecordCorrection = "";
-        public string official = "";
-        public string berthStatus= "";
-        public string startDataPeriodValidity = "";
-        public string inResearch = "";
-        public string source_DocumentDate = "";
-        public string source_DocumentNumber = "";
+        //public string mainAddress = "";
+        //public string indicationRecordInactive = "";
+        //public string indicationRecordCorrection = "";
+        //public string official = "";
+        //public string berthStatus= "";
+        //public string startDataPeriodValidity = "";
+        //public string inResearch = "";
+        //public string source_DocumentDate = "";
+        //public string source_DocumentNumber = "";
 
         public List<string> berthStatusType = new List<string>()
         {
@@ -32,8 +28,6 @@ namespace GMLTest.BAG_Objects
         public Berth(string tag = "bag_LVC:Ligplaats", string name = "ligplaats", string objectType = "LIG")
             : base (tag,name,objectType)
         {
-            Console.WriteLine("******CREATED A NEW BERTH ... XD THAT NAME THO");
-
             Add(new BAGenumAttribute(berthStatusType, berthStatusType.Count, "ligplaatsStatus", "bag_LVC:ligplaatsStatus"));
             Add(new BAGpolygon(3, "geovlak", "bag_LVC:ligplaatsGeometrie"));
             Add(new BAGgeometryValidation("geom_valid","geovlak"));
@@ -43,10 +37,15 @@ namespace GMLTest.BAG_Objects
         {
             return true;
         }
+
+        public void ShowAllAttributes()
+        {
+            var myList = GetListOfAttributes();
+            Console.WriteLine($"{myList.Count} Attributes were found");
+            foreach ( var att in myList)
+            {
+                Console.WriteLine($"Found: {att.GetName()} Value: {att.GetValue()}");
+            }
+        }
     }
-
-    // Maybe create a class to store all the geometry data? 
-    // A Lot of stuff is indented and categorized... soooooooooooooo
-
-
 }

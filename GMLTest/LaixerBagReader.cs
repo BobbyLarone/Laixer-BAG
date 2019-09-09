@@ -94,6 +94,8 @@ namespace GMLTest
         {
             //read the xml file Async
             WithXMLReaderAsync(filePath).Wait();
+            var firstItem = (Berth)listOfBAGObjects[0];
+            firstItem.ShowAllAttributes();
         }
 
         /// <summary>
@@ -238,8 +240,15 @@ namespace GMLTest
             {
                 case "Ligplaats":
                     {
+                        var elementName = "";
+                        var elementValue = "";
+
                         var nameOfelement = reader.LocalName;
-                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(nameOfelement));
+                        Berth myObject = (Berth)BAGObjectFactory.GetBagObjectByXML(nameOfelement);
+                        listOfBAGObjects.Add(myObject);
+
+                        myObject.ShowAllAttributes();
+
 
                         // fill the object with al the stuff that we can find in the xml file
                         while(reader.Read())
@@ -248,13 +257,21 @@ namespace GMLTest
                             {
                                 case XmlNodeType.Element:
                                     {
+                                        elementName = reader.LocalName;
                                         Console.WriteLine($"reading the element now: {reader.Name}");
+                                        if(reader.LocalName == "ligplaatsStatus")
+                                        {
+                                            Console.WriteLine("*************FOUND LIGLPAAATS**************");
+                                        }
                                         break;
                                     }
                                 case XmlNodeType.Text:
                                     {
                                         // retrieve the value in the node
-                                        Console.WriteLine($"Text Node: {await reader.GetValueAsync().ConfigureAwait(false)}");
+                                        string value = await reader.GetValueAsync().ConfigureAwait(false);
+                                        Console.WriteLine($"Text Node: {value}");
+
+                                        myObject.SetAttribute(elementName, value);
                                         break;
                                     }
                                 case XmlNodeType.EndElement:
@@ -571,7 +588,7 @@ namespace GMLTest
         }
 
 
-        public void ProductTraveler()
+        public void FillObject(Berth myObject)
         {
 
         }
