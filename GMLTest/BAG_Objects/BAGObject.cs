@@ -20,6 +20,7 @@ namespace GMLTest.BAG_Objects
 
         private string originalObj = "";
         private string processId = "";
+        private int BAGObjectId;
 
 
         public BAGObject(string tag ="",string name ="", string objecType = "")
@@ -39,7 +40,6 @@ namespace GMLTest.BAG_Objects
             // list of all the attributes that this object contains
             attributeList = new List<BAGAttribute>();
 
-
             // This holds the relations to other attributes
             relations = new List<BAGrelationAttribute>();
 
@@ -55,11 +55,17 @@ namespace GMLTest.BAG_Objects
 
         }
 
-
+        /// <summary>
+        /// Add a BAG attribute to the object
+        /// </summary>
+        /// <param name="attribute"></param>
         public void Add(BAGAttribute attribute)
         {
+            attribute.parentObject = this;
+
             // Add to the dictionary to acces it later as an key value pair
             dictionaryBAGObjects.Add(attribute.GetName(), attribute);
+
             // Add to the list
             attributeList.Add(attribute);
         }
@@ -92,6 +98,55 @@ namespace GMLTest.BAG_Objects
             return _tag;
         }
 
+        /// <summary>
+        /// Get the unique id of the BAG_Object
+        /// </summary>
+        /// <returns></returns>
+        public string GetIdentification()
+        {
+            // Find the attribute by Id
+            var result = GetAttribute("identificatie");
+            if(result == null)
+            {
+                return ""; // return an empty string if there is no Id
+            }
+            // else we can return the value
+            return result.GetValue();
+        }
+
+        /// <summary>
+        /// Checks if this object has the specified attribute
+        /// </summary>
+        /// <param name="name">The name of the attribute</param>
+        /// <returns></returns>
+        public bool HasAttribute(string name)
+        {
+            return attributeList.Exists(x => x.GetName() == name);
+        }
+
+        /// <summary>
+        /// Get a BAG attribute that matches the name
+        /// </summary>
+        /// <param name="name">Name of the attribute</param>
+        /// <returns></returns>
+        public BAGAttribute GetAttribute(string name)
+        {
+            if(HasAttribute(name))
+            {
+                return attributeList.Find(x => x.GetName() == name);
+            }
+            return null;
+        }
+
+
+        public void FillObjectAttributes()
+        {
+            string fields = "";
+            string values = "";
+
+            for
+
+        }
 
     }
 }
