@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GMLTest.BAG_Attributes;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -23,16 +24,22 @@ namespace GMLTest.BAG_Objects
         public string source_DocumentDate = "";
         public string source_DocumentNumber = "";
 
-        public string[] berthStatusType = {"Plaats aangewezen", "Plaats ingetrokken" };
+        public List<string> berthStatusType = new List<string>()
+        {
+            "Plaats aangewezen", "Plaats ingetrokken"
+        };
 
-        public Berth()
+        public Berth(string tag = "bag_LVC:Ligplaats", string name = "ligplaats", string objectType = "LIG")
+            : base (tag,name,objectType)
         {
             Console.WriteLine("******CREATED A NEW BERTH ... XD THAT NAME THO");
 
-
+            Add(new BAGenumAttribute(berthStatusType, berthStatusType.Count, "ligplaatsStatus", "bag_LVC:ligplaatsStatus"));
+            Add(new BAGpolygon(3, "geovlak", "bag_LVC:ligplaatsGeometrie"));
+            Add(new BAGgeometryValidation("geom_valid","geovlak"));
         }
 
-        public bool hasGeometry()
+        public bool HasGeometry()
         {
             return true;
         }
