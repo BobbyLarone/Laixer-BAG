@@ -11,30 +11,31 @@ namespace GMLTest.BAG_Objects
     {
         private string abreviation = "VBO";
 
-        private enum enumStatus
+        public List<string> accomodationStatus = new List<string>()
         {
-            Verblijfsobject_gevormd,
-            Niet_gerealiseerd_verblijfsobject,
-            Verblijfsobject_in_gebruik_niet_ingemeten,
-            Verblijfsobject_in_gebruik,
-            Verblijfsobject_ingetrokken,
-            Verblijfsobject_buiten_gebruik
-        }
+            "Verblijfsobject gevormd",
+            "Niet gerealiseerd verblijfsobject",
+            "Verblijfsobject in gebruik (niet ingemeten)",
+            "Verblijfsobject in gebruik",
+            "Verblijfsobject ingetrokken",
+            "Verblijfsobject buiten gebruik"
+        };
 
-        private enum enumPurpose
+
+        public List<string> accomodationPurpose= new List<string>()
         {
-            woonfunctie,
-            bijeenkomstfunctie,
-            celfunctie,
-            gezondheidszorgfunctie,
-            industriefunctie,
-            kantoorfunctie,
-            logiesfunctie,
-            onderwijsfunctie,
-            sportfunctie,
-            winkelfunctie,
-            overige_gebruiksfunctie
-        }
+            "woonfunctie",
+            "bijeenkomstfunctie",
+            "celfunctie",
+            "gezondheidszorgfunctie",
+            "industriefunctie",
+            "kantoorfunctie",
+            "logiesfunctie",
+            "onderwijsfunctie",
+            "sportfunctie",
+            "winkelfunctie",
+            "overige gebruiksfunctie"
+        };
 
         public Accommodation()
         {
