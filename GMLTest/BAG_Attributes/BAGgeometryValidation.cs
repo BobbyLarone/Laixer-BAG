@@ -6,9 +6,17 @@ namespace GMLTest.BAG_Attributes
 {
     class BAGgeometryValidation : BAGAttribute
     {
-        public BAGgeometryValidation(int length, string name, string tag) : base(length, name, tag)
-        {
+        private string nameGeometryAttribute;
 
+        public BAGgeometryValidation(string name, string nameGeoAttribute ,int length = -1, string tag = "") 
+            : base(length, name, tag)
+        {
+            nameGeometryAttribute = nameGeoAttribute;
+        }
+
+        public string GetType()
+        {
+            return "";
         }
     }
 }
