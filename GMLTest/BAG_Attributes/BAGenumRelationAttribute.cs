@@ -1,13 +1,14 @@
-﻿using System;
+﻿using LaixerGMLTest.BAG_Objects;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GMLTest.BAG_Attributes
+namespace LaixerGMLTest.BAG_Attributes
 {
     class BAGenumRelationAttribute : BAGrelationAttribute
     {
-        public BAGenumRelationAttribute(string relationName, int length, string name, string tag, string exraAttributes, List<BAGrelationAttribute> list) 
-            : base(relationName, list.Count, name, tag, exraAttributes)
+        public BAGenumRelationAttribute(BAGObject parent, string relationName, string name, string tag, List<string> exraAttributes, List<string> list) 
+            : base(parent, relationName, list.Count, name, tag, exraAttributes)
         {
 
         }

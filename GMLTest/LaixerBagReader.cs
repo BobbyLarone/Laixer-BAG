@@ -1,4 +1,4 @@
-﻿using GMLTest.BAG_Objects;
+﻿using LaixerGMLTest.BAG_Objects;
 using NetTopologySuite.IO.GML2;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Xml;
 
 
 
-namespace GMLTest
+namespace LaixerGMLTest
 {
     /// <summary>
     /// A custom reader for BAG XML Files
@@ -580,7 +580,7 @@ namespace GMLTest
             var myReader = reader;
             var gmlReader = new GMLReader();
 
-            var gmlReader2 = new GMLReader(new NetTopologySuite.Geometries.GeometryFactory(new NetTopologySuite.Geometries.PrecisionModel(), 28992));
+            var gmlReader2 = new GMLReader(new NetTopologySuite.Geometries.GeometryFactory(new NetTopologySuite.Geometries.PrecisionModel(), 0));
 
             var result = gmlReader2.Read(myReader);
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GMLTest.BAG_Attributes
+namespace LaixerGMLTest.BAG_Attributes
 {
     class BAGbooleanAttribute : BAGAttribute
     {

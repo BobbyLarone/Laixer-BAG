@@ -1,9 +1,9 @@
-﻿using GMLTest.BAG_Objects;
+﻿using LaixerGMLTest.BAG_Objects;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GMLTest.BAG_Attributes
+namespace LaixerGMLTest.BAG_Attributes
 {
     /// <summary>
     /// Base class for all the other attributes

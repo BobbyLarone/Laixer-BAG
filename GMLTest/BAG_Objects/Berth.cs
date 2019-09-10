@@ -1,10 +1,10 @@
-﻿using GMLTest.BAG_Attributes;
+﻿using LaixerGMLTest.BAG_Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 
-namespace GMLTest.BAG_Objects
+namespace LaixerGMLTest.BAG_Objects
 {
     /// <summary>
     /// Translation to Dutch: Ligplaats
@@ -36,9 +36,6 @@ namespace GMLTest.BAG_Objects
 
         public bool HasGeometry()
         {
-
-
-
             return true;
         }
 

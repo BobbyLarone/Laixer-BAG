@@ -4,9 +4,9 @@ using System.Text;
 
 namespace LaixerGMLTest.BAG_Attributes
 {
-    class BAGstringAttribute : BAGAttribute
+    class BAGnumericAttribute : BAGAttribute
     {
-        public BAGstringAttribute(int length, string name, string tag) : base(length, name, tag)
+        public BAGnumericAttribute(int length, string name, string tag) : base(length, name, tag)
         {
 
         }

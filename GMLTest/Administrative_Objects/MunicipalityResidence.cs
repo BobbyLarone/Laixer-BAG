@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GMLTest.Administrative_Objects
+namespace LaixerGMLTest.Administrative_Objects
 {
     /// <summary>
     /// Translation to Dutch: Gemeente Woonplaats

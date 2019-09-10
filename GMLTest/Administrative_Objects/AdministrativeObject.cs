@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 
-namespace GMLTest.Administrative_Objects
+namespace LaixerGMLTest.Administrative_Objects
 {
     class AdministrativeObject
     {

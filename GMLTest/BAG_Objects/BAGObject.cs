@@ -1,9 +1,9 @@
-﻿using GMLTest.BAG_Attributes;
+﻿using LaixerGMLTest.BAG_Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GMLTest.BAG_Objects
+namespace LaixerGMLTest.BAG_Objects
 {
     /// <summary>
     /// Base class for all the other objects
@@ -68,6 +68,16 @@ namespace GMLTest.BAG_Objects
 
             // Add to the list
             attributeList.Add(attribute);
+        }
+
+        /// <summary>
+        /// Add a relation to the object
+        /// </summary>
+        /// <param name="relation">The relation attribute</param>
+        public void AddRelation(BAGrelationAttribute relation)
+        {
+            // Add a relation to the object
+            relations.Add(relation);
         }
 
         public string GetObjectType()

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GMLTest
+namespace LaixerGMLTest
 {
     /// <summary>
     ///  Class to read the content of the specified directory

@@ -1,10 +1,10 @@
-﻿using GMLTest.Object_Relations;
+﻿using LaixerGMLTest.Object_Relations;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 
-namespace GMLTest.BAG_Objects
+namespace LaixerGMLTest.BAG_Objects
 {
     //TODO: Transform this into an singleton class
 

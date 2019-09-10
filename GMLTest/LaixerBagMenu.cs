@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GMLTest
+namespace LaixerGMLTest
 {
     class LaixerBagMenu
     {

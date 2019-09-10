@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace GMLTest
+namespace LaixerGMLTest
 {
     class Program
     {
