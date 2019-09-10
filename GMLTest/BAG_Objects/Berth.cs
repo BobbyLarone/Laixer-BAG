@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+
 namespace GMLTest.BAG_Objects
 {
     /// <summary>
@@ -35,6 +36,9 @@ namespace GMLTest.BAG_Objects
 
         public bool HasGeometry()
         {
+
+
+
             return true;
         }
 

@@ -3,8 +3,11 @@ using NetTopologySuite.IO.GML2;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
+
+
 
 namespace GMLTest
 {
@@ -36,7 +39,6 @@ namespace GMLTest
                 Async = true
             };
             reader = XmlReader.Create(filename, settings);
-
             var table = reader.NameTable;
 
             manager = new XmlNamespaceManager(table);
@@ -230,14 +232,11 @@ namespace GMLTest
                 case "Ligplaats":
                     {
                         var elementName = "";
-                        var elementValue = "";
-
                         var nameOfelement = reader.LocalName;
                         Berth myObject = (Berth)BAGObjectFactory.GetBagObjectByXML(nameOfelement);
                         listOfBAGObjects.Add(myObject);
 
                         myObject.ShowAllAttributes();
-
 
                         // fill the object with al the stuff that we can find in the xml file
                         while(reader.Read())
@@ -248,9 +247,9 @@ namespace GMLTest
                                     {
                                         elementName = reader.LocalName;
                                         Console.WriteLine($"reading the element now: {reader.Name}");
-                                        if(reader.LocalName == "ligplaatsStatus")
+                                        if(reader.LocalName == "ligplaatsGeometrie")
                                         {
-                                            Console.WriteLine("*************FOUND LIGLPAAATS**************");
+                                            readGMLAttributes(reader);
                                         }
                                         break;
                                     }
@@ -576,47 +575,43 @@ namespace GMLTest
             }
         }
 
-
-        public void FillObject(Berth myObject)
+        private void readGMLAttributes(XmlReader reader)
         {
+            var myReader = reader;
+            var gmlReader = new GMLReader();
 
-        }
+            var gmlReader2 = new GMLReader(new NetTopologySuite.Geometries.GeometryFactory(new NetTopologySuite.Geometries.PrecisionModel(), 28992));
 
+            var result = gmlReader2.Read(myReader);
 
-        /// <summary>
-        /// Still WIP, loads Doc in mem i think
-        /// </summary>
-        public void TheFkingFile()
-        {
-            int docDept = 0;
-            Console.WriteLine("Reading with document");
-            //setup and load the XML document
-            XmlDocument document = new XmlDocument();
-            document.Load(filename);
+            var temp = result.Coordinates.ToList();
+            Console.WriteLine(result.SRID);
+            Console.WriteLine(result);
 
-            var rootName = document.DocumentElement; // read the root name
-            var begin = rootName.FirstChild; // read the next node in the xml file
-            var rootEndName = rootName.ParentNode.LastChild; // go back to the previous node and read the last child to determin the end element
-
-            Console.WriteLine($"XML depth = {docDept}");
-            Console.WriteLine($"Root element is: {rootName.Name} and end element is: {rootEndName.Name} of type: {rootEndName.NodeType}");
-            Console.WriteLine("This element has the following child nodes: ");
-
-            while (begin.HasChildNodes)
+            foreach (var item in temp)
             {
-                docDept++;
-                Console.WriteLine("*******************************");
-                Console.WriteLine($"XML depth = {docDept}");
-                Console.WriteLine($"Data: {begin.Name}");
-
-                if (begin.HasChildNodes && begin.FirstChild.NodeType == XmlNodeType.Element)
-                {
-                    Console.WriteLine($"Next child is: {begin.FirstChild.Name} and last child is: {begin.LastChild.Name} with {begin.ChildNodes.Count} inbetween");
-                }
-                begin = begin.FirstChild;
+                Console.WriteLine(item.CoordinateValue);
             }
-
-            Console.WriteLine($"Inner data from {begin.ParentNode.Name} = {begin.InnerText}");
         }
+
+        private void convertToGPS()
+        {
+            //var csWgs84 = ProjNet.CoordinateSystems.GeographicCoordinateSystems.WGS84;
+            //const string epsg27700 = "..."; // see http://epsg.io/27700
+            //var cs27700 = ProjNet.Converters.WellKnownText.CoordinateSystemWktReader.Parse(epsg27700);
+            //var ctFactory = new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory();
+            //var ct = ctFactory.CreateFromCoordinateSystems(csWgs84, cs27700);
+            //var mt = ct.MathTransform;
+
+            //var gf = new NetTopologySuite.Geometries.GeometryFactory(27700);
+
+            //// BT2 8HB
+            //var myPostcode = gf.CreatePoint(mt.Transform(new Coordinate(-5.926223, 54.592395)));
+            //// DT11 0DB
+            //var myMatesPostcode = gf.CreatePoint(mt.Transform(new Coordinate(-2.314507, 50.827157)));
+
+            //double distance = myPostcode.Distance(myMatesPostcode);
+        }
+
     }
 }
