@@ -216,17 +216,6 @@ namespace GMLTest
                         await BAGObjectGenerator(reader).ConfigureAwait(false);
                         break;
                     }
-                case "gml":
-                    {
-                        //Console.WriteLine("I found a GML element !!!");
-                        break;
-                    }
-
-                case "bagtype":
-                    {
-                        //Console.WriteLine("I found a BagType");
-                        break;
-                    }
 
                 default:
                     break;
