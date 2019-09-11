@@ -27,5 +27,15 @@ namespace LaixerGMLTest.BAG_Objects
         {
             return true;
         }
+
+        public void ShowAllAttributes()
+        {
+            var myList = GetListOfAttributes();
+            Console.WriteLine($"{myList.Count} Attributes were found");
+            foreach (var att in myList)
+            {
+                Console.WriteLine($"Found: {att.GetName()} Value: {att.GetValue()}");
+            }
+        }
     }
 }

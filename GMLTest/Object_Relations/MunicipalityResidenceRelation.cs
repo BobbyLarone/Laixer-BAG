@@ -18,7 +18,6 @@ namespace LaixerGMLTest.Object_Relations
             "definitief"
         };
 
-
         public MunicipalityResidenceRelation() : base("gwr_LVC:GemeenteWoonplaatsRelatie", "gemeente_woonplaats", "GWR")
         {
             Add(new BAGdatetimeAttribute("begindatumtijdvakgeldigheid", "gwr_LVC:tijdvakgeldigheid/bagtype:begindatumTijdvakGeldigheid"));

@@ -41,6 +41,7 @@ namespace LaixerGMLTest.BAG_Objects
             Add(new BAGnumericAttribute(6, "oppervlakteVerblijfsobject", "bag_LVC:oppervlakteVerblijfsobject"));
             Add(new BAGpoint(3, "geopunt", "bag_LVC:verblijfsobjectGeometrie"));
             Add(new BAGpolygon(3, "geovlak", "bag_LVC:verblijfsobjectGeometrie"));
+            Add(new BAGgeometryValidation("geom_valid", "geovlak"));
 
             AddRelation(new BAGenumRelationAttribute(this, 
                 "verblijfsobjectgebruiksdoel",
@@ -64,6 +65,16 @@ namespace LaixerGMLTest.BAG_Objects
         public bool HasGeometry()
         {
             return true;
+        }
+
+        public void ShowAllAttributes()
+        {
+            var myList = GetListOfAttributes();
+            Console.WriteLine($"{myList.Count} Attributes were found");
+            foreach (var att in myList)
+            {
+                Console.WriteLine($"Found: {att.GetName()} Value: {att.GetValue()}");
+            }
         }
 
     }

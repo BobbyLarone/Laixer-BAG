@@ -16,6 +16,8 @@ namespace LaixerGMLTest
         private string[] splitFile;
         private uint directoryDepth = 0;
 
+        private LaixerBagReader myReader;
+
         public DirectoryReader()
         {
 
@@ -92,7 +94,7 @@ namespace LaixerGMLTest
                 if(readFirst)
                 {
                     // Read the first map in the directory and make a list of the files
-                    var filesInDirectory = Directory.EnumerateFiles(listOfDirectories[0]).ToList();
+                    var filesInDirectory = Directory.EnumerateFiles(listOfDirectories[5]).ToList();
 
                     // Read the first file in the list
                     ReadFileAsync(filesInDirectory[0]);
@@ -108,13 +110,18 @@ namespace LaixerGMLTest
 
         private void ReadFileAsync(string filePath)
         {
-            var myReader = new LaixerBagReader();
+            myReader = new LaixerBagReader();
             Console.WriteLine($"Going to read the following file : {filePath}");
 
             // Make some room in the console
             Console.WriteLine("\n\n\n\n\n");
             myReader.ReadXML(filePath);
 
+        }
+
+        public int GetTotalObjects()
+        {
+            return myReader.listOfBAGObjects.Count;
         }
     }
 }

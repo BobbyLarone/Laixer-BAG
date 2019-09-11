@@ -1,4 +1,5 @@
 ﻿using LaixerGMLTest.BAG_Objects;
+using LaixerGMLTest.Object_Relations;
 using NetTopologySuite.IO.GML2;
 using System;
 using System.Collections.Generic;
@@ -96,8 +97,8 @@ namespace LaixerGMLTest
         {
             //read the xml file Async
             WithXMLReaderAsync(filePath).Wait();
-            var firstItem = (Berth)listOfBAGObjects[0];
-            firstItem.ShowAllAttributes();
+            printAllAttributes();
+
         }
 
         /// <summary>
@@ -122,13 +123,13 @@ namespace LaixerGMLTest
                     {
                         case XmlNodeType.Element:
                         {
-                                await CheckRootElement(reader).ConfigureAwait(false);
-                                break;
+                            await CheckRootElement(reader).ConfigureAwait(false);
+                            break;
                         }
                         default:
                         {
-                                Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
-                                break;
+                            Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
+                            break;
                         }
                     }
                 }
@@ -177,16 +178,19 @@ namespace LaixerGMLTest
                             await PrefixReader(reader).ConfigureAwait(false);
                             break;
                         }
+
                     case XmlNodeType.Text:
                         {
                             Console.WriteLine($"Text Node: {await reader.GetValueAsync().ConfigureAwait(false)}");
                             break;
                         }
+
                     case XmlNodeType.EndElement:
                         {
                             Console.WriteLine($"End Element {reader.Name} \n");
                             break;
                         }
+
                     default:
                         {
                             Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
@@ -233,7 +237,7 @@ namespace LaixerGMLTest
                     {
                         var elementName = "";
                         var nameOfelement = reader.LocalName;
-                        Berth myObject = (Berth)BAGObjectFactory.GetBagObjectByXML(nameOfelement);
+                        var myObject = (Berth)BAGObjectFactory.GetBagObjectByXML(nameOfelement);
                         listOfBAGObjects.Add(myObject);
 
                         myObject.ShowAllAttributes();
@@ -284,8 +288,10 @@ namespace LaixerGMLTest
                     }
                 case "Woonplaats":
                     {
+                        var elementName = "";
                         var nameOfelement = reader.LocalName;
-                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(nameOfelement));
+                        var myObject = (Residence)BAGObjectFactory.GetBagObjectByXML(nameOfelement);
+                        listOfBAGObjects.Add(myObject);
 
                         // fill the object with al the stuff that we can find in the xml file
                         while (reader.Read())
@@ -294,13 +300,17 @@ namespace LaixerGMLTest
                             {
                                 case XmlNodeType.Element:
                                     {
+                                        elementName = reader.LocalName;
                                         Console.WriteLine($"reading the element now: {reader.Name}");
                                         break;
                                     }
                                 case XmlNodeType.Text:
                                     {
                                         // retrieve the value in the node
-                                        Console.WriteLine($"Text Node: {await reader.GetValueAsync().ConfigureAwait(false)}");
+                                        string value = await reader.GetValueAsync().ConfigureAwait(false);
+                                        Console.WriteLine($"Text Node: {value}");
+
+                                        myObject.SetAttribute(elementName, value);
                                         break;
                                     }
                                 case XmlNodeType.EndElement:
@@ -325,8 +335,10 @@ namespace LaixerGMLTest
                     }
                 case "Verblijfsobject":
                     {
+                        var elementName = "";
                         var nameOfelement = reader.LocalName;
-                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(nameOfelement));
+                        var myObject = (Accommodation)BAGObjectFactory.GetBagObjectByXML(nameOfelement);
+                        listOfBAGObjects.Add(myObject);
 
                         // fill the object with al the stuff that we can find in the xml file
                         while (reader.Read())
@@ -335,13 +347,17 @@ namespace LaixerGMLTest
                             {
                                 case XmlNodeType.Element:
                                     {
+                                        elementName = reader.LocalName;
                                         Console.WriteLine($"reading the element now: {reader.Name}");
                                         break;
                                     }
                                 case XmlNodeType.Text:
                                     {
                                         // retrieve the value in the node
-                                        Console.WriteLine($"Text Node: {await reader.GetValueAsync().ConfigureAwait(false)}");
+                                        string value = await reader.GetValueAsync().ConfigureAwait(false);
+                                        Console.WriteLine($"Text Node: {value}");
+
+                                        myObject.SetAttribute(elementName, value);
                                         break;
                                     }
                                 case XmlNodeType.EndElement:
@@ -366,8 +382,10 @@ namespace LaixerGMLTest
                     }
                 case "OpenbareRuimte":
                     {
+                        var elementName = "";
                         var nameOfelement = reader.LocalName;
-                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(nameOfelement));
+                        var myObject = (PublicSpace)BAGObjectFactory.GetBagObjectByXML(nameOfelement);
+                        listOfBAGObjects.Add(myObject);
 
                         // fill the object with al the stuff that we can find in the xml file
                         while (reader.Read())
@@ -376,13 +394,17 @@ namespace LaixerGMLTest
                             {
                                 case XmlNodeType.Element:
                                     {
+                                        elementName = reader.LocalName;
                                         Console.WriteLine($"reading the element now: {reader.Name}");
                                         break;
                                     }
                                 case XmlNodeType.Text:
                                     {
                                         // retrieve the value in the node
-                                        Console.WriteLine($"Text Node: {await reader.GetValueAsync().ConfigureAwait(false)}");
+                                        string value = await reader.GetValueAsync().ConfigureAwait(false);
+                                        Console.WriteLine($"Text Node: {value}");
+
+                                        myObject.SetAttribute(elementName, value);
                                         break;
                                     }
                                 case XmlNodeType.EndElement:
@@ -407,8 +429,10 @@ namespace LaixerGMLTest
                     }
                 case "Nummeraanduiding":
                     {
+                        var elementName = "";
                         var nameOfelement = reader.LocalName;
-                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(nameOfelement));
+                        var myObject = (NumberIndication)BAGObjectFactory.GetBagObjectByXML(nameOfelement);
+                        listOfBAGObjects.Add(myObject);
 
                         // fill the object with al the stuff that we can find in the xml file
                         while (reader.Read())
@@ -417,13 +441,18 @@ namespace LaixerGMLTest
                             {
                                 case XmlNodeType.Element:
                                     {
+                                        elementName = reader.LocalName;
+
                                         Console.WriteLine($"reading the element now: {reader.Name}");
                                         break;
                                     }
                                 case XmlNodeType.Text:
                                     {
                                         // retrieve the value in the node
-                                        Console.WriteLine($"Text Node: {await reader.GetValueAsync().ConfigureAwait(false)}");
+                                        string value = await reader.GetValueAsync().ConfigureAwait(false);
+                                        Console.WriteLine($"Text Node: {value}");
+
+                                        myObject.SetAttribute(elementName, value);
                                         break;
                                     }
                                 case XmlNodeType.EndElement:
@@ -448,8 +477,10 @@ namespace LaixerGMLTest
                     }
                 case "Standplaats":
                     {
+                        var elementName = "";
                         var nameOfelement = reader.LocalName;
-                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(nameOfelement));
+                        var myObject = (Location)BAGObjectFactory.GetBagObjectByXML(nameOfelement);
+                        listOfBAGObjects.Add(myObject);
 
                         // fill the object with al the stuff that we can find in the xml file
                         while (reader.Read())
@@ -458,13 +489,18 @@ namespace LaixerGMLTest
                             {
                                 case XmlNodeType.Element:
                                     {
+                                        elementName = reader.LocalName;
+
                                         Console.WriteLine($"reading the element now: {reader.Name}");
                                         break;
                                     }
                                 case XmlNodeType.Text:
                                     {
                                         // retrieve the value in the node
-                                        Console.WriteLine($"Text Node: {await reader.GetValueAsync().ConfigureAwait(false)}");
+                                        string value = await reader.GetValueAsync().ConfigureAwait(false);
+                                        Console.WriteLine($"Text Node: {value}");
+
+                                        myObject.SetAttribute(elementName, value);
                                         break;
                                     }
                                 case XmlNodeType.EndElement:
@@ -489,8 +525,10 @@ namespace LaixerGMLTest
                     }
                 case "Pand":
                     {
+                        var elementName = "";
                         var nameOfelement = reader.LocalName;
-                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(nameOfelement));
+                        var myObject = (Premises)BAGObjectFactory.GetBagObjectByXML(nameOfelement);
+                        listOfBAGObjects.Add(myObject);
 
                         // fill the object with al the stuff that we can find in the xml file
                         while (reader.Read())
@@ -499,13 +537,18 @@ namespace LaixerGMLTest
                             {
                                 case XmlNodeType.Element:
                                     {
+                                        elementName = reader.LocalName;
+
                                         Console.WriteLine($"reading the element now: {reader.Name}");
                                         break;
                                     }
                                 case XmlNodeType.Text:
                                     {
                                         // retrieve the value in the node
-                                        Console.WriteLine($"Text Node: {await reader.GetValueAsync().ConfigureAwait(false)}");
+                                        string value = await reader.GetValueAsync().ConfigureAwait(false);
+                                        Console.WriteLine($"Text Node: {value}");
+
+                                        myObject.SetAttribute(elementName, value);
                                         break;
                                     }
                                 case XmlNodeType.EndElement:
@@ -530,8 +573,10 @@ namespace LaixerGMLTest
                     }
                 case "GemeenteWoonplaatsRelatie":
                     {
+                        var elementName = "";
                         var nameOfelement = reader.LocalName;
-                        listOfBAGObjects.Add(BAGObjectFactory.GetBagObjectByXML(nameOfelement));
+                        var myObject = (MunicipalityResidenceRelation)BAGObjectFactory.GetBagObjectByXML(nameOfelement);
+                        listOfBAGObjects.Add(myObject);
 
                         // fill the object with al the stuff that we can find in the xml file
                         while (reader.Read())
@@ -540,13 +585,18 @@ namespace LaixerGMLTest
                             {
                                 case XmlNodeType.Element:
                                     {
+                                        elementName = reader.LocalName;
+
                                         Console.WriteLine($"reading the element now: {reader.Name}");
                                         break;
                                     }
                                 case XmlNodeType.Text:
                                     {
                                         // retrieve the value in the node
-                                        Console.WriteLine($"Text Node: {await reader.GetValueAsync().ConfigureAwait(false)}");
+                                        string value = await reader.GetValueAsync().ConfigureAwait(false);
+                                        Console.WriteLine($"Text Node: {value}");
+
+                                        myObject.SetAttribute(elementName, value);
                                         break;
                                     }
                                 case XmlNodeType.EndElement:
@@ -569,7 +619,6 @@ namespace LaixerGMLTest
                         }
                         break;
                     }
-
                 default:
                     break;
             }
@@ -611,6 +660,46 @@ namespace LaixerGMLTest
             //var myMatesPostcode = gf.CreatePoint(mt.Transform(new Coordinate(-2.314507, 50.827157)));
 
             //double distance = myPostcode.Distance(myMatesPostcode);
+        }
+
+        private void printAllAttributes()
+        {
+            if(listOfBAGObjects[0].GetType() == typeof(Berth))
+            {
+                var item = (Berth)listOfBAGObjects[0];
+                item.ShowAllAttributes();
+            }
+            else if(listOfBAGObjects[0].GetType() == typeof(Location))
+            {
+                var item = (Location)listOfBAGObjects[0];
+                item.ShowAllAttributes();
+            }
+            else if (listOfBAGObjects[0].GetType() == typeof(Premises))
+            {
+                var item = (Premises)listOfBAGObjects[0];
+                item.ShowAllAttributes();
+            }
+            else if (listOfBAGObjects[0].GetType() == typeof(NumberIndication))
+            {
+                var item = (NumberIndication)listOfBAGObjects[0];
+                item.ShowAllAttributes();
+            }
+            else if (listOfBAGObjects[0].GetType() == typeof(Residence))
+            {
+                var item = (Residence)listOfBAGObjects[0];
+                item.ShowAllAttributes();
+            }
+            else if (listOfBAGObjects[0].GetType() == typeof(PublicSpace))
+            {
+                var item = (PublicSpace)listOfBAGObjects[0];
+                item.ShowAllAttributes();
+            }
+            else if (listOfBAGObjects[0].GetType() == typeof(Accommodation))
+            {
+                var item = (Accommodation)listOfBAGObjects[0];
+                item.ShowAllAttributes();
+            }
+
         }
 
     }

@@ -14,25 +14,24 @@ namespace LaixerGMLTest.BAG_Objects
         private List<BAGAttribute> attributeList;
         private List<BAGrelationAttribute> relations;
 
-        private string _objectType;
+        // The XML tag of this object
         private string _tag;
+
+        // The name of this object
         private string _name;
 
+        // the object type of this object
+        private string _objectType;
+        
         private string originalObj = "";
         private string processId = "";
         private int BAGObjectId;
 
-
-        public BAGObject(string tag ="",string name ="", string objecType = "")
+        public BAGObject(string tag ="",string name ="", string objectType = "")
         {
-            // The XML tag of this object
             _tag = tag;
-
-            // The name of this object
             _name = name;
-
-            // the object type of this object
-            _objectType = objecType;
+            _objectType = objectType;
 
             // Dictionary to acces the attributes based on key pair values
             dictionaryBAGObjects = new Dictionary<string, BAGAttribute>();
@@ -52,7 +51,6 @@ namespace LaixerGMLTest.BAG_Objects
             Add(new BAGdatetimeAttribute("einddatumTijdvakGeldigheid", "bag_LVC:tijdvakgeldigheid/bagtype:einddatumTijdvakGeldigheid"));
             Add(new BAGstringAttribute  (20, "documentnummer", "bag_LVC:bron/bagtype:documentnummer"));
             Add(new BAGdatetimeAttribute("documentdatum", "bag_LVC:bron/bagtype:documentdatum"));
-
         }
 
         /// <summary>
@@ -74,19 +72,12 @@ namespace LaixerGMLTest.BAG_Objects
         /// Add a relation to the object
         /// </summary>
         /// <param name="relation">The relation attribute</param>
-        public void AddRelation(BAGrelationAttribute relation)
-        {
-            // Add a relation to the object
-            relations.Add(relation);
-        }
+        public void AddRelation(BAGrelationAttribute relation){relations.Add(relation);}
 
-        public string GetObjectType()
-        {
-            return _objectType;
-        }
+        public string GetObjectType(){ return _objectType;}
         
         /// <summary>
-        /// Get the relations
+        /// Get the relations of this object
         /// </summary>
         /// <param name="relationName"></param>
         public List<BAGrelationAttribute> GetRelations(string relationName = "")
@@ -103,10 +94,7 @@ namespace LaixerGMLTest.BAG_Objects
             return result;
         }
 
-        public string GetTag()
-        {
-            return _tag;
-        }
+        public string GetTag() {return _tag;}
 
         /// <summary>
         /// Get the unique id of the BAG_Object
@@ -116,7 +104,7 @@ namespace LaixerGMLTest.BAG_Objects
         {
             // Find the attribute by Id
             var result = GetAttribute("identificatie");
-            if(result == null)
+            if (result == null)
             {
                 return ""; // return an empty string if there is no Id
             }
@@ -141,31 +129,58 @@ namespace LaixerGMLTest.BAG_Objects
         /// <returns></returns>
         public BAGAttribute GetAttribute(string name)
         {
-            if(HasAttribute(name))
-            {
-                return attributeList.Find(x => x.GetName() == name);
-            }
-            return null;
+            #region original if statement
+            /*
+             *  if(HasAttribute(name))
+             *  {
+             *      return attributeList.Find(x => x.GetName() == name);
+             *  }
+             *  return null;
+            */
+            #endregion
+
+            // Ternaery operator style for the if statement above
+            return HasAttribute(name) ? attributeList.Find(x => x.GetName() == name) : null;
+
         }
 
-        public List<BAGAttribute> GetListOfAttributes()
+        public List<BAGAttribute> GetListOfAttributes() { return attributeList; }
+
+        /// <summary>
+        /// Fill the attributes of this object
+        /// </summary>
+        /// <param name="values"></param>
+        public void SetAttributes(List<string> values)
         {
-            return attributeList;
+            int i = 0;
+
+            int max = values.Count;
+            foreach(var attribute in attributeList)
+            {
+                SetAttribute(attribute.GetName(),values[i]);
+                i++;
+            }
+
         }
 
+        /// <summary>
+        /// Set the value for the attribute for this object
+        /// </summary>
+        /// <param name="attributeName">Name of the attribute</param>
+        /// <param name="value">The value for the object</param>
         public void SetAttribute(string attributeName, string value)
         {
             if (HasAttribute(attributeName))
             {
-                foreach(var item in attributeList)
-                {
-                    if(item.GetName() == attributeName)
-                    {
-                        item.SetValue(value);
-                    }
-                }
+                GetAttribute(attributeName).SetValue(value);
             }
         }
+
+        /// <summary>
+        /// Return the name of this object
+        /// </summary>
+        /// <returns></returns>
+        public string GetName() { return _name; }
 
     }
 }
