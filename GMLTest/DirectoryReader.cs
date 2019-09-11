@@ -15,6 +15,8 @@ namespace LaixerGMLTest
         private static readonly string fileDirectory = "";
         private string[] splitFile;
         private uint directoryDepth = 0;
+        private int readDirectoryFolder = 0;
+
 
         private LaixerBagReader myReader;
 
@@ -94,7 +96,7 @@ namespace LaixerGMLTest
                 if(readFirst)
                 {
                     // Read the first map in the directory and make a list of the files
-                    var filesInDirectory = Directory.EnumerateFiles(listOfDirectories[5]).ToList();
+                    var filesInDirectory = Directory.EnumerateFiles(listOfDirectories[readDirectoryFolder]).ToList();
 
                     // Read the first file in the list
                     ReadFileAsync(filesInDirectory[0]);

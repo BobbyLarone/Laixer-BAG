@@ -255,6 +255,11 @@ namespace LaixerGMLTest
                                         {
                                             readGMLAttributes(reader);
                                         }
+
+                                        if(reader.LocalName == "hoofdadres")
+                                        {
+                                            reader.Read();
+                                        }
                                         break;
                                     }
                                 case XmlNodeType.Text:
@@ -396,6 +401,10 @@ namespace LaixerGMLTest
                                     {
                                         elementName = reader.LocalName;
                                         Console.WriteLine($"reading the element now: {reader.Name}");
+                                        //if (reader.LocalName == "gerelateerdeWoonplaats")
+                                        {
+                                            reader.Read();
+                                        }
                                         break;
                                     }
                                 case XmlNodeType.Text:
@@ -444,6 +453,10 @@ namespace LaixerGMLTest
                                         elementName = reader.LocalName;
 
                                         Console.WriteLine($"reading the element now: {reader.Name}");
+                                        if(reader.LocalName == "gerelateerdeOpenbareRuimte")
+                                        {
+                                            reader.Read();
+                                        }
                                         break;
                                     }
                                 case XmlNodeType.Text:
