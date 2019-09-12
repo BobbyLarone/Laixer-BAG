@@ -15,6 +15,11 @@ namespace LaixerGMLTest.BAG_Objects
             "Woonplaats aangewezen", "Woonplaats ingetrokken"
         };
 
+        public string WoonplaatsNaam { get => GetAttribute("woonplaatsNaam").GetValue(); }
+        public string WoonplaatsStatus { get => GetAttribute("woonplaatsStatus").GetValue(); }
+        public string Geovlak { get => GetAttribute("geovlak").GetValue(); }
+        public string Geom_valid { get => GetAttribute("geom_valid").GetValue(); }
+
         public Residence() : base("bag_LVC:Woonplaats", "woonplaats","WPL")
         {
             Add(new BAGstringAttribute(80, "woonplaatsNaam", "bag_LVC:woonplaatsNaam"));

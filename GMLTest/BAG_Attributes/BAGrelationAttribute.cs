@@ -1,11 +1,9 @@
 ﻿using LaixerGMLTest.BAG_Objects;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace LaixerGMLTest.BAG_Attributes
 {
-    class BAGrelationAttribute : BAGAttribute
+    public class BAGrelationAttribute : BAGAttribute
     {
         private string _relationName;
         private BAGObject _parent;
@@ -14,7 +12,7 @@ namespace LaixerGMLTest.BAG_Attributes
 
         //idk yet what kind of type these things are... sooo default for me is string
 
-        public BAGrelationAttribute(BAGObject parent,string relationName, int length, string name, string tag, List<string> extraAttributes) 
+        public BAGrelationAttribute(BAGObject parent, string relationName, int length, string name, string tag, List<string> extraAttributes)
             : base(length, name, tag)
         {
             _parent = parent;

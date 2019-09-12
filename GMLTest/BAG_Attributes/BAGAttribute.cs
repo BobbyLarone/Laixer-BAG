@@ -8,7 +8,7 @@ namespace LaixerGMLTest.BAG_Attributes
     /// <summary>
     /// Base class for all the other attributes
     /// </summary>
-    class BAGAttribute
+    public class BAGAttribute
     {
         private int _length;
         private string _name;

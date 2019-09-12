@@ -3,7 +3,6 @@ using LaixerGMLTest.Object_Relations;
 using NetTopologySuite.IO.GML2;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
@@ -71,15 +70,15 @@ namespace LaixerGMLTest
                     switch (reader.NodeType)
                     {
                         case XmlNodeType.Element:
-                        {
-                            await CheckRootElement(reader).ConfigureAwait(false);
-                            break;
-                        }
+                            {
+                                await CheckRootElement(reader).ConfigureAwait(false);
+                                break;
+                            }
                         default:
-                        {
-                            Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
-                            break;
-                        }
+                            {
+                                Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
+                                break;
+                            }
                     }
                 }
             }
@@ -187,7 +186,7 @@ namespace LaixerGMLTest
                         listOfBAGObjects.Add(myObject);
 
                         // fill the object with al the stuff that we can find in the xml file
-                        while(reader.Read())
+                        while (reader.Read())
                         {
                             switch (reader.NodeType)
                             {
@@ -201,7 +200,7 @@ namespace LaixerGMLTest
                                             myObject.SetAttribute("geovlak", geoData);
                                         }
 
-                                        if(reader.LocalName == "hoofdadres")
+                                        if (reader.LocalName == "hoofdadres")
                                         {
                                             //skip one node to read the text
                                             reader.Read();
@@ -218,7 +217,7 @@ namespace LaixerGMLTest
                                 case XmlNodeType.EndElement:
                                     {
                                         // If the end element is reached
-                                        if(reader.LocalName == nameOfelement)
+                                        if (reader.LocalName == nameOfelement)
                                         {
                                             // We can get out of this function, because we reached the end tag of this element
                                             return;
@@ -248,6 +247,11 @@ namespace LaixerGMLTest
                                 case XmlNodeType.Element:
                                     {
                                         elementName = reader.LocalName;
+                                        if (reader.LocalName.ToLower() == "polygon")
+                                        {
+                                            var value = await reader.ReadOuterXmlAsync();
+                                            myObject.SetAttribute("geovlak", value);
+                                        }
                                         Console.WriteLine($"reading the element now: {reader.Name}");
                                         break;
                                     }
@@ -255,9 +259,9 @@ namespace LaixerGMLTest
                                     {
                                         // retrieve the value in the node
                                         string value = await reader.GetValueAsync().ConfigureAwait(false);
+                                        myObject.SetAttribute(elementName, value);
                                         Console.WriteLine($"Text Node: {value}");
 
-                                        myObject.SetAttribute(elementName, value);
                                         break;
                                     }
                                 case XmlNodeType.EndElement:
@@ -398,11 +402,11 @@ namespace LaixerGMLTest
                                 case XmlNodeType.Element:
                                     {
                                         elementName = reader.LocalName;
-                                        if(reader.LocalName == "gerelateerdeOpenbareRuimte")
+                                        if (reader.LocalName == "gerelateerdeOpenbareRuimte")
                                         {
                                             reader.Read();
                                         }
-                                        if(reader.LocalName == "gerelateerdeWoonplaats")
+                                        if (reader.LocalName == "gerelateerdeWoonplaats")
                                         {
                                             reader.Read();
                                         }
@@ -594,7 +598,7 @@ namespace LaixerGMLTest
             string gmlString = "";
             foreach (var item in temp)
             {
-                if(gmlString == "") { gmlString = $"{item.CoordinateValue}"; }
+                if (gmlString == "") { gmlString = $"{item.CoordinateValue}"; }
 
                 gmlString = $"{gmlString},{item.CoordinateValue}";
             }
@@ -613,12 +617,12 @@ namespace LaixerGMLTest
 
         private void printAllAttributes()
         {
-            if(listOfBAGObjects[0].GetType() == typeof(Berth))
+            if (listOfBAGObjects[0].GetType() == typeof(Berth))
             {
                 var item = (Berth)listOfBAGObjects[0];
                 item.ShowAllAttributes();
             }
-            else if(listOfBAGObjects[0].GetType() == typeof(Location))
+            else if (listOfBAGObjects[0].GetType() == typeof(Location))
             {
                 var item = (Location)listOfBAGObjects[0];
                 item.ShowAllAttributes();

@@ -3,32 +3,55 @@ using System.Diagnostics;
 
 namespace LaixerGMLTest
 {
-    class Program
+    internal sealed class Program
     {
-        static string filePath; // = @"C:\Users\Workstation\Documents\MyProjects\Documents\XML";
-        // folder to the files
-        //static string filePath2 = @"C:\Users\Workstation\Documents\Fundermaps\Documents\BAG data\inspireadressen";
+        private DirectoryReader directoryReader;
+        private string path;
+        private ILoader loader;
 
-        static void Main(string[] args)
+        private Program Extract(string path)
         {
-            var reader = new DirectoryReader();
+            // TODO: Step 1
 
-            var timer = new Stopwatch();
-            timer.Start();
+            this.path = path;
+            return this;
+        }
 
+        private Program Load<TLoader>()
+            where TLoader : ILoader, new()
+        {
+            // TODO: Step 2
+
+            loader = new TLoader(); // TODO: Fow now
+            return this;
+        }
+
+        private Program Process()
+        {
+            // TODO: Run
+            directoryReader = new DirectoryReader(loader); // TODO: Fow now
+            directoryReader.readFolder(path);
+            return this;
+        }
+
+        private static void Main(string[] args)
+        {
             if (args.Length == 0)
             {
                 Console.WriteLine($"tool.exe [path]");
                 return;
             }
 
-            filePath = args[0];
+            var timer = new Stopwatch();
+            timer.Start();
 
-            //reader.readFolder(filePath);
-            reader.readFolder(filePath);
+            var processedObjects = new Program()
+                .Extract(path: args[0])
+                .Load<DatabaseLoader>()
+                .Process();
 
             timer.Stop();
-            Console.WriteLine($"Made {reader.GetTotalObjects()} objects!");
+            Console.WriteLine($"Made {processedObjects} objects!");
             Console.WriteLine($"Read within {timer.Elapsed.TotalSeconds} seconds");
             Console.ReadLine();
         }

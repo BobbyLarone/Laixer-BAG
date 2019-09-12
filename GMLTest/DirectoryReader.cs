@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LaixerGMLTest
 {
@@ -15,14 +12,17 @@ namespace LaixerGMLTest
         private string[] splitFile;
         private uint directoryDepth = 0;
         private int readDirectoryFolder = 1;
-
+        private readonly ILoader loader;
 
         private LaixerBagReader myReader;
 
         /// <summary>
         /// The constructor
         /// </summary>
-        public DirectoryReader(){}
+        public DirectoryReader(ILoader loader)
+        {
+            this.loader = loader;
+        }
 
         /// <summary>
         /// Read the content of an directory and show the amount of files and directories found
@@ -30,7 +30,7 @@ namespace LaixerGMLTest
         /// <param name="filePath">The path to the directory</param>
         public void readFolder(string filePath)
         {
-            readFolderContentAsync(filePath,true,true);
+            readFolderContentAsync(filePath, true, true);
         }
 
         /// <summary>
@@ -39,9 +39,9 @@ namespace LaixerGMLTest
         /// <param name="filePath">Path to the file</param>
         /// <param name="subFiles">Enable reading the subfiles</param>
         /// <param name="readFirst">Enable reading the first map and first file in that map</param>
-        private void readFolderContentAsync(string filePath,bool subFiles = false, bool readFirst = false)
+        private void readFolderContentAsync(string filePath, bool subFiles = false, bool readFirst = false)
         {
-            if(Directory.Exists(filePath))
+            if (Directory.Exists(filePath))
             {
                 // This is to keep track of the amount of files
                 uint fileCount = 0;
@@ -57,7 +57,7 @@ namespace LaixerGMLTest
                 Console.WriteLine($"Found: {listOfDirectories.Count} Directories and {listOfFiles.Count} Files");
                 Console.WriteLine("These are the directories found in the current directory:");
 
-                foreach(var path in listOfDirectories)
+                foreach (var path in listOfDirectories)
                 {
                     Console.WriteLine($"\tFound: {path}");
                 }
@@ -67,7 +67,7 @@ namespace LaixerGMLTest
                 foreach (var file in listOfFiles)
                 {
                     // If we reached the maximum amount of files to read.. we stop reading further
-                    if(fileCount >= maxFileCount){ break; }
+                    if (fileCount >= maxFileCount) { break; }
 
                     // Split the file on the " . " and store this in a new array.
                     splitFile = file.Split(".");
@@ -77,13 +77,13 @@ namespace LaixerGMLTest
                 }
 
                 // If read the files in the subFolders
-                if(subFiles)
+                if (subFiles)
                 {
-                    foreach(var fileOrDirectory in listOfDirectories)
+                    foreach (var fileOrDirectory in listOfDirectories)
                     {
                         Console.WriteLine($"\nIn directory: {fileOrDirectory}");
                         directoryDepth++;
-                        readFolderContentAsync(fileOrDirectory,subFiles);
+                        readFolderContentAsync(fileOrDirectory, subFiles);
                         directoryDepth--;
                     }
                 }
@@ -91,7 +91,7 @@ namespace LaixerGMLTest
                 //TODO: transform this into a foreach so that it can read ALL the files
 
                 // Read the first file of te first map
-                if(readFirst)
+                if (readFirst)
                 {
                     // Read the first map in the directory and make a list of the files
                     var filesInDirectory = Directory.EnumerateFiles(listOfDirectories[readDirectoryFolder]).ToList();
