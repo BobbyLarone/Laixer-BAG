@@ -21,7 +21,6 @@ namespace LaixerGMLTest
 
         private XmlReader reader;
         private XmlNamespaceManager manager;
-        private GMLReader gmlReader; // its here... just for testing purpouses
 
         public string logText = "";
         public string xmlOutput = "";
@@ -165,7 +164,6 @@ namespace LaixerGMLTest
             }
         }
 
-
         private async Task ReadXMLBody(XmlReader reader)
         {
             while (await reader.ReadAsync())
@@ -240,8 +238,6 @@ namespace LaixerGMLTest
                         var myObject = (Berth)BAGObjectFactory.GetBagObjectByXML(nameOfelement);
                         listOfBAGObjects.Add(myObject);
 
-                        myObject.ShowAllAttributes();
-
                         // fill the object with al the stuff that we can find in the xml file
                         while(reader.Read())
                         {
@@ -253,7 +249,9 @@ namespace LaixerGMLTest
                                         Console.WriteLine($"reading the element now: {reader.Name}");
                                         if(reader.LocalName == "ligplaatsGeometrie")
                                         {
-                                            readGMLAttributes(reader);
+                                            var geoData = ReadGMLAttributes(reader);
+                                            myObject.SetAttribute("geovlak", geoData);
+
                                         }
 
                                         if(reader.LocalName == "hoofdadres")
@@ -278,6 +276,7 @@ namespace LaixerGMLTest
                                         if(reader.LocalName == nameOfelement)
                                         {
                                             // We can get out of this function, because we reached the end tag of this element
+                                            myObject.ShowAllAttributes();
                                             return;
                                         }
                                         break;
@@ -289,6 +288,8 @@ namespace LaixerGMLTest
                                     }
                             }
                         }
+
+
                         break;
                     }
                 case "Woonplaats":
@@ -637,23 +638,25 @@ namespace LaixerGMLTest
             }
         }
 
-        private void readGMLAttributes(XmlReader reader)
+        private string ReadGMLAttributes(XmlReader reader)
         {
             var myReader = reader;
-            var gmlReader = new GMLReader();
-
-            var gmlReader2 = new GMLReader(new NetTopologySuite.Geometries.GeometryFactory(new NetTopologySuite.Geometries.PrecisionModel(), 0));
-
-            var result = gmlReader2.Read(myReader);
-
+            var gmlReader = new GMLReader(new NetTopologySuite.Geometries.GeometryFactory(new NetTopologySuite.Geometries.PrecisionModel(), 0));
+            var result = gmlReader.Read(myReader);
             var temp = result.Coordinates.ToList();
-            Console.WriteLine(result.SRID);
-            Console.WriteLine(result);
+            string gmlString = "";
+//            Console.WriteLine(result.SRID);
+//            Console.WriteLine(result);
+
 
             foreach (var item in temp)
             {
                 Console.WriteLine(item.CoordinateValue);
+                if(gmlString == "") { gmlString = $"{item.CoordinateValue}"; }
+
+                gmlString = $"{gmlString},{item.CoordinateValue}";
             }
+            return gmlString;
         }
 
         private void convertToGPS()
