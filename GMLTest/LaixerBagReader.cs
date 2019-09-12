@@ -384,9 +384,13 @@ namespace LaixerGMLTest
                                     {
                                         elementName = reader.LocalName;
                                         Console.WriteLine($"reading the element now: {reader.Name}");
-                                        //if (reader.LocalName == "gerelateerdeWoonplaats")
+                                        if (reader.LocalName == "gerelateerdeWoonplaats")
                                         {
                                             reader.Read();
+                                        }
+                                        if (reader.LocalName == "VerkorteOpenbareruimteNaam")
+                                        {
+
                                         }
                                         break;
                                     }
@@ -406,6 +410,7 @@ namespace LaixerGMLTest
                                         if (reader.LocalName == nameOfelement)
                                         {
                                             // We can get out of this function, because we reached the end tag of this element
+                                            myObject.ShowAllAttributes();
                                             return;
                                         }
                                         break;
@@ -461,7 +466,6 @@ namespace LaixerGMLTest
                                         Console.WriteLine($"End Element {reader.Name} \n");
                                         if (reader.LocalName == nameOfelement)
                                         {
-                                            myObject.ShowAllAttributes();
                                             // We can get out of this function, because we reached the end tag of this element
                                             return;
                                         }

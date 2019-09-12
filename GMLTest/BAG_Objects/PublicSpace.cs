@@ -32,10 +32,10 @@ namespace LaixerGMLTest.BAG_Objects
         public PublicSpace() : base("bag_LVC:OpenbareRuimte", "openbareruimte", "OPR")
         {
             Add(new BAGstringAttribute(80, "openbareRuimteNaam", "bag_LVC:openbareRuimteNaam"));
-            Add(new BAGenumAttribute(publicSpaceStatusTypes,publicSpaceStatusTypes.Count, "openbareRuimteStatus", "bag_LVC:openbareruimteStatus"));
+            Add(new BAGenumAttribute(publicSpaceStatusTypes,publicSpaceStatusTypes.Count, "openbareruimteStatus", "bag_LVC:openbareruimteStatus"));
             Add(new BAGenumAttribute(publicSpaceTypes,publicSpaceTypes.Count, "openbareRuimteType", "bag_LVC:openbareRuimteType"));
             Add(new BAGstringAttribute(16, "gerelateerdeWoonplaats", "bag_LVC:gerelateerdeWoonplaats/bag_LVC:identificatie"));
-            Add(new BAGAttribute(80, "verkorteOpenbareRuimteNaam", "nen5825:VerkorteOpenbareruimteNaam"));
+            Add(new BAGAttribute(80, "VerkorteOpenbareruimteNaam", "nen5825:VerkorteOpenbareruimteNaam"));
 
         }
 
