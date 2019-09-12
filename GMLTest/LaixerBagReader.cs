@@ -17,49 +17,17 @@ namespace LaixerGMLTest
     /// </summary>
     class LaixerBagReader
     {
-        const string filename = @"C:\Users\Workstation\Documents\MyProjects\Documents\XML\9999LIG08082019-000001-reformatted.xml";
+        string filename = @"C:\Users\Workstation\Documents\MyProjects\Documents\XML\9999LIG08082019-000001-reformatted.xml";
 
-        private XmlReader reader;
-        private XmlNamespaceManager manager;
-
-        public string logText = "";
-        public string xmlOutput = "";
+        public string logText;
+        public string xmlOutput;
 
         public List<BAGObject> listOfBAGObjects;
         BAGObjectFactory BAGObjectFactory = new BAGObjectFactory();
 
         public LaixerBagReader()
         {
-            Console.WriteLine("Starting to open the file...........");
-            //gmlReader = new GMLReader();
             listOfBAGObjects = new List<BAGObject>();
-
-            XmlReaderSettings settings = new XmlReaderSettings
-            {
-                Async = true
-            };
-            reader = XmlReader.Create(filename, settings);
-            var table = reader.NameTable;
-
-            manager = new XmlNamespaceManager(table);
-            FillXMLNSManager();
-        }
-
-        /// <summary>
-        /// Fill the XML namespace manager with namespaces
-        /// </summary>
-        private void FillXMLNSManager()
-        {
-            manager.AddNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
-            manager.AddNamespace("xs", "http://www.w3.org/2001/XMLSchema");
-            manager.AddNamespace("xb", "http://www.kadaster.nl/schemas/bag-verstrekkingen/extract-deelbestand-lvc/v20090901");
-            manager.AddNamespace("bag_LVC", "http://www.kadaster.nl/schemas/imbag/lvc/v20090901");
-            manager.AddNamespace("gml", "http://www.opengis.net/gml");
-            manager.AddNamespace("xlink", "http://www.w3.org/1999/xlink");
-            manager.AddNamespace("bagtype", "http://www.kadaster.nl/schemas/imbag/imbag-types/v20090901");
-            manager.AddNamespace("nen5825", "http://www.kadaster.nl/schemas/imbag/nen5825/v20090901");
-            manager.AddNamespace("product_LVC", "http://www.kadaster.nl/schemas/bag-verstrekkingen/extract-producten-lvc/v20090901");
-            manager.AddNamespace("selecties-extract", "http://www.kadaster.nl/schemas/bag-verstrekkingen/extract-selecties/v20090901");
         }
 
         /// <summary>
@@ -154,7 +122,6 @@ namespace LaixerGMLTest
                 {
                     case XmlNodeType.Element:
                         {
-                            Console.WriteLine("reading the element now: ");
                             await PrefixReader(reader).ConfigureAwait(false);
                             break;
                         }
@@ -197,8 +164,7 @@ namespace LaixerGMLTest
 
                 case "bag_LVC":
                     {
-                        Console.WriteLine($"Start Element {reader.Name}");
-
+                        //Console.WriteLine($"Start Element {reader.Name}");
                         await BAGObjectGenerator(reader).ConfigureAwait(false);
                         break;
                     }
@@ -228,16 +194,16 @@ namespace LaixerGMLTest
                                 case XmlNodeType.Element:
                                     {
                                         elementName = reader.LocalName;
-                                        Console.WriteLine($"reading the element now: {reader.Name}");
-                                        if(reader.LocalName == "ligplaatsGeometrie")
+                                        if (reader.LocalName == "ligplaatsGeometrie")
                                         {
+                                            // insert the list of position data into the attribute :geovlak
                                             var geoData = ReadGMLAttributes(reader);
                                             myObject.SetAttribute("geovlak", geoData);
-
                                         }
 
                                         if(reader.LocalName == "hoofdadres")
                                         {
+                                            //skip one node to read the text
                                             reader.Read();
                                         }
                                         break;
@@ -246,32 +212,25 @@ namespace LaixerGMLTest
                                     {
                                         // retrieve the value in the node
                                         string value = await reader.GetValueAsync().ConfigureAwait(false);
-                                        Console.WriteLine($"Text Node: {value}");
-
                                         myObject.SetAttribute(elementName, value);
                                         break;
                                     }
                                 case XmlNodeType.EndElement:
                                     {
-                                        // write the end element name. For testing purpouse
-                                        Console.WriteLine($"End Element {reader.Name} \n");
+                                        // If the end element is reached
                                         if(reader.LocalName == nameOfelement)
                                         {
                                             // We can get out of this function, because we reached the end tag of this element
-                                            myObject.ShowAllAttributes();
                                             return;
                                         }
                                         break;
                                     }
                                 default:
                                     {
-                                        Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
                                         break;
                                     }
                             }
                         }
-
-
                         break;
                     }
                 case "Woonplaats":
@@ -439,8 +398,6 @@ namespace LaixerGMLTest
                                 case XmlNodeType.Element:
                                     {
                                         elementName = reader.LocalName;
-
-                                        Console.WriteLine($"reading the element now: {reader.Name}");
                                         if(reader.LocalName == "gerelateerdeOpenbareRuimte")
                                         {
                                             reader.Read();
@@ -455,15 +412,12 @@ namespace LaixerGMLTest
                                     {
                                         // retrieve the value in the node
                                         string value = await reader.GetValueAsync().ConfigureAwait(false);
-                                        Console.WriteLine($"Text Node: {value}");
-
                                         myObject.SetAttribute(elementName, value);
                                         break;
                                     }
                                 case XmlNodeType.EndElement:
                                     {
                                         // write the end element name. For testing purpouse
-                                        Console.WriteLine($"End Element {reader.Name} \n");
                                         if (reader.LocalName == nameOfelement)
                                         {
                                             // We can get out of this function, because we reached the end tag of this element
@@ -473,7 +427,6 @@ namespace LaixerGMLTest
                                     }
                                 default:
                                     {
-                                        Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
                                         break;
                                     }
                             }
@@ -635,14 +588,12 @@ namespace LaixerGMLTest
             var gmlReader = new GMLReader(new NetTopologySuite.Geometries.GeometryFactory(new NetTopologySuite.Geometries.PrecisionModel(), 0));
             var result = gmlReader.Read(myReader);
             var temp = result.Coordinates.ToList();
+
+            //var r = NetTopologySuite.IO.WKTWriter.ToLineString(result.Coordinates);
+
             string gmlString = "";
-//            Console.WriteLine(result.SRID);
-//            Console.WriteLine(result);
-
-
             foreach (var item in temp)
             {
-                Console.WriteLine(item.CoordinateValue);
                 if(gmlString == "") { gmlString = $"{item.CoordinateValue}"; }
 
                 gmlString = $"{gmlString},{item.CoordinateValue}";
@@ -652,21 +603,12 @@ namespace LaixerGMLTest
 
         private void convertToGPS()
         {
-            //var csWgs84 = ProjNet.CoordinateSystems.GeographicCoordinateSystems.WGS84;
-            //const string epsg27700 = "..."; // see http://epsg.io/27700
-            //var cs27700 = ProjNet.Converters.WellKnownText.CoordinateSystemWktReader.Parse(epsg27700);
-            //var ctFactory = new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory();
-            //var ct = ctFactory.CreateFromCoordinateSystems(csWgs84, cs27700);
-            //var mt = ct.MathTransform;
+            // WIP
 
-            //var gf = new NetTopologySuite.Geometries.GeometryFactory(27700);
-
-            //// BT2 8HB
-            //var myPostcode = gf.CreatePoint(mt.Transform(new Coordinate(-5.926223, 54.592395)));
-            //// DT11 0DB
-            //var myMatesPostcode = gf.CreatePoint(mt.Transform(new Coordinate(-2.314507, 50.827157)));
-
-            //double distance = myPostcode.Distance(myMatesPostcode);
+            /*
+             * This function will take a coordinate in the epsg28996 format 
+             * and then calculate the gps position based on epgs4326
+            */
         }
 
         private void printAllAttributes()

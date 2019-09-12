@@ -12,18 +12,17 @@ namespace LaixerGMLTest
     /// </summary>
     class DirectoryReader
     {
-        private static readonly string fileDirectory = "";
         private string[] splitFile;
         private uint directoryDepth = 0;
-        private int readDirectoryFolder = 2;
+        private int readDirectoryFolder = 1;
 
 
         private LaixerBagReader myReader;
 
-        public DirectoryReader()
-        {
-
-        }
+        /// <summary>
+        /// The constructor
+        /// </summary>
+        public DirectoryReader(){}
 
         /// <summary>
         /// Read the content of an directory and show the amount of files and directories found
@@ -31,7 +30,6 @@ namespace LaixerGMLTest
         /// <param name="filePath">The path to the directory</param>
         public void readFolder(string filePath)
         {
-
             readFolderContentAsync(filePath,true,true);
         }
 
@@ -99,12 +97,15 @@ namespace LaixerGMLTest
                     var filesInDirectory = Directory.EnumerateFiles(listOfDirectories[readDirectoryFolder]).ToList();
 
                     // Read the first file in the list
-                    ReadFileAsync(filesInDirectory[0]);
+                    ReadFileAsync(filesInDirectory[1]);
                 }
             }
         }
 
-
+        /// <summary>
+        /// Read the file
+        /// </summary>
+        /// <param name="filePath"></param>
         public void ReadFile(string filePath)
         {
             ReadFileAsync(filePath);
@@ -116,9 +117,7 @@ namespace LaixerGMLTest
             Console.WriteLine($"Going to read the following file : {filePath}");
 
             // Make some room in the console
-            Console.WriteLine("\n\n\n\n\n");
             myReader.ReadXML(filePath);
-
         }
 
         public int GetTotalObjects()

@@ -10,7 +10,6 @@ namespace LaixerGMLTest.BAG_Objects
         public BAGAddressableObject(string tag, string name, string objectType)
             : base(tag,name,objectType)
         {
-            Console.WriteLine("Created a new Adressable Object");
             Add(new BAGstringAttribute(16, "hoofdadres", "bag_LVC:gerelateerdeAdressen/bag_LVC:hoofdadres/bag_LVC:identificatie"));
             AddRelation(new BAGrelationAttribute(
                 this, 
