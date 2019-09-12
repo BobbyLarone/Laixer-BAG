@@ -1,14 +1,17 @@
 ﻿using LaixerGMLTest.BAG_Attributes;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace LaixerGMLTest.BAG_Objects
 {
+    public static class StringExtensions
+    {
+        public static bool AsBoolean(this string str) => str[0] == 'J';
+    }
+
     /// <summary>
     /// Base class for all the other objects
     /// </summary>
-    class BAGObject
+    public class BAGObject
     {
         private Dictionary<string, BAGAttribute> dictionaryBAGObjects;
         private List<BAGAttribute> attributeList;
@@ -22,12 +25,18 @@ namespace LaixerGMLTest.BAG_Objects
 
         // the object type of this object
         private string _objectType;
-        
-        private string originalObj = "";
-        private string processId = "";
-        private int BAGObjectId;
 
-        public BAGObject(string tag ="",string name ="", string objectType = "")
+        public string Identification { get => GetAttribute("identificatie").GetValue(); }
+        public bool AanduidingRecordInactief { get => GetAttribute("aanduidingRecordInactief").GetValue().AsBoolean(); }
+        public string AanduidingRecordCorrectie { get => GetAttribute("aanduidingRecordCorrectie").GetValue(); }
+        public bool Officieel { get => GetAttribute("officieel").GetValue().AsBoolean(); }
+        public bool InOnderzoek { get => GetAttribute("inOnderzoek").GetValue().AsBoolean(); }
+        public string BegindatumTijdvakGeldigheid { get => GetAttribute("begindatumTijdvakGeldigheid").GetValue(); }
+        public string EinddatumTijdvakGeldigheid { get => GetAttribute("einddatumTijdvakGeldigheid").GetValue(); }
+        public string DocumentNummer { get => GetAttribute("documentnummer").GetValue(); }
+        public string DocumentDatum { get => GetAttribute("documentdatum").GetValue(); }
+
+        public BAGObject(string tag = "", string name = "", string objectType = "")
         {
             _tag = tag;
             _name = name;
@@ -42,14 +51,14 @@ namespace LaixerGMLTest.BAG_Objects
             // This holds the relations to other attributes
             relations = new List<BAGrelationAttribute>();
 
-            Add(new BAGstringAttribute  (16, "identificatie", "identificatie"));
-            Add(new BAGbooleanAttribute ("aanduidingRecordInactief", "bag_LVC:aanduidingRecordInactief"));
-            Add(new BAGintegerAttribute ("aanduidingRecordCorrectie", "bag_LVC:aanduidingRecordCorrectie"));
-            Add(new BAGbooleanAttribute ("officieel", "bag_LVC:officieel"));
-            Add(new BAGbooleanAttribute ("inOnderzoek", "bag_LVC:inOnderzoek"));
+            Add(new BAGstringAttribute(16, "identificatie", "identificatie"));
+            Add(new BAGbooleanAttribute("aanduidingRecordInactief", "bag_LVC:aanduidingRecordInactief"));
+            Add(new BAGintegerAttribute("aanduidingRecordCorrectie", "bag_LVC:aanduidingRecordCorrectie"));
+            Add(new BAGbooleanAttribute("officieel", "bag_LVC:officieel"));
+            Add(new BAGbooleanAttribute("inOnderzoek", "bag_LVC:inOnderzoek"));
             Add(new BAGdatetimeAttribute("begindatumTijdvakGeldigheid", "bag_LVC:tijdvakgeldigheid/bagtype:begindatumTijdvakGeldigheid"));
             Add(new BAGdatetimeAttribute("einddatumTijdvakGeldigheid", "bag_LVC:tijdvakgeldigheid/bagtype:einddatumTijdvakGeldigheid"));
-            Add(new BAGstringAttribute  (20, "documentnummer", "bag_LVC:bron/bagtype:documentnummer"));
+            Add(new BAGstringAttribute(20, "documentnummer", "bag_LVC:bron/bagtype:documentnummer"));
             Add(new BAGdatetimeAttribute("documentdatum", "bag_LVC:bron/bagtype:documentdatum"));
         }
 
@@ -72,10 +81,10 @@ namespace LaixerGMLTest.BAG_Objects
         /// Add a relation to the object
         /// </summary>
         /// <param name="relation">The relation attribute</param>
-        public void AddRelation(BAGrelationAttribute relation){relations.Add(relation);}
+        public void AddRelation(BAGrelationAttribute relation) { relations.Add(relation); }
 
-        public string GetObjectType(){ return _objectType;}
-        
+        public string GetObjectType() { return _objectType; }
+
         /// <summary>
         /// Get the relations of this object
         /// </summary>
@@ -84,9 +93,9 @@ namespace LaixerGMLTest.BAG_Objects
         {
             var result = new List<BAGrelationAttribute>();
 
-            foreach(var relation in relations)
+            foreach (var relation in relations)
             {
-                if(relation == null || relationName == relation.GetRelationName())
+                if (relation == null || relationName == relation.GetRelationName())
                 {
                     result.Add(relation);
                 }
@@ -94,7 +103,7 @@ namespace LaixerGMLTest.BAG_Objects
             return result;
         }
 
-        public string GetTag() {return _tag;}
+        public string GetTag() { return _tag; }
 
         /// <summary>
         /// Get the unique id of the BAG_Object
@@ -155,9 +164,9 @@ namespace LaixerGMLTest.BAG_Objects
             int i = 0;
 
             int max = values.Count;
-            foreach(var attribute in attributeList)
+            foreach (var attribute in attributeList)
             {
-                SetAttribute(attribute.GetName(),values[i]);
+                SetAttribute(attribute.GetName(), values[i]);
                 i++;
             }
 
