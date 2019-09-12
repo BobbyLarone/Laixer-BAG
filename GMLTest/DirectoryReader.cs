@@ -15,7 +15,7 @@ namespace LaixerGMLTest
         private static readonly string fileDirectory = "";
         private string[] splitFile;
         private uint directoryDepth = 0;
-        private int readDirectoryFolder = 0;
+        private int readDirectoryFolder = 1;
 
 
         private LaixerBagReader myReader;

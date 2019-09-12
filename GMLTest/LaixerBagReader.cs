@@ -63,24 +63,6 @@ namespace LaixerGMLTest
         }
 
         /// <summary>
-        /// Test Function to check if the namespaces are correctly places inside the XML namespace manager
-        /// </summary>
-        public void TheNameSpaces()
-        {
-            Console.WriteLine("The namespace reader is called :");
-
-            var result = manager.GetNamespacesInScope(XmlNamespaceScope.All);
-            Console.WriteLine($"Amount of namespaces: {result.Count}");
-
-            foreach (KeyValuePair<string, string> entry in result)
-            {
-                Console.WriteLine($"Entry Key: {entry.Key} and value: {entry.Value}");
-            }
-        }
-
-
-        //TODO: check for 
-        /// <summary>
         /// This can read the Whole XML file within +-35 seconds
         /// </summary>
         public void ReadXML()
@@ -458,6 +440,10 @@ namespace LaixerGMLTest
                                         {
                                             reader.Read();
                                         }
+                                        if(reader.LocalName == "gerelateerdeWoonplaats")
+                                        {
+                                            reader.Read();
+                                        }
                                         break;
                                     }
                                 case XmlNodeType.Text:
@@ -475,6 +461,7 @@ namespace LaixerGMLTest
                                         Console.WriteLine($"End Element {reader.Name} \n");
                                         if (reader.LocalName == nameOfelement)
                                         {
+                                            myObject.ShowAllAttributes();
                                             // We can get out of this function, because we reached the end tag of this element
                                             return;
                                         }
