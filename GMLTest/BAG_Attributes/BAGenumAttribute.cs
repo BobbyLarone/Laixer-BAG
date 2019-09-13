@@ -12,15 +12,12 @@ namespace LaixerGMLTest.BAG_Attributes
         private string _tag;
         private string value = "";
 
-
         public BAGenumAttribute(List<string> list, int length, string name, string tag) : base(length, name, tag)
         {
             _enumList = list;
             _length = length;
             _name = name;
             _tag = tag;
-
-
         }
     }
 }

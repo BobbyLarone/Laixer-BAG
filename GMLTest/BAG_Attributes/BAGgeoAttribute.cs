@@ -6,9 +6,20 @@ namespace LaixerGMLTest.BAG_Attributes
 {
     class BAGgeoAttribute : BAGAttribute
     {
-        public BAGgeoAttribute(int length, string name, string tag) : base(length, name, tag)
+        private int _dimension;
+        public BAGgeoAttribute(int length, string name, string tag) : base(-1, name, tag)
         {
+            _dimension = 2;
+        }
 
+        public int GetDimension()
+        {
+            return _dimension;
+        }
+
+        public bool IsGeometry()
+        {
+            return true;
         }
     }
 }
