@@ -11,15 +11,9 @@ namespace LaixerGMLTest.BAG_Objects
     /// </summary>
     class Berth : BAGAddressableObject
     {
-        //public string mainAddress = "";
-        //public string indicationRecordInactive = "";
-        //public string indicationRecordCorrection = "";
-        //public string official = "";
-        //public string berthStatus= "";
-        //public string startDataPeriodValidity = "";
-        //public string inResearch = "";
-        //public string source_DocumentDate = "";
-        //public string source_DocumentNumber = "";
+        public string LigplaatsStatus { get => GetAttribute("ligplaatsStatus").GetValue(); }
+        public string Geovlak { get => GetAttribute("geovlak").GetValue(); }
+        public string Geom_valid { get => GetAttribute("geom_valid").GetValue(); }
 
         public List<string> berthStatusType = new List<string>()
         {

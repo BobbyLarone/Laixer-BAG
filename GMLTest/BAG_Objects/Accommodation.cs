@@ -10,6 +10,16 @@ namespace LaixerGMLTest.BAG_Objects
     /// </summary>
     class Accommodation : BAGAddressableObject
     {
+        public string VerblijfsobjectStatus { get => GetAttribute("verblijfsobjectStatus").GetValue(); }
+        public string OppervlakteVerblijfsobject { get => GetAttribute("oppervlakteVerblijfsobject").GetValue(); }
+        public string Geopunt { get => GetAttribute("geopunt").GetValue(); }
+        public string LigplaatsStatus { get => GetAttribute("ligplaatsStatus").GetValue(); }
+        public string GebruiksdoelVerblijfsobject { get => GetAttribute("gebruiksdoelVerblijfsobject").GetValue(); }
+        public string GerelateerdPand { get => GetAttribute("gerelateerdPand").GetValue(); }
+        public string Geovlak { get => GetAttribute("geovlak").GetValue(); }
+        public string Geom_valid { get => GetAttribute("geom_valid").GetValue(); }
+
+
         public List<string> accomodationStatus = new List<string>()
         {
             "Verblijfsobject gevormd",
@@ -55,7 +65,6 @@ namespace LaixerGMLTest.BAG_Objects
                 16, "gerelateerdPand",
                 "bag_LVC:gerelateerdPand/bag_LVC:identificatie",
                 new List<string>(){ "verblijfsobjectStatus", "geom_valid" }));
-
         }
 
         /// <summary>

@@ -44,7 +44,7 @@ namespace LaixerGMLTest
                         @WoonplaatsNaam,
                         null,
                         null,
-                        ST_Multi(ST_GeomFromGML(@Geovlak)))";
+                        ST_Multi(ST_GeomFromGML(@Geovlak, 28992)))";
 
                 var orderDetails = connection.Execute(sql, residenceObjects);
             }

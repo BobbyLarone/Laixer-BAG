@@ -11,7 +11,7 @@ namespace LaixerGMLTest
     {
         private string[] splitFile;
         private uint directoryDepth = 0;
-        private int readDirectoryFolder = 1;
+        private int readDirectoryFolder = 6;
         private readonly ILoader loader;
 
         private LaixerBagReader myReader;
@@ -97,7 +97,7 @@ namespace LaixerGMLTest
                     var filesInDirectory = Directory.EnumerateFiles(listOfDirectories[readDirectoryFolder]).ToList();
 
                     // Read the first file in the list
-                    ReadFileAsync(filesInDirectory[1]);
+                    ReadFileAsync(filesInDirectory[0]);
                 }
             }
         }

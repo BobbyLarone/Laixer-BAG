@@ -10,7 +10,12 @@ namespace LaixerGMLTest.BAG_Objects
     /// </summary>
     class PublicSpace : BAGObject
     {
-        private string abbreviation = "OPR";
+        public string OpenbareRuimteNaam { get => GetAttribute("openbareRuimteNaam").GetValue(); }
+        public string OpenbareruimteStatus { get => GetAttribute("openbareruimteStatus").GetValue(); }
+        public string OpenbareRuimteType { get => GetAttribute("openbareRuimteType").GetValue(); }
+        public string GerelateerdeWoonplaats { get => GetAttribute("gerelateerdeWoonplaats").GetValue(); }
+        public string VerkorteOpenbareruimteNaam { get => GetAttribute("VerkorteOpenbareruimteNaam").GetValue(); }
+
 
         public List<string> publicSpaceTypes = new List<string>()
         {
@@ -36,7 +41,6 @@ namespace LaixerGMLTest.BAG_Objects
             Add(new BAGenumAttribute(publicSpaceTypes,publicSpaceTypes.Count, "openbareRuimteType", "bag_LVC:openbareRuimteType"));
             Add(new BAGstringAttribute(16, "gerelateerdeWoonplaats", "bag_LVC:gerelateerdeWoonplaats/bag_LVC:identificatie"));
             Add(new BAGAttribute(80, "VerkorteOpenbareruimteNaam", "nen5825:VerkorteOpenbareruimteNaam"));
-
         }
 
         public void ShowAllAttributes()

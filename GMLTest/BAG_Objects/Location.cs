@@ -10,6 +10,11 @@ namespace LaixerGMLTest.BAG_Objects
     /// </summary>
     class Location : BAGAddressableObject
     {
+
+        public string StandplaatsStatus { get => GetAttribute("standplaatsStatus").GetValue(); }
+        public string Geovlak { get => GetAttribute("geovlak").GetValue(); }
+        public string Geom_valid { get => GetAttribute("geom_valid").GetValue(); }
+
         public List<string> locationStatusType = new List<string>()
         {
             "Plaats aangewezen", "Plaats ingetrokken"

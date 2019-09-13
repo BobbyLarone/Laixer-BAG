@@ -10,7 +10,13 @@ namespace LaixerGMLTest.BAG_Objects
     /// </summary>
     class Premises : BAGObject
     {
-        public string abbreviation = "PND";
+
+        public string PandStatus { get => GetAttribute("pandStatus").GetValue(); }
+        public string Bouwjaar { get => GetAttribute("bouwjaar").GetValue(); }
+        public string Geovlak { get => GetAttribute("geovlak").GetValue(); }
+        public string Geom_valid { get => GetAttribute("geom_valid").GetValue(); }
+
+
         public List<string> statusEnum = new List<string>()
         {
             "Bouwvergunning verleend",

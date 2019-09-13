@@ -10,15 +10,15 @@ namespace LaixerGMLTest.BAG_Objects
     /// </summary>
     class Residence : BAGObject
     {
-        public List<string> residenceStatusType = new List<string>()
-        {
-            "Woonplaats aangewezen", "Woonplaats ingetrokken"
-        };
-
         public string WoonplaatsNaam { get => GetAttribute("woonplaatsNaam").GetValue(); }
         public string WoonplaatsStatus { get => GetAttribute("woonplaatsStatus").GetValue(); }
         public string Geovlak { get => GetAttribute("geovlak").GetValue(); }
         public string Geom_valid { get => GetAttribute("geom_valid").GetValue(); }
+
+        public List<string> residenceStatusType = new List<string>()
+        {
+            "Woonplaats aangewezen", "Woonplaats ingetrokken"
+        };
 
         public Residence() : base("bag_LVC:Woonplaats", "woonplaats","WPL")
         {

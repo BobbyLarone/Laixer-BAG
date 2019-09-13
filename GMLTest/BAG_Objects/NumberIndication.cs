@@ -10,6 +10,15 @@ namespace LaixerGMLTest.BAG_Objects
     /// </summary>
     class NumberIndication : BAGObject
     {
+        public string Huisnummer { get => GetAttribute("huisnummer").GetValue(); }
+        public string Huisletter { get => GetAttribute("huisletter").GetValue(); }
+        public string Huisnummertoevoeging { get => GetAttribute("huisnummertoevoeging").GetValue(); }
+        public string Postcode { get => GetAttribute("postcode").GetValue(); }
+        public string NummeraanduidingStatus { get => GetAttribute("nummeraanduidingStatus").GetValue(); }
+        public string TypeAdresseerbaarObject { get => GetAttribute("typeAdresseerbaarObject").GetValue(); }
+        public string GerelateerdeOpenbareRuimte { get => GetAttribute("gerelateerdeOpenbareRuimte").GetValue(); }
+        public string GerelateerdeWoonplaats { get => GetAttribute("gerelateerdeWoonplaats").GetValue(); }
+
         public List<string> numberIndicationTypes = new List<string>()
         {
             "Naamgeving uitgegeven",
