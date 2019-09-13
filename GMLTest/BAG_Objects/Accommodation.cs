@@ -13,7 +13,7 @@ namespace LaixerGMLTest.BAG_Objects
         public string VerblijfsobjectStatus { get => GetAttribute("verblijfsobjectStatus").GetValue(); }
         public string OppervlakteVerblijfsobject { get => GetAttribute("oppervlakteVerblijfsobject").GetValue(); }
         public string Geopunt { get => GetAttribute("geopunt").GetValue(); }
-        public string LigplaatsStatus { get => GetAttribute("ligplaatsStatus").GetValue(); }
+        public string LigplaatsStatus { get => GetAttribute("verblijfsobjectStatus").GetValue(); }
         public string GebruiksdoelVerblijfsobject { get => GetAttribute("gebruiksdoelVerblijfsobject").GetValue(); }
         public string GerelateerdPand { get => GetAttribute("gerelateerdPand").GetValue(); }
         public string Geovlak { get => GetAttribute("geovlak").GetValue(); }

@@ -76,7 +76,6 @@ namespace LaixerGMLTest
                             }
                         default:
                             {
-                                Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
                                 break;
                             }
                     }
@@ -127,19 +126,16 @@ namespace LaixerGMLTest
 
                     case XmlNodeType.Text:
                         {
-                            Console.WriteLine($"Text Node: {await reader.GetValueAsync().ConfigureAwait(false)}");
                             break;
                         }
 
                     case XmlNodeType.EndElement:
                         {
-                            Console.WriteLine($"End Element {reader.Name} \n");
                             break;
                         }
 
                     default:
                         {
-                            Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
                             break;
                         }
                 }
@@ -152,22 +148,18 @@ namespace LaixerGMLTest
             {
                 case "xb - remove this to use it -":
                     {
-                        Console.WriteLine($"Root element: {reader.LocalName}");
                         break;
                     }
                 case "selecties-extract":
                     {
-                        Console.WriteLine($"Start Element {reader.Name}");
                         break;
                     }
 
                 case "bag_LVC":
                     {
-                        //Console.WriteLine($"Start Element {reader.Name}");
                         await BAGObjectGenerator(reader).ConfigureAwait(false);
                         break;
                     }
-
                 default:
                     break;
             }
@@ -252,7 +244,34 @@ namespace LaixerGMLTest
                                             var value = await reader.ReadOuterXmlAsync();
                                             myObject.SetAttribute("geovlak", value);
                                         }
-                                        Console.WriteLine($"reading the element now: {reader.Name}");
+                                        if(reader.LocalName == "begindatumTijdvakGeldigheid")
+                                        {
+                                            
+                                            // go to next part
+                                            reader.Read();
+                                            string value = await reader.GetValueAsync();
+                                            var timeLenght = value.Length;
+
+                                            var year = int.Parse(value.Substring(0, 4));
+                                            var month = int.Parse(value.Substring(4, 2));
+                                            var day = int.Parse(value.Substring(6, 2));
+                                            var Hour = int.Parse(value.Substring(8, 2));
+                                            var minute = int.Parse(value.Substring(10, 2));
+                                            var seconds = int.Parse(value.Substring(12, 2));
+                                            var microseconds = int.Parse(value.Substring(14,2));
+
+                                            string date = $"{day}{month}{year}{Hour}{minute}{seconds}{microseconds}";
+                                            var r = new DateTime(year: year, month: month, day: day, hour: Hour, minute: minute, second: seconds, millisecond: microseconds);
+
+                                            //string[] formats = { "yyyyMMddHHmmss" };
+                                            //DateTime date;
+
+                                            //DateTime.TryParseExact(value, formats, null, System.Globalization.DateTimeStyles.AllowWhiteSpaces |
+                                            //System.Globalization.DateTimeStyles.AdjustToUniversal,out date);
+
+                                            myObject.SetAttribute(elementName, r);
+
+                                        }
                                         break;
                                     }
                                 case XmlNodeType.Text:
@@ -260,14 +279,11 @@ namespace LaixerGMLTest
                                         // retrieve the value in the node
                                         string value = await reader.GetValueAsync().ConfigureAwait(false);
                                         myObject.SetAttribute(elementName, value);
-                                        Console.WriteLine($"Text Node: {value}");
-
                                         break;
                                     }
                                 case XmlNodeType.EndElement:
                                     {
                                         // write the end element name. For testing purpouse
-                                        Console.WriteLine($"End Element {reader.Name} \n");
                                         if (reader.LocalName == nameOfelement)
                                         {
                                             // We can get out of this function, because we reached the end tag of this element
@@ -277,7 +293,6 @@ namespace LaixerGMLTest
                                     }
                                 default:
                                     {
-                                        Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
                                         break;
                                     }
                             }
@@ -299,14 +314,17 @@ namespace LaixerGMLTest
                                 case XmlNodeType.Element:
                                     {
                                         elementName = reader.LocalName;
-                                        Console.WriteLine($"reading the element now: {reader.Name}");
+                                        if(reader.LocalName == "gerelateerdPand" || reader.LocalName == "hoofdadres")
+                                        {
+                                            // skip once to get to the id
+                                            reader.Read();
+                                        }
                                         break;
                                     }
                                 case XmlNodeType.Text:
                                     {
                                         // retrieve the value in the node
                                         string value = await reader.GetValueAsync().ConfigureAwait(false);
-                                        Console.WriteLine($"Text Node: {value}");
 
                                         myObject.SetAttribute(elementName, value);
                                         break;
@@ -314,7 +332,6 @@ namespace LaixerGMLTest
                                 case XmlNodeType.EndElement:
                                     {
                                         // write the end element name. For testing purpouse
-                                        Console.WriteLine($"End Element {reader.Name} \n");
                                         if (reader.LocalName == nameOfelement)
                                         {
                                             // We can get out of this function, because we reached the end tag of this element
@@ -324,7 +341,6 @@ namespace LaixerGMLTest
                                     }
                                 default:
                                     {
-                                        Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
                                         break;
                                     }
                             }
@@ -346,7 +362,6 @@ namespace LaixerGMLTest
                                 case XmlNodeType.Element:
                                     {
                                         elementName = reader.LocalName;
-                                        Console.WriteLine($"reading the element now: {reader.Name}");
                                         if (reader.LocalName == "gerelateerdeWoonplaats")
                                         {
                                             reader.Read();
@@ -361,7 +376,6 @@ namespace LaixerGMLTest
                                     {
                                         // retrieve the value in the node
                                         string value = await reader.GetValueAsync().ConfigureAwait(false);
-                                        Console.WriteLine($"Text Node: {value}");
 
                                         myObject.SetAttribute(elementName, value);
                                         break;
@@ -369,7 +383,6 @@ namespace LaixerGMLTest
                                 case XmlNodeType.EndElement:
                                     {
                                         // write the end element name. For testing purpouse
-                                        Console.WriteLine($"End Element {reader.Name} \n");
                                         if (reader.LocalName == nameOfelement)
                                         {
                                             // We can get out of this function, because we reached the end tag of this element
@@ -380,7 +393,6 @@ namespace LaixerGMLTest
                                     }
                                 default:
                                     {
-                                        Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
                                         break;
                                     }
                             }
@@ -452,23 +464,18 @@ namespace LaixerGMLTest
                                 case XmlNodeType.Element:
                                     {
                                         elementName = reader.LocalName;
-
-                                        Console.WriteLine($"reading the element now: {reader.Name}");
                                         break;
                                     }
                                 case XmlNodeType.Text:
                                     {
                                         // retrieve the value in the node
                                         string value = await reader.GetValueAsync().ConfigureAwait(false);
-                                        Console.WriteLine($"Text Node: {value}");
-
                                         myObject.SetAttribute(elementName, value);
                                         break;
                                     }
                                 case XmlNodeType.EndElement:
                                     {
                                         // write the end element name. For testing purpouse
-                                        Console.WriteLine($"End Element {reader.Name} \n");
                                         if (reader.LocalName == nameOfelement)
                                         {
                                             // We can get out of this function, because we reached the end tag of this element
@@ -478,7 +485,6 @@ namespace LaixerGMLTest
                                     }
                                 default:
                                     {
-                                        Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
                                         break;
                                     }
                             }
@@ -500,15 +506,12 @@ namespace LaixerGMLTest
                                 case XmlNodeType.Element:
                                     {
                                         elementName = reader.LocalName;
-
-                                        Console.WriteLine($"reading the element now: {reader.Name}");
                                         break;
                                     }
                                 case XmlNodeType.Text:
                                     {
                                         // retrieve the value in the node
                                         string value = await reader.GetValueAsync().ConfigureAwait(false);
-                                        Console.WriteLine($"Text Node: {value}");
 
                                         myObject.SetAttribute(elementName, value);
                                         break;
@@ -516,7 +519,6 @@ namespace LaixerGMLTest
                                 case XmlNodeType.EndElement:
                                     {
                                         // write the end element name. For testing purpouse
-                                        Console.WriteLine($"End Element {reader.Name} \n");
                                         if (reader.LocalName == nameOfelement)
                                         {
                                             // We can get out of this function, because we reached the end tag of this element
@@ -526,7 +528,6 @@ namespace LaixerGMLTest
                                     }
                                 default:
                                     {
-                                        Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
                                         break;
                                     }
                             }
@@ -549,14 +550,12 @@ namespace LaixerGMLTest
                                     {
                                         elementName = reader.LocalName;
 
-                                        Console.WriteLine($"reading the element now: {reader.Name}");
                                         break;
                                     }
                                 case XmlNodeType.Text:
                                     {
                                         // retrieve the value in the node
                                         string value = await reader.GetValueAsync().ConfigureAwait(false);
-                                        Console.WriteLine($"Text Node: {value}");
 
                                         myObject.SetAttribute(elementName, value);
                                         break;
@@ -564,7 +563,6 @@ namespace LaixerGMLTest
                                 case XmlNodeType.EndElement:
                                     {
                                         // write the end element name. For testing purpouse
-                                        Console.WriteLine($"End Element {reader.Name} \n");
                                         if (reader.LocalName == nameOfelement)
                                         {
                                             // We can get out of this function, because we reached the end tag of this element
@@ -574,7 +572,6 @@ namespace LaixerGMLTest
                                     }
                                 default:
                                     {
-                                        Console.WriteLine("Other node {0} with value {1}", reader.NodeType, reader.Value);
                                         break;
                                     }
                             }
@@ -592,8 +589,6 @@ namespace LaixerGMLTest
             var gmlReader = new GMLReader(new NetTopologySuite.Geometries.GeometryFactory(new NetTopologySuite.Geometries.PrecisionModel(), 0));
             var result = gmlReader.Read(myReader);
             var temp = result.Coordinates.ToList();
-
-            //var r = NetTopologySuite.IO.WKTWriter.ToLineString(result.Coordinates);
 
             string gmlString = "";
             foreach (var item in temp)

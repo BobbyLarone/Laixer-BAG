@@ -1,4 +1,5 @@
 ﻿using LaixerGMLTest.BAG_Attributes;
+using System;
 using System.Collections.Generic;
 
 namespace LaixerGMLTest.BAG_Objects
@@ -178,6 +179,19 @@ namespace LaixerGMLTest.BAG_Objects
         /// <param name="attributeName">Name of the attribute</param>
         /// <param name="value">The value for the object</param>
         public void SetAttribute(string attributeName, string value)
+        {
+            if (HasAttribute(attributeName))
+            {
+                GetAttribute(attributeName).SetValue(value);
+            }
+        }
+
+        /// <summary>
+        /// Set the value for the attribute for this object
+        /// </summary>
+        /// <param name="attributeName">Name of the attribute</param>
+        /// <param name="value">The value for the object</param>
+        public void SetAttribute(string attributeName, DateTime value)
         {
             if (HasAttribute(attributeName))
             {

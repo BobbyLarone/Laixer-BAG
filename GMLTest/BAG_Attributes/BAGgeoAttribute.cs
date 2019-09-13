@@ -7,9 +7,9 @@ namespace LaixerGMLTest.BAG_Attributes
     class BAGgeoAttribute : BAGAttribute
     {
         private int _dimension;
-        public BAGgeoAttribute(int length, string name, string tag) : base(-1, name, tag)
+        public BAGgeoAttribute(int dimension, string name, string tag) : base(-1, name, tag)
         {
-            _dimension = 2;
+            _dimension = dimension;
         }
 
         public int GetDimension()

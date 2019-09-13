@@ -81,5 +81,14 @@ namespace LaixerGMLTest.BAG_Attributes
         {
             _value = value;
         }
+
+        /// <summary>
+        /// Set the value for the object
+        /// </summary>
+        /// <param name="value"></param>
+        public void SetValue(DateTime value)
+        {
+            _value = value.ToString();
+        }
     }
 }

@@ -8,8 +8,7 @@ namespace LaixerGMLTest.BAG_Objects
     class BAGAddressableObject : BAGObject
     {
         public string Hoofdadres { get => GetAttribute("hoofdadres").GetValue(); }
-        public string Nevenadres { get => GetAttribute("nevenadres").GetValue(); }
-
+        
         public BAGAddressableObject(string tag, string name, string objectType)
             : base(tag,name,objectType)
         {

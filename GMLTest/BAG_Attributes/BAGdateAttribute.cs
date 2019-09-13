@@ -6,7 +6,8 @@ namespace LaixerGMLTest.BAG_Attributes
 {
     class BAGdateAttribute : BAGAttribute
     {
-        public BAGdateAttribute(int length, string name, string tag) : base(length, name, tag)
+
+        public BAGdateAttribute(string name, string tag) : base(4, name, tag)
         {
 
         }
