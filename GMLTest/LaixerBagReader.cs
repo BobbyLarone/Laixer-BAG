@@ -244,7 +244,7 @@ namespace LaixerGMLTest
                                             var value = await reader.ReadOuterXmlAsync();
                                             myObject.SetAttribute("geovlak", value);
                                         }
-                                        if(reader.LocalName == "begindatumTijdvakGeldigheid")
+                                        if(reader.LocalName == "begindatumTijdvakGeldigheid" || reader.LocalName == "einddatumTijdvakGeldigheid")
                                         {
                                             
                                             // go to next part
