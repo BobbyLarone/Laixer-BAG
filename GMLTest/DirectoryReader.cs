@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LaixerGMLTest.BAG_Objects;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -123,6 +125,11 @@ namespace LaixerGMLTest
         public int GetTotalObjects()
         {
             return myReader.listOfBAGObjects.Count;
+        }
+
+        public List<BAGObject> GetAllObjects()
+        {
+            return myReader.listOfBAGObjects;
         }
     }
 }
