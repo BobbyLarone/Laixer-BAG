@@ -13,7 +13,9 @@ namespace LaixerGMLTest.BAG_Objects
         public string WoonplaatsNaam { get => GetAttribute("woonplaatsNaam").GetValue(); }
         public string WoonplaatsStatus { get => GetAttribute("woonplaatsStatus").GetValue(); }
         public string Geovlak { get => GetAttribute("geovlak").GetValue(); }
-        public string Geom_valid { get => GetAttribute("geom_valid").GetValue(); }
+        public string Geom_valid { get => GetAttribute("geom_valid").GetValue() == ""? null : GetAttribute("geom_valid").GetValue(); }
+
+
 
         public List<string> residenceStatusType = new List<string>()
         {
