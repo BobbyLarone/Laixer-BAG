@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LaixerGMLTest.BAG_Objects;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace LaixerGMLTest
@@ -8,6 +10,7 @@ namespace LaixerGMLTest
         private DirectoryReader directoryReader;
         private string path;
         private ILoader loader;
+        private List<BAGObject> list;
 
         private Program Extract(string path)
         {
@@ -23,6 +26,7 @@ namespace LaixerGMLTest
             // TODO: Step 2
 
             loader = new TLoader(); // TODO: Fow now
+            loader.Load(list);
             return this;
         }
 
@@ -31,6 +35,7 @@ namespace LaixerGMLTest
             // TODO: Run
             directoryReader = new DirectoryReader(loader); // TODO: Fow now
             directoryReader.readFolder(path);
+            list = directoryReader.GetAllObjects();
             return this;
         }
 
@@ -47,8 +52,8 @@ namespace LaixerGMLTest
 
             var processedObjects = new Program()
                 .Extract(path: args[0])
-                .Load<DatabaseLoader>()
-                .Process();
+                .Process()
+                .Load<DatabaseLoader>();
 
             timer.Stop();
             Console.WriteLine($"Made {processedObjects} objects!");
