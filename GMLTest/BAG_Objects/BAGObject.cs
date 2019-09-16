@@ -32,10 +32,10 @@ namespace LaixerGMLTest.BAG_Objects
         public string AanduidingRecordCorrectie { get => GetAttribute("aanduidingRecordCorrectie").GetValue(); }
         public bool Officieel { get => GetAttribute("officieel").GetValue().AsBoolean(); }
         public bool InOnderzoek { get => GetAttribute("inOnderzoek").GetValue().AsBoolean(); }
-        public string BegindatumTijdvakGeldigheid { get => GetAttribute("begindatumTijdvakGeldigheid").GetValue(); }
-        public string EinddatumTijdvakGeldigheid { get => GetAttribute("einddatumTijdvakGeldigheid").GetValue(); }
+        public DateTime BegindatumTijdvakGeldigheid { get => GetAttribute("begindatumTijdvakGeldigheid").GetDateTime(); }
+        public DateTime EinddatumTijdvakGeldigheid { get => GetAttribute("einddatumTijdvakGeldigheid").GetDateTime(); }
         public string DocumentNummer { get => GetAttribute("documentnummer").GetValue(); }
-        public string DocumentDatum { get => GetAttribute("documentdatum").GetValue(); }
+        public DateTime DocumentDatum { get => GetAttribute("documentdatum").GetDateTime(); }
 
         public BAGObject(string tag = "", string name = "", string objectType = "")
         {
@@ -195,9 +195,10 @@ namespace LaixerGMLTest.BAG_Objects
         {
             if (HasAttribute(attributeName))
             {
-                GetAttribute(attributeName).SetValue(value);
+                GetAttribute(attributeName).SetDateTime(value);
             }
         }
+
 
         /// <summary>
         /// Return the name of this object

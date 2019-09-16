@@ -15,13 +15,17 @@ namespace LaixerGMLTest.BAG_Attributes
         private string _tag;
         private string _value;
         private string _relationName;
+        private DateTime dateTime;
 
+        // The parent of this object
+        /// <summary>
+        /// 
+        /// </summary>
         public BAGObject parentObject; 
 
         public BAGAttribute(int length, string name, string tag)
         {
             _tag = tag;
-            _value = "";
             _name = name;
             _length = length;
             _relationName = "";
@@ -74,21 +78,31 @@ namespace LaixerGMLTest.BAG_Attributes
         }
 
         /// <summary>
+        /// Get the datetime
+        /// </summary>
+        /// <returns></returns>
+        public DateTime GetDateTime()
+        {
+            return dateTime;
+        }
+
+
+        /// <summary>
         /// Set the value for the object
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">the string value</param>
         public void SetValue(string value)
         {
             _value = value;
         }
 
         /// <summary>
-        /// Set the value for the object
+        /// Set the date time for the object
         /// </summary>
-        /// <param name="value"></param>
-        public void SetValue(DateTime value)
+        /// <param name="datetime">The time and date for the object</param>
+        public void SetDateTime(DateTime datetime)
         {
-            _value = value.ToString();
+            dateTime = datetime;
         }
     }
 }
