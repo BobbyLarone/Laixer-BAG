@@ -3,6 +3,7 @@ using LaixerGMLTest.Object_Relations;
 using NetTopologySuite.IO.GML2;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
@@ -250,26 +251,10 @@ namespace LaixerGMLTest
                                         {
                                             // Go to next part
                                             reader.Read();
-
-                                            // Read the value
-                                            string value = await reader.GetValueAsync();
-
-                                            // Split and store the date and time
-                                            var year = int.Parse(value.Substring(0, 4));
-                                            var month = int.Parse(value.Substring(4, 2));
-                                            var day = int.Parse(value.Substring(6, 2));
-                                            var Hour = int.Parse(value.Substring(8, 2));
-                                            var minute = int.Parse(value.Substring(10, 2));
-                                            var seconds = int.Parse(value.Substring(12, 2));
-                                            var microseconds = int.Parse(value.Substring(14, 2));
-
-                                            //string date = $"{day}{month}{year}{Hour}{minute}{seconds}{microseconds}";
-                                            // Create a new DateTime variable with the variables from above
-                                            var r = new DateTime(year: year, month: month, day: day, hour: Hour, minute: minute, second: seconds, millisecond: microseconds);
-
+                                            // Read the value and transform it into a DateTime object
+                                            var r = normalizeDateTime(await reader.GetValueAsync());
                                             // Set the attribute
                                             myObject.SetAttribute(elementName, r);
-
                                         }
                                         // Transform the date string to a DateTime object
                                         if(reader.LocalName.ToLower() == "documentdatum")
@@ -277,19 +262,10 @@ namespace LaixerGMLTest
                                             // Go to next part
                                             reader.Read();
                                             // Get the date string
-                                            string value = await reader.GetValueAsync();
-                                            // Split and store
-                                            var year = int.Parse(value.Substring(0, 4));
-                                            var month = int.Parse(value.Substring(4, 2));
-                                            var day = int.Parse(value.Substring(6, 2));
-
-                                            // Create a new DateTime object
-                                            var r = new DateTime(year: year, month: month, day: day);
-                                            
+                                            var r = normalizeDate(await reader.GetValueAsync());
                                             // Set the attribute
                                             myObject.SetAttribute(elementName, r);
                                         }
-
                                         break;
                                     }
                                 case XmlNodeType.Text:
@@ -432,14 +408,11 @@ namespace LaixerGMLTest
                                 case XmlNodeType.Element:
                                     {
                                         elementName = reader.LocalName;
-                                        if (reader.LocalName == "gerelateerdeOpenbareRuimte")
+                                        if (reader.LocalName == "gerelateerdeOpenbareRuimte" || reader.LocalName == "gerelateerdeWoonplaats")
                                         {
                                             reader.Read();
                                         }
-                                        if (reader.LocalName == "gerelateerdeWoonplaats")
-                                        {
-                                            reader.Read();
-                                        }
+
                                         break;
                                     }
                                 case XmlNodeType.Text:
@@ -618,16 +591,6 @@ namespace LaixerGMLTest
             return gmlString;
         }
 
-        private void convertToGPS()
-        {
-            // WIP
-
-            /*
-             * This function will take a coordinate in the epsg28996 format 
-             * and then calculate the gps position based on epgs4326
-            */
-        }
-
         private void printAllAttributes()
         {
             if (listOfBAGObjects[0].GetType() == typeof(Berth))
@@ -666,6 +629,37 @@ namespace LaixerGMLTest
                 item.ShowAllAttributes();
             }
 
+        }
+
+        private DateTime normalizeDateTime(string time)
+        {
+            // Split and store the date and time separate
+            var year = int.Parse(time.Substring(0, 4));
+            var month = int.Parse(time.Substring(4, 2));
+            var day = int.Parse(time.Substring(6, 2));
+            var Hour = int.Parse(time.Substring(8, 2));
+            var minute = int.Parse(time.Substring(10, 2));
+            var seconds = int.Parse(time.Substring(12, 2));
+            var microseconds = int.Parse(time.Substring(14, 2));
+
+            // Create a new DateTime variable with the variables from above
+            return new DateTime(year: year, month: month, day: day, hour: Hour, minute: minute, second: seconds, millisecond: microseconds);
+        }
+
+        /// <summary>
+        /// normalize the datetime string ( ISO8106)
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        private DateTime normalizeDate(string time)
+        {
+            // Split and store
+            var year = int.Parse(time.Substring(0, 4));
+            var month = int.Parse(time.Substring(4, 2));
+            var day = int.Parse(time.Substring(6, 2));
+
+            // Create a new DateTime object
+            return new DateTime(year: year, month: month, day: day);
         }
 
     }
