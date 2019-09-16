@@ -37,12 +37,12 @@ namespace LaixerGMLTest
                         @AanduidingRecordCorrectie::int,
                         @Officieel::boolean,
                         @InOnderzoek::boolean,
-                        null, -- @BegindatumTijdvakGeldigheid,
-                        null, -- @EinddatumTijdvakGeldigheid,
+                        @BegindatumTijdvakGeldigheid::timestamptz,
+                        @EinddatumTijdvakGeldigheid::timestamptz,
                         @DocumentNummer,
-                        null, -- @DocumentDatum,
+                        @DocumentDatum::date,
                         @WoonplaatsNaam,
-                        null,
+                        @WoonplaatsStatus::woonplaatsstatus,
                         null,
                         ST_Multi(ST_GeomFromGML(@Geovlak, 28992)))";
 
