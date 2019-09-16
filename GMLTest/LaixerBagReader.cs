@@ -16,7 +16,6 @@ namespace LaixerGMLTest
     /// </summary>
     class LaixerBagReader
     {
-        string filename = @"C:\Users\Workstation\Documents\MyProjects\Documents\XML\9999LIG08082019-000001-reformatted.xml";
 
         public string logText;
         public string xmlOutput;
@@ -34,7 +33,7 @@ namespace LaixerGMLTest
         /// </summary>
         public void ReadXML()
         {
-            WithXMLReaderAsync(filename).Wait();
+            WithXMLReaderAsync("nope").Wait();
         }
 
         /// <summary>
@@ -231,47 +230,66 @@ namespace LaixerGMLTest
                         var myObject = (Residence)BAGObjectFactory.GetBagObjectByXML(nameOfelement);
                         listOfBAGObjects.Add(myObject);
 
-                        // fill the object with al the stuff that we can find in the xml file
+                        // Fill the object with al the stuff that we can find in the xml file
                         while (reader.Read())
                         {
                             switch (reader.NodeType)
                             {
                                 case XmlNodeType.Element:
                                     {
+                                        // Store the name of the current element
                                         elementName = reader.LocalName;
                                         if (reader.LocalName.ToLower() == "polygon")
                                         {
                                             var value = await reader.ReadOuterXmlAsync();
+                                            // Store the value in the property geovlak of this object
                                             myObject.SetAttribute("geovlak", value);
                                         }
-                                        if(reader.LocalName == "begindatumTijdvakGeldigheid" || reader.LocalName == "einddatumTijdvakGeldigheid")
+                                        // Transform the date-time string to a DateTime object when these two names are found
+                                        if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
                                         {
-                                            
-                                            // go to next part
+                                            // Go to next part
                                             reader.Read();
-                                            string value = await reader.GetValueAsync();
-                                            var timeLenght = value.Length;
 
+                                            // Read the value
+                                            string value = await reader.GetValueAsync();
+
+                                            // Split and store the date and time
                                             var year = int.Parse(value.Substring(0, 4));
                                             var month = int.Parse(value.Substring(4, 2));
                                             var day = int.Parse(value.Substring(6, 2));
                                             var Hour = int.Parse(value.Substring(8, 2));
                                             var minute = int.Parse(value.Substring(10, 2));
                                             var seconds = int.Parse(value.Substring(12, 2));
-                                            var microseconds = int.Parse(value.Substring(14,2));
+                                            var microseconds = int.Parse(value.Substring(14, 2));
 
-                                            string date = $"{day}{month}{year}{Hour}{minute}{seconds}{microseconds}";
+                                            //string date = $"{day}{month}{year}{Hour}{minute}{seconds}{microseconds}";
+                                            // Create a new DateTime variable with the variables from above
                                             var r = new DateTime(year: year, month: month, day: day, hour: Hour, minute: minute, second: seconds, millisecond: microseconds);
 
-                                            //string[] formats = { "yyyyMMddHHmmss" };
-                                            //DateTime date;
-
-                                            //DateTime.TryParseExact(value, formats, null, System.Globalization.DateTimeStyles.AllowWhiteSpaces |
-                                            //System.Globalization.DateTimeStyles.AdjustToUniversal,out date);
-
+                                            // Set the attribute
                                             myObject.SetAttribute(elementName, r);
 
                                         }
+                                        // Transform the date string to a DateTime object
+                                        if(reader.LocalName.ToLower() == "documentdatum")
+                                        {
+                                            // Go to next part
+                                            reader.Read();
+                                            // Get the date string
+                                            string value = await reader.GetValueAsync();
+                                            // Split and store
+                                            var year = int.Parse(value.Substring(0, 4));
+                                            var month = int.Parse(value.Substring(4, 2));
+                                            var day = int.Parse(value.Substring(6, 2));
+
+                                            // Create a new DateTime object
+                                            var r = new DateTime(year: year, month: month, day: day);
+                                            
+                                            // Set the attribute
+                                            myObject.SetAttribute(elementName, r);
+                                        }
+
                                         break;
                                     }
                                 case XmlNodeType.Text:
@@ -314,7 +332,7 @@ namespace LaixerGMLTest
                                 case XmlNodeType.Element:
                                     {
                                         elementName = reader.LocalName;
-                                        if(reader.LocalName == "gerelateerdPand" || reader.LocalName == "hoofdadres")
+                                        if (reader.LocalName == "gerelateerdPand" || reader.LocalName == "hoofdadres")
                                         {
                                             // skip once to get to the id
                                             reader.Read();
