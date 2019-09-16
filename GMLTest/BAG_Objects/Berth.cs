@@ -13,7 +13,7 @@ namespace LaixerGMLTest.BAG_Objects
     {
         public string LigplaatsStatus { get => GetAttribute("ligplaatsStatus").GetValue(); }
         public string Geovlak { get => GetAttribute("geovlak").GetValue(); }
-        public string Geom_valid { get => GetAttribute("geom_valid").GetValue(); }
+        public string Geom_valid { get => GetAttribute("geom_valid").GetValue() == "" ? null : GetAttribute("geom_valid").GetValue(); }
 
         public List<string> berthStatusType = new List<string>()
         {

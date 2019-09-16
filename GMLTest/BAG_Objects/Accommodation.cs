@@ -17,7 +17,7 @@ namespace LaixerGMLTest.BAG_Objects
         public string GebruiksdoelVerblijfsobject { get => GetAttribute("gebruiksdoelVerblijfsobject").GetValue(); }
         public string GerelateerdPand { get => GetAttribute("gerelateerdPand").GetValue(); }
         public string Geovlak { get => GetAttribute("geovlak").GetValue(); }
-        public string Geom_valid { get => GetAttribute("geom_valid").GetValue(); }
+        public string Geom_valid { get => GetAttribute("geom_valid").GetValue() == "" ? null : GetAttribute("geom_valid").GetValue(); }
 
 
         public List<string> accomodationStatus = new List<string>()
