@@ -14,7 +14,8 @@ namespace LaixerGMLTest.BAG_Objects
         public string OpenbareruimteStatus { get => GetAttribute("openbareruimteStatus").GetValue(); }
         public string OpenbareRuimteType { get => GetAttribute("openbareRuimteType").GetValue(); }
         public string GerelateerdeWoonplaats { get => GetAttribute("gerelateerdeWoonplaats").GetValue(); }
-        public string VerkorteOpenbareruimteNaam { get => GetAttribute("VerkorteOpenbareruimteNaam").GetValue(); }
+        public string VerkorteOpenbareruimteNaam { get => GetAttribute("VerkorteOpenbareruimteNaam").GetValue() == "" ? 
+                null : GetAttribute("VerkorteOpenbareruimteNaam").GetValue(); }
 
 
         public List<string> publicSpaceTypes = new List<string>()
@@ -49,7 +50,14 @@ namespace LaixerGMLTest.BAG_Objects
             Console.WriteLine($"{myList.Count} Attributes were found");
             foreach (var att in myList)
             {
-                Console.WriteLine($"Found: {att.GetName()} Value: {att.GetValue()}");
+                if (att.GetType() == typeof(BAGdatetimeAttribute))
+                {
+                    Console.WriteLine($"Found: {att.GetName()} Value: {att.GetDateTime()}");
+                }
+                else
+                {
+                    Console.WriteLine($"Found: {att.GetName()} Value: {att.GetValue()}");
+                }
             }
         }
 
