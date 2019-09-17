@@ -44,8 +44,6 @@ namespace LaixerGMLTest.Object_Relations
             // This holds the relations to other attributes
             relations = new List<BAGrelationAttribute>();
 
-
-
             Add(new BAGstringAttribute(16, "identificatie", "identificatie"));
             Add(new BAGbooleanAttribute("aanduidingRecordInactief", "bag_LVC:aanduidingRecordInactief"));
             Add(new BAGintegerAttribute("aanduidingRecordCorrectie", "bag_LVC:aanduidingRecordCorrectie"));
