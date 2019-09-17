@@ -13,15 +13,23 @@ namespace LaixerGMLTest
     {
         private string[] splitFile;
         private uint directoryDepth = 0;
-        private int readDirectoryFolder = 6;
-        private readonly ILoader loader;
+        private int readDirectoryFolder;
+        private ILoader loader;
 
         private LaixerBagReader myReader;
+        private string folderPath;
+        private List<string> listOfFilesInDirectory;
+        private List<string> listOfDirectories;
 
         /// <summary>
         /// The constructor
         /// </summary>
-        public DirectoryReader(ILoader loader)
+        public DirectoryReader()
+        {
+            // This is a constructor.... (^.^)b
+        }
+
+        public void SetLoader(ILoader loader)
         {
             this.loader = loader;
         }
@@ -32,7 +40,8 @@ namespace LaixerGMLTest
         /// <param name="filePath">The path to the directory</param>
         public void readFolder(string filePath)
         {
-            readFolderContentAsync(filePath, true, true);
+            folderPath = filePath;
+            readFolderContentAsync(filePath);
         }
 
         /// <summary>
@@ -41,68 +50,25 @@ namespace LaixerGMLTest
         /// <param name="filePath">Path to the file</param>
         /// <param name="subFiles">Enable reading the subfiles</param>
         /// <param name="readFirst">Enable reading the first map and first file in that map</param>
-        private void readFolderContentAsync(string filePath, bool subFiles = false, bool readFirst = false)
+        private void readFolderContentAsync(string filePath)
         {
             if (Directory.Exists(filePath))
             {
-                // This is to keep track of the amount of files
-                uint fileCount = 0;
-
-                // Specify the amount of files to read.
-                uint maxFileCount = 2;
-
                 // Keep a list of directories and files
-                var listOfDirectories = Directory.EnumerateDirectories(filePath).ToList();
-                var listOfFiles = Directory.EnumerateFiles(filePath).ToList();
+                listOfDirectories = Directory.EnumerateDirectories(filePath).ToList();
+                listOfFilesInDirectory = Directory.EnumerateFiles(filePath).ToList();
 
                 Console.WriteLine($"Current directory depth = {directoryDepth}");
-                Console.WriteLine($"Found: {listOfDirectories.Count} Directories and {listOfFiles.Count} Files");
+                Console.WriteLine($"Found: {listOfDirectories.Count} Directories and {listOfFilesInDirectory.Count} Files");
                 Console.WriteLine("These are the directories found in the current directory:");
 
                 foreach (var path in listOfDirectories)
                 {
                     Console.WriteLine($"\tFound: {path}");
                 }
-
-                Console.WriteLine("\nThese are the files found in the current directory:");
-
-                foreach (var file in listOfFiles)
-                {
-                    // If we reached the maximum amount of files to read.. we stop reading further
-                    if (fileCount >= maxFileCount) { break; }
-
-                    // Split the file on the " . " and store this in a new array.
-                    splitFile = file.Split(".");
-
-                    Console.WriteLine($"\tFound: {splitFile[0]}. Extension = {splitFile[1]}");
-                    fileCount++;
-                }
-
-                // If read the files in the subFolders
-                if (subFiles)
-                {
-                    foreach (var fileOrDirectory in listOfDirectories)
-                    {
-                        Console.WriteLine($"\nIn directory: {fileOrDirectory}");
-                        directoryDepth++;
-                        readFolderContentAsync(fileOrDirectory, subFiles);
-                        directoryDepth--;
-                    }
-                }
-
-                //TODO: transform this into a foreach so that it can read ALL the files
-
-                // Read the first file of te first map
-                if (readFirst)
-                {
-                    // Read the first map in the directory and make a list of the files
-                    var filesInDirectory = Directory.EnumerateFiles(listOfDirectories[readDirectoryFolder]).ToList();
-
-                    // Read the first file in the list
-                    ReadFileAsync(filesInDirectory[0]);
-                }
             }
         }
+
 
         /// <summary>
         /// Read the file
@@ -113,23 +79,88 @@ namespace LaixerGMLTest
             ReadFileAsync(filePath);
         }
 
+        /// <summary>
+        /// Read the file
+        /// </summary>
+        /// <param name="filePath"></param>
         private void ReadFileAsync(string filePath)
         {
-            myReader = new LaixerBagReader();
             Console.WriteLine($"Going to read the following file : {filePath}");
-
-            // Make some room in the console
+            
+            myReader = new LaixerBagReader();
+            // read the file
             myReader.ReadXML(filePath);
         }
 
+        /// <summary>
+        /// Return the total amount of objects
+        /// </summary>
+        /// <returns></returns>
         public int GetTotalObjects()
         {
+            // Making sure that a reader exists
+            if (myReader == null)
+            {
+                return 0;
+            }
             return myReader.listOfBAGObjects.Count;
         }
 
+        /// <summary>
+        /// Return a list of objects
+        /// </summary>
+        /// <returns>list of BAGobjects</returns>
         public List<BAGObject> GetAllObjects()
         {
+            // Making sure that a reader exists
+            if(myReader == null)
+            {
+                return null;
+            }
             return myReader.listOfBAGObjects;
         }
+
+        /// <summary>
+        /// Get the amount of files in te directory
+        /// </summary>
+        /// <returns></returns>
+        public int GetFileCountInDirectory()
+        {
+            return Directory.EnumerateFiles(listOfDirectories[readDirectoryFolder]).ToList().Count;
+        }
+
+        /// <summary>
+        /// Get the amount of directories
+        /// </summary>
+        /// <returns></returns>
+        public int GetAmountOfDirectories()
+        {
+            return 1;
+        }
+
+        /// <summary>
+        /// Get a list of directories
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetListOfDirectories()
+        {
+            return listOfDirectories;
+        }
+
+        public List<string> GetListOfFilesInDirectory()
+        {
+            return Directory.EnumerateFiles(listOfDirectories[readDirectoryFolder]).ToList();
+        }
+
+        /// <summary>
+        /// Set the directory to read
+        /// </summary>
+        /// <param name="number">the number of the directory</param>
+        public void SetDirectoryNumber(int number)
+        {
+            readDirectoryFolder = number;
+        }
+
+        //TODO: Create function that reads a directory based on the name
     }
 }
