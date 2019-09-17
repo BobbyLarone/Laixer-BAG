@@ -45,8 +45,6 @@ namespace LaixerGMLTest
         {
             //read the xml file Async
             WithXMLReaderAsync(filePath).Wait();
-            printAllAttributes();
-
         }
 
         /// <summary>
@@ -356,14 +354,34 @@ namespace LaixerGMLTest
                                 case XmlNodeType.Element:
                                     {
                                         elementName = reader.LocalName;
-                                        if (reader.LocalName == "gerelateerdeWoonplaats")
+                                        if (reader.LocalName.ToLower() == "gerelateerdewoonplaats")
                                         {
+                                            // read next node
                                             reader.Read();
                                         }
-                                        if (reader.LocalName == "VerkorteOpenbareruimteNaam")
-                                        {
 
+                                        // Transform the date-time string to a DateTime object when these two names are found
+                                        if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
+                                        {
+                                            // Go to next part
+                                            reader.Read();
+                                            // Read the value and transform it into a DateTime object
+                                            var r = normalizeDateTime(await reader.GetValueAsync());
+                                            // Set the attribute
+                                            myObject.SetAttribute(elementName, r);
                                         }
+
+                                        // Transform the date string to a DateTime object
+                                        if (reader.LocalName.ToLower() == "documentdatum")
+                                        {
+                                            // Go to next part
+                                            reader.Read();
+                                            // Get the date string
+                                            var r = normalizeDate(await reader.GetValueAsync());
+                                            // Set the attribute
+                                            myObject.SetAttribute(elementName, r);
+                                        }
+
                                         break;
                                     }
                                 case XmlNodeType.Text:
@@ -380,7 +398,6 @@ namespace LaixerGMLTest
                                         if (reader.LocalName == nameOfelement)
                                         {
                                             // We can get out of this function, because we reached the end tag of this element
-                                            myObject.ShowAllAttributes();
                                             return;
                                         }
                                         break;
