@@ -13,7 +13,7 @@ namespace LaixerGMLTest
         private ILoader loader;
         private List<BAGObject> list;
         private List<string> directories;
-        private static int batchSize = 1;
+        private static int batchSize = 2;
         private static int dirToRead = 0;
 
         private static int fileCount;
@@ -139,6 +139,7 @@ namespace LaixerGMLTest
                 }
                 await Task.WhenAll(taskList);
             }
+
             if(rest>0)
             {
                 // for the remaining files
@@ -164,6 +165,7 @@ namespace LaixerGMLTest
             //}
 
             timer.Stop();
+            Console.WriteLine("Push complete!");
             Console.WriteLine($"Read within {timer.Elapsed.TotalSeconds} seconds");
             Console.ReadLine();
         }

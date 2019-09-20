@@ -14,7 +14,7 @@ namespace LaixerGMLTest
         {
             using (var connection = new NpgsqlConnection(""))
             {
-                var objects = LoadVBO(bAGObjects,out string sql);
+                var objects = LoadLIG(bAGObjects,out string sql);
 
                 var orderDetails = await connection.ExecuteAsync(sql, objects);
             }
@@ -102,6 +102,12 @@ namespace LaixerGMLTest
             return bAGObjects.Cast<PublicSpace>();
         }
 
+        /// <summary>
+        /// Loads the Berth (Ligplaats) objects and also provides a sql query
+        /// </summary>
+        /// <param name="bAGObjects">The BAG objects to transform</param>
+        /// <param name="sqlstring">The SQL paramater that is created for this</param>
+        /// <returns>The converted BAG objects</returns>
         private IEnumerable<Berth> LoadLIG(List<BAGObject> bAGObjects, out string sqlstring)
         {
             sqlstring = @"
@@ -131,9 +137,9 @@ namespace LaixerGMLTest
                         @DocumentNummer,
                         @DocumentDatum::date,
                         @Hoofdadres,
-                        @Ligplaatsstatus,
+                        @Ligplaatsstatus::ligplaatsstatus,
                         null,
-                        ST_Multi(ST_GeomFromGML(@Geovlak, 28992))))";
+                        ST_GeomFromGML(@Geovlak, 28992))";
 
 
             return bAGObjects.Cast<Berth>();
