@@ -14,17 +14,6 @@ namespace LaixerGMLTest.BAG_Objects
         {
             Add(new BAGstringAttribute(16, "hoofdadres", "bag_LVC:gerelateerdeAdressen/bag_LVC:hoofdadres/bag_LVC:identificatie"));
             Add(new BAGstringAttribute(16, "nevenadres", "bag_LVC:nevenadres/bag_LVC:identificatie"));
-
-            //AddRelation(new BAGrelationAttribute(
-            //    this, 
-            //    "adresseerbaarobjectnevenadres",
-            //    16, 
-            //    "nevenadres",
-            //    "bag_LVC:gerelateerdeAdressen/bag_LVC:nevenadres/bag_LVC:identificatie",
-            //    new List<string>()
-            //    {
-            //        "ligplaatsStatus", "standplaatsStatus", "verblijfsobjectStatus", "geom_valid"
-            //    }));
         }
     }
 }

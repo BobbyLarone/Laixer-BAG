@@ -11,14 +11,11 @@ namespace LaixerGMLTest.Object_Relations
     /// </summary>
     class MunicipalityResidenceRelation : BAGObject
     {
-        private string abbreviation = "GWR";
-
         public string Begindatumtijdvakgeldigheid { get => GetAttribute("begindatumtijdvakgeldigheid").GetValue(); }
         public string Einddatumtijdvakgeldigheid { get => GetAttribute("einddatumtijdvakgeldigheid").GetValue(); }
         public string Woonplaatscode { get => GetAttribute("woonplaatscode").GetValue(); }
         public string Gemeentecode { get => GetAttribute("gemeentecode").GetValue(); }
         public string status { get => GetAttribute("status").GetValue(); }
-
 
         private List<string> statusEnum = new List<string>()
         {

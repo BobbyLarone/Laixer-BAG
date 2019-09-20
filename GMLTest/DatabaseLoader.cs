@@ -9,12 +9,16 @@ namespace LaixerGMLTest
 {
     internal class DatabaseLoader : ILoader
     {
+        /// <summary>
+        /// Load the BAGObjects Async
+        /// </summary>
+        /// <param name="bAGObjects">The BAGobjects to load</param>
+        /// <returns></returns>
         public async Task LoadAsync(List<BAGObject> bAGObjects)
-        //public async Task Load(List<BAGObject> bAGObjects)
         {
             using (var connection = new NpgsqlConnection(""))
             {
-                var objects = LoadSTA(bAGObjects,out string sql);
+                var objects = LoadPND(bAGObjects,out string sql);
 
                 var orderDetails = await connection.ExecuteAsync(sql, objects);
             }
@@ -234,6 +238,12 @@ namespace LaixerGMLTest
             return bAGObjects.Cast<Premises>();
         }
 
+        /// <summary>
+        /// Loads the Location (standplaats) objects and also provides a sql query
+        /// </summary>
+        /// <param name="bAGObjects">The BAG objects to transform</param>
+        /// <param name="sqlstring">The SQL paramater that is created for this</param>
+        /// <returns>The converted BAG objects</returns>
         private IEnumerable<Location> LoadSTA(List<BAGObject> bAGObjects, out string sqlstring)
         {
             sqlstring = @"
@@ -317,6 +327,48 @@ namespace LaixerGMLTest
                         END)";
 
             return bAGObjects.Cast<Accommodation>();
+        }
+
+        /// <summary>
+        /// This is WIP DO NOT USEEE
+        /// This should give a SQL query and cast the object to the correct object time
+        /// </summary>
+        /// <param name="bagObjects"></param>
+        private void GetLoadableObject(List<BAGObject> bagObjects)
+        {
+            // Check what type the object is
+            // First check what type the first object is.
+            var firstItem = bagObjects[0];
+            var typeOfFirstItem = bagObjects.GetType();
+
+            if(typeOfFirstItem == typeof(Residence))
+            {
+
+            }
+            if (typeOfFirstItem == typeof(PublicSpace))
+            {
+
+            }
+            if (typeOfFirstItem == typeof(Berth))
+            {
+
+            }
+            if (typeOfFirstItem == typeof(NumberIndication))
+            {
+
+            }
+            if (typeOfFirstItem == typeof(Premises))
+            {
+
+            }
+            if (typeOfFirstItem == typeof(Location))
+            {
+
+            }
+            if (typeOfFirstItem == typeof(Accommodation))
+            {
+
+            }
         }
     }
 }

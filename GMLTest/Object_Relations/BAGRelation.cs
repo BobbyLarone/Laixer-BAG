@@ -32,7 +32,6 @@ namespace LaixerGMLTest.Object_Relations
             _tag = tag;
             _name = name;
             _objectType = objectType;
-
             originalObj = null;
 
             // Dictionary to acces the attributes based on key pair values

@@ -3,7 +3,6 @@ using LaixerGMLTest.Object_Relations;
 using NetTopologySuite.IO.GML2;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
@@ -17,7 +16,6 @@ namespace LaixerGMLTest
     /// </summary>
     class LaixerBagReader
     {
-
         public string logText;
         public string xmlOutput;
 
@@ -27,14 +25,6 @@ namespace LaixerGMLTest
         public LaixerBagReader()
         {
             listOfBAGObjects = new List<BAGObject>();
-        }
-
-        /// <summary>
-        /// This can read the Whole XML file within +-35 seconds
-        /// </summary>
-        public void ReadXML()
-        {
-            WithXMLReaderAsync("nope").Wait();
         }
 
         /// <summary>
@@ -122,16 +112,6 @@ namespace LaixerGMLTest
                             break;
                         }
 
-                    case XmlNodeType.Text:
-                        {
-                            break;
-                        }
-
-                    case XmlNodeType.EndElement:
-                        {
-                            break;
-                        }
-
                     default:
                         {
                             break;
@@ -183,32 +163,37 @@ namespace LaixerGMLTest
                                 case XmlNodeType.Element:
                                     {
                                         elementName = reader.LocalName;
-                                        if (reader.LocalName.ToLower() == "polygon")
-                                        {
-                                            var value = await reader.ReadOuterXmlAsync();
-                                            // Store the value in the property geovlak of this object
-                                            myObject.SetAttribute("geovlak", value);
-                                        }
-                                        // Transform the date-time string to a DateTime object when these two names are found
-                                        if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
-                                        {
-                                            // Go to next part
-                                            reader.Read();
-                                            // Read the value and transform it into a DateTime object
-                                            var r = normalizeDateTime(await reader.GetValueAsync());
-                                            // Set the attribute
-                                            myObject.SetAttribute(elementName, r);
-                                        }
-                                        // Transform the date string to a DateTime object
-                                        if (reader.LocalName.ToLower() == "documentdatum")
-                                        {
-                                            // Go to next part
-                                            reader.Read();
-                                            // Get the date string
-                                            var r = normalizeDate(await reader.GetValueAsync());
-                                            // Set the attribute
-                                            myObject.SetAttribute(elementName, r);
-                                        }
+                                        #region test
+                                        //if (reader.LocalName.ToLower() == "polygon")
+                                        //{
+                                        //    var value = await reader.ReadOuterXmlAsync();
+                                        //    // Store the value in the property geovlak of this object
+                                        //    myObject.SetAttribute("geovlak", value);
+                                        //}
+                                        //// Transform the date-time string to a DateTime object when these two names are found
+                                        //if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
+                                        //{
+                                        //    // Go to next part
+                                        //    reader.Read();
+                                        //    // Read the value and transform it into a DateTime object
+                                        //    var r = normalizeDateTime(await reader.GetValueAsync());
+                                        //    // Set the attribute
+                                        //    myObject.SetAttribute(elementName, r);
+                                        //}
+                                        //// Transform the date string to a DateTime object
+                                        //if (reader.LocalName.ToLower() == "documentdatum")
+                                        //{
+                                        //    // Go to next part
+                                        //    reader.Read();
+                                        //    // Get the date string
+                                        //    var r = normalizeDate(await reader.GetValueAsync());
+                                        //    // Set the attribute
+                                        //    myObject.SetAttribute(elementName, r);
+                                        //}
+                                        #endregion
+
+                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject);
+
                                         if (reader.LocalName.ToLower() == "hoofdadres")
                                         {
                                             //skip one node to read the text
@@ -257,32 +242,36 @@ namespace LaixerGMLTest
                                     {
                                         // Store the name of the current element
                                         elementName = reader.LocalName;
-                                        if (reader.LocalName.ToLower() == "polygon")
-                                        {
-                                            var value = await reader.ReadOuterXmlAsync();
-                                            // Store the value in the property geovlak of this object
-                                            myObject.SetAttribute("geovlak", value);
-                                        }
-                                        // Transform the date-time string to a DateTime object when these two names are found
-                                        if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
-                                        {
-                                            // Go to next part
-                                            reader.Read();
-                                            // Read the value and transform it into a DateTime object
-                                            var r = normalizeDateTime(await reader.GetValueAsync());
-                                            // Set the attribute
-                                            myObject.SetAttribute(elementName, r);
-                                        }
-                                        // Transform the date string to a DateTime object
-                                        if(reader.LocalName.ToLower() == "documentdatum")
-                                        {
-                                            // Go to next part
-                                            reader.Read();
-                                            // Get the date string
-                                            var r = normalizeDate(await reader.GetValueAsync());
-                                            // Set the attribute
-                                            myObject.SetAttribute(elementName, r);
-                                        }
+                                        #region test
+                                        //if (reader.LocalName.ToLower() == "polygon")
+                                        //{
+                                        //    var value = await reader.ReadOuterXmlAsync();
+                                        //    // Store the value in the property geovlak of this object
+                                        //    myObject.SetAttribute("geovlak", value);
+                                        //}
+                                        //// Transform the date-time string to a DateTime object when these two names are found
+                                        //if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
+                                        //{
+                                        //    // Go to next part
+                                        //    reader.Read();
+                                        //    // Read the value and transform it into a DateTime object
+                                        //    var r = normalizeDateTime(await reader.GetValueAsync());
+                                        //    // Set the attribute
+                                        //    myObject.SetAttribute(elementName, r);
+                                        //}
+                                        //// Transform the date string to a DateTime object
+                                        //if(reader.LocalName.ToLower() == "documentdatum")
+                                        //{
+                                        //    // Go to next part
+                                        //    reader.Read();
+                                        //    // Get the date string
+                                        //    var r = normalizeDate(await reader.GetValueAsync());
+                                        //    // Set the attribute
+                                        //    myObject.SetAttribute(elementName, r);
+                                        //}
+                                        #endregion
+                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject);
+
                                         break;
                                     }
                                 case XmlNodeType.Text:
@@ -338,34 +327,37 @@ namespace LaixerGMLTest
                                             var value2 = value.Replace("<gml:pos>", "<gml:pos srsDimension=\"3\">");
                                             myObject.SetAttribute("geopunt", value2);
                                         }
-                                        if (reader.LocalName.ToLower() == "polygon")
-                                        {
-                                            string value = await reader.ReadOuterXmlAsync();
-                                            // Store the value in the property geovlak of this object
-                                            myObject.SetAttribute("geovlak", value);
-                                        }
 
-                                        // Transform the date-time string to a DateTime object when these two names are found
-                                        if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
-                                        {
-                                            // Go to next part
-                                            reader.Read();
-                                            // Read the value and transform it into a DateTime object
-                                            var r = normalizeDateTime(await reader.GetValueAsync());
-                                            // Set the attribute
-                                            myObject.SetAttribute(elementName, r);
-                                        }
+                                        #region test
+                                        //// Transform the date-time string to a DateTime object when these two names are found
+                                        //if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
+                                        //{
+                                        //    // Go to next part
+                                        //    reader.Read();
+                                        //    // Read the value and transform it into a DateTime object
+                                        //    var r = normalizeDateTime(await reader.GetValueAsync());
+                                        //    // Set the attribute
+                                        //    myObject.SetAttribute(elementName, r);
+                                        //}
+                                        //if (reader.LocalName.ToLower() == "polygon")
+                                        //{
+                                        //    string value = await reader.ReadOuterXmlAsync();
+                                        //    // Store the value in the property geovlak of this object
+                                        //    myObject.SetAttribute("geovlak", value);
+                                        //}
+                                        //// Transform the date string to a DateTime object
+                                        //if (reader.LocalName.ToLower() == "documentdatum")
+                                        //{
+                                        //    // Go to next part
+                                        //    reader.Read();
+                                        //    // Get the date string
+                                        //    var r = normalizeDate(await reader.GetValueAsync());
+                                        //    // Set the attribute
+                                        //    myObject.SetAttribute(elementName, r);
+                                        //}
+                                        #endregion
+                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject);
 
-                                        // Transform the date string to a DateTime object
-                                        if (reader.LocalName.ToLower() == "documentdatum")
-                                        {
-                                            // Go to next part
-                                            reader.Read();
-                                            // Get the date string
-                                            var r = normalizeDate(await reader.GetValueAsync());
-                                            // Set the attribute
-                                            myObject.SetAttribute(elementName, r);
-                                        }
                                         break;
                                     }
                                 case XmlNodeType.Text:
@@ -378,7 +370,6 @@ namespace LaixerGMLTest
                                     }
                                 case XmlNodeType.EndElement:
                                     {
-                                        // Write the end element name. For testing purpouse
                                         if (reader.LocalName == nameOfelement)
                                         {
                                             // We can get out of this function, because we reached the end tag of this element
@@ -416,27 +407,30 @@ namespace LaixerGMLTest
                                             reader.Read();
                                         }
 
-                                        // Transform the date-time string to a DateTime object when these two names are found
-                                        if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
-                                        {
-                                            // Go to next part
-                                            reader.Read();
-                                            // Read the value and transform it into a DateTime object
-                                            var r = normalizeDateTime(await reader.GetValueAsync());
-                                            // Set the attribute
-                                            myObject.SetAttribute(elementName, r);
-                                        }
+                                        #region test
+                                        //// Transform the date-time string to a DateTime object when these two names are found
+                                        //if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
+                                        //{
+                                        //    // Go to next part
+                                        //    reader.Read();
+                                        //    // Read the value and transform it into a DateTime object
+                                        //    var r = normalizeDateTime(await reader.GetValueAsync());
+                                        //    // Set the attribute
+                                        //    myObject.SetAttribute(elementName, r);
+                                        //}
 
-                                        // Transform the date string to a DateTime object
-                                        if (reader.LocalName.ToLower() == "documentdatum")
-                                        {
-                                            // Go to next part
-                                            reader.Read();
-                                            // Get the date string
-                                            var r = normalizeDate(await reader.GetValueAsync());
-                                            // Set the attribute
-                                            myObject.SetAttribute(elementName, r);
-                                        }
+                                        //// Transform the date string to a DateTime object
+                                        //if (reader.LocalName.ToLower() == "documentdatum")
+                                        //{
+                                        //    // Go to next part
+                                        //    reader.Read();
+                                        //    // Get the date string
+                                        //    var r = normalizeDate(await reader.GetValueAsync());
+                                        //    // Set the attribute
+                                        //    myObject.SetAttribute(elementName, r);
+                                        //}
+                                        #endregion
+                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject);
 
                                         break;
                                     }
@@ -481,28 +475,33 @@ namespace LaixerGMLTest
                                 case XmlNodeType.Element:
                                     {
                                         elementName = reader.LocalName;
-                                        // Transform the date-time string to a DateTime object when these two names are found
-                                        if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
-                                        {
-                                            // Go to next part
-                                            reader.Read();
-                                            // Read the value and transform it into a DateTime object
-                                            var r = normalizeDateTime(await reader.GetValueAsync());
-                                            // Set the attribute
-                                            myObject.SetAttribute(elementName, r);
-                                        }
+                                        #region test
+                                        //// Transform the date-time string to a DateTime object when these two names are found
+                                        //if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
+                                        //{
+                                        //    // Go to next part
+                                        //    reader.Read();
+                                        //    // Read the value and transform it into a DateTime object
+                                        //    var r = normalizeDateTime(await reader.GetValueAsync());
+                                        //    // Set the attribute
+                                        //    myObject.SetAttribute(elementName, r);
+                                        //}
 
-                                        // Transform the date string to a DateTime object
-                                        if (reader.LocalName.ToLower() == "documentdatum")
-                                        {
-                                            // Go to next part
-                                            reader.Read();
-                                            // Get the date string
-                                            var r = normalizeDate(await reader.GetValueAsync());
-                                            // Set the attribute
-                                            myObject.SetAttribute(elementName, r);
-                                        }
-                                        if(reader.LocalName == "gerelateerdeOpenbareRuimte" || reader.LocalName == "gerelateerdeWoonplaats")
+                                        //// Transform the date string to a DateTime object
+                                        //if (reader.LocalName.ToLower() == "documentdatum")
+                                        //{
+                                        //    // Go to next part
+                                        //    reader.Read();
+                                        //    // Get the date string
+                                        //    var r = normalizeDate(await reader.GetValueAsync());
+                                        //    // Set the attribute
+                                        //    myObject.SetAttribute(elementName, r);
+                                        //}
+                                        #endregion
+
+                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject);
+
+                                        if (reader.LocalName == "gerelateerdeOpenbareRuimte" || reader.LocalName == "gerelateerdeWoonplaats")
                                         {
                                             // Go to next part of the element
                                             reader.Read();
@@ -510,8 +509,6 @@ namespace LaixerGMLTest
                                             var value = await reader.GetValueAsync();
                                             myObject.SetAttribute(elementName, value);
                                         }
-
-
                                         break;
                                     }
                                 case XmlNodeType.Text:
@@ -527,7 +524,6 @@ namespace LaixerGMLTest
                                         if (reader.LocalName == nameOfelement)
                                         {
                                             // We can get out of this function, because we reached the end tag of this element
-                                            //myObject.ShowAllAttributes();
                                             return;
                                         }
                                         break;
@@ -555,32 +551,36 @@ namespace LaixerGMLTest
                                 case XmlNodeType.Element:
                                     {
                                         elementName = reader.LocalName;
-                                        if (reader.LocalName.ToLower() == "polygon")
-                                        {
-                                            var value = await reader.ReadOuterXmlAsync();
-                                            // Store the value in the property geovlak of this object
-                                            myObject.SetAttribute("geovlak", value);
-                                        }
-                                        // Transform the date-time string to a DateTime object when these two names are found
-                                        if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
-                                        {
-                                            // Go to next part
-                                            reader.Read();
-                                            // Read the value and transform it into a DateTime object
-                                            var r = normalizeDateTime(await reader.GetValueAsync());
-                                            // Set the attribute
-                                            myObject.SetAttribute(elementName, r);
-                                        }
-                                        // Transform the date string to a DateTime object
-                                        if (reader.LocalName.ToLower() == "documentdatum")
-                                        {
-                                            // Go to next part
-                                            reader.Read();
-                                            // Get the date string
-                                            var r = normalizeDate(await reader.GetValueAsync());
-                                            // Set the attribute
-                                            myObject.SetAttribute(elementName, r);
-                                        }
+                                        #region test
+                                        //if (reader.LocalName.ToLower() == "polygon")
+                                        //{
+                                        //    var value = await reader.ReadOuterXmlAsync();
+                                        //    // Store the value in the property geovlak of this object
+                                        //    myObject.SetAttribute("geovlak", value);
+                                        //}
+                                        //// Transform the date-time string to a DateTime object when these two names are found
+                                        //if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
+                                        //{
+                                        //    // Go to next part
+                                        //    reader.Read();
+                                        //    // Read the value and transform it into a DateTime object
+                                        //    var r = normalizeDateTime(await reader.GetValueAsync());
+                                        //    // Set the attribute
+                                        //    myObject.SetAttribute(elementName, r);
+                                        //}
+                                        //// Transform the date string to a DateTime object
+                                        //if (reader.LocalName.ToLower() == "documentdatum")
+                                        //{
+                                        //    // Go to next part
+                                        //    reader.Read();
+                                        //    // Get the date string
+                                        //    var r = normalizeDate(await reader.GetValueAsync());
+                                        //    // Set the attribute
+                                        //    myObject.SetAttribute(elementName, r);
+                                        //}
+                                        #endregion
+                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject);
+
                                         if (reader.LocalName.ToLower() == "hoofdadres")
                                         {
                                             //skip one node to read the text
@@ -632,32 +632,36 @@ namespace LaixerGMLTest
                                 case XmlNodeType.Element:
                                     {
                                         elementName = reader.LocalName;
-                                        if (reader.LocalName.ToLower() == "polygon")
-                                        {
-                                            // Insert the list of position data into the attribute :geovlak
-                                            var value = await reader.ReadOuterXmlAsync();
-                                            myObject.SetAttribute("geovlak", value);
-                                        }
-                                        // Transform the date-time string to a DateTime object when these two names are found
-                                        if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
-                                        {
-                                            // Go to next part
-                                            reader.Read();
-                                            // Read the value and transform it into a DateTime object
-                                            var r = normalizeDateTime(await reader.GetValueAsync());
-                                            // Set the attribute
-                                            myObject.SetAttribute(elementName, r);
-                                        }
-                                        // Transform the date string to a DateTime object
-                                        if (reader.LocalName.ToLower() == "documentdatum")
-                                        {
-                                            // Go to next part
-                                            reader.Read();
-                                            // Get the date string
-                                            var r = normalizeDate(await reader.GetValueAsync());
-                                            // Set the attribute
-                                            myObject.SetAttribute(elementName, r);
-                                        }
+                                        #region test
+                                        //if (reader.LocalName.ToLower() == "polygon")
+                                        //{
+                                        //    // Insert the list of position data into the attribute :geovlak
+                                        //    var value = await reader.ReadOuterXmlAsync();
+                                        //    myObject.SetAttribute("geovlak", value);
+                                        //}
+                                        //// Transform the date-time string to a DateTime object when these two names are found
+                                        //if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
+                                        //{
+                                        //    // Go to next part
+                                        //    reader.Read();
+                                        //    // Read the value and transform it into a DateTime object
+                                        //    var r = normalizeDateTime(await reader.GetValueAsync());
+                                        //    // Set the attribute
+                                        //    myObject.SetAttribute(elementName, r);
+                                        //}
+                                        //// Transform the date string to a DateTime object
+                                        //if (reader.LocalName.ToLower() == "documentdatum")
+                                        //{
+                                        //    // Go to next part
+                                        //    reader.Read();
+                                        //    // Get the date string
+                                        //    var r = normalizeDate(await reader.GetValueAsync());
+                                        //    // Set the attribute
+                                        //    myObject.SetAttribute(elementName, r);
+                                        //}
+                                        #endregion
+
+                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject);
                                         break;
                                     }
                                 case XmlNodeType.Text:
@@ -674,6 +678,7 @@ namespace LaixerGMLTest
                                         if (reader.LocalName == nameOfelement)
                                         {
                                             // We can get out of this function, because we reached the end tag of this element
+                                            myObject.ShowAllAttributes();
                                             return;
                                         }
                                         break;
@@ -701,6 +706,8 @@ namespace LaixerGMLTest
                                 case XmlNodeType.Element:
                                     {
                                         elementName = reader.LocalName;
+
+                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject);
 
                                         break;
                                     }
@@ -730,6 +737,53 @@ namespace LaixerGMLTest
                         }
                         break;
                     }
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Fill the standard attributes
+        /// </summary>
+        /// <param name="reader">The xml reader that is used to read the xml file</param>
+        /// <param name="elementName">The main name of the element</param>
+        /// <param name="name">The name of the element that the current node is</param>
+        /// <param name="myObject">The BAGobject for the current element</param>
+        /// <returns></returns>
+        private async Task FillStandardAttributes(XmlReader reader, string elementName, string name, BAGObject myObject)
+        {
+            name = name.ToLower();
+            switch (name)
+            {
+                case "polygon":
+                    {
+                        // Insert the list of position data into the attribute :geovlak
+                        var value = await reader.ReadOuterXmlAsync();
+                        myObject.SetAttribute("geovlak", value);
+                        break;
+                    }
+                case "begindatumtijdvakgeldigheid":
+                case "einddatumtijdvakgeldigheid":
+                    {
+                        // Go to next part
+                        reader.Read();
+                        // Read the value and transform it into a DateTime object
+                        var r = normalizeDateTime(await reader.GetValueAsync());
+                        // Set the attribute
+                        myObject.SetAttribute(elementName, r);
+                        break;
+                    }
+                case "documentdatum":
+                    {
+                        // Go to next part
+                        reader.Read();
+                        // Get the date string
+                        var r = normalizeDate(await reader.GetValueAsync());
+                        // Set the attribute
+                        myObject.SetAttribute(elementName, r);
+                        break;
+                    }
+
                 default:
                     break;
             }
@@ -792,6 +846,11 @@ namespace LaixerGMLTest
 
         }
 
+        /// <summary>
+        /// normalize the datetime string ( ISO8106)
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
         private DateTime normalizeDateTime(string time)
         {
             // Split and store the date and time separate
@@ -808,7 +867,7 @@ namespace LaixerGMLTest
         }
 
         /// <summary>
-        /// normalize the datetime string ( ISO8106)
+        /// normalize the date string ( ISO8106)
         /// </summary>
         /// <param name="time"></param>
         /// <returns></returns>
