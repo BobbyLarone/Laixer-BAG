@@ -60,6 +60,5 @@ namespace LaixerGMLTest.BAG_Objects
                 }
             }
         }
-
     }
 }

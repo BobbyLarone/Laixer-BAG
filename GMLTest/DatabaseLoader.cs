@@ -3,29 +3,31 @@ using LaixerGMLTest.BAG_Objects;
 using Npgsql;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace LaixerGMLTest
 {
     internal class DatabaseLoader : ILoader
     {
-        public void Load(List<BAGObject> bAGObjects)
+        public async Task LoadAsync(List<BAGObject> bAGObjects)
+        //public async Task Load(List<BAGObject> bAGObjects)
         {
             using (var connection = new NpgsqlConnection(""))
             {
-                // TOOD: Check to insert which table.
+                var objects = LoadVBO(bAGObjects,out string sql);
 
-                //var residenceObjects = bAGObjects.Cast<Residence>();
-
-                var residenceObjects = bAGObjects.Cast<PublicSpace>();
-
-                var sql = LoadOPR();
-
-                var orderDetails = connection.Execute(sql, residenceObjects);
+                var orderDetails = await connection.ExecuteAsync(sql, objects);
             }
         }
-        private string LoadWPL()
+        /// <summary>
+        /// Loads the Residence (Woonplaats) objects and also provides a sql query
+        /// </summary>
+        /// <param name="bAGObjects">The BAG objects to transform</param>
+        /// <param name="sqlstring">The SQL paramater that is created for this</param>
+        /// <returns>The converted BAG objects</returns>
+        private IEnumerable<Residence> LoadWPL(List<BAGObject> bAGObjects, out string sqlstring)
         {
-            return $@"
+            sqlstring = $@"
                     INSERT INTO public.woonplaats(
                         identificatie,
                         aanduidingrecordinactief,
@@ -41,7 +43,7 @@ namespace LaixerGMLTest
                         geom_valid,
                         geovlak)
                     VALUES (
-                        @Identification,
+                        @Identificatie,
                         @AanduidingRecordInactief::boolean,
                         @AanduidingRecordCorrectie::int,
                         @Officieel::boolean,
@@ -54,10 +56,19 @@ namespace LaixerGMLTest
                         @WoonplaatsStatus::woonplaatsstatus,
                         null,
                         ST_Multi(ST_GeomFromGML(@Geovlak, 28992)))";
+
+            return bAGObjects.Cast<Residence>();
         }
-        private string LoadOPR()
+        /// <summary>
+        /// Loads the Public space (Openbare ruimte) objects and also provides a sql query
+        /// </summary>
+        /// <param name="bAGObjects">The BAG objects to transform</param>
+        /// <param name="sqlstring">The SQL paramater that is created for this</param>
+        /// <returns>The converted BAG objects</returns>
+        private IEnumerable<PublicSpace> LoadOPR(List<BAGObject> bAGObjects, out string sqlstring)
         {
-            return @"INSERT INTO public.openbareruimte(
+            sqlstring = @"
+                    INSERT INTO public.openbareruimte(
                         identificatie,
                         aanduidingrecordinactief,
                         aanduidingrecordcorrectie,
@@ -72,9 +83,9 @@ namespace LaixerGMLTest
                         openbareruimtetype,
                         gerelateerdewoonplaats,
                         verkorteopenbareruimtenaam)
-                        VALUES
+                    VALUES
                         (
-                        @Identification,
+                        @Identificatie,
                         @AanduidingRecordInactief::boolean,
                         @AanduidingRecordCorrectie::int,
                         @Officieel::boolean,
@@ -88,31 +99,187 @@ namespace LaixerGMLTest
                         @OpenbareRuimteType::openbareruimtetype,
                         @GerelateerdeWoonplaats,
                         @VerkorteOpenbareruimteNaam)";
+            return bAGObjects.Cast<PublicSpace>();
         }
 
-        private void LoadLIG()
+        private IEnumerable<Berth> LoadLIG(List<BAGObject> bAGObjects, out string sqlstring)
         {
+            sqlstring = @"
+                    INSERT INTO public.ligplaats(
+                        identificatie,
+                        aanduidingrecordinactief,
+                        aanduidingrecordcorrectie,
+                        officieel,
+                        inonderzoek,
+                        begindatumtijdvakgeldigheid,
+                        einddatumtijdvakgeldigheid,
+                        documentnummer,
+                        documentdatum,
+                        hoofdadres,
+                        ligplaatsstatus,
+                        geom_valid,
+                        geovlak)
+                    VALUES
+                        (
+                        @Identificatie,
+                        @AanduidingRecordInactief::boolean,
+                        @AanduidingRecordCorrectie::int,
+                        @Officieel::boolean,
+                        @InOnderzoek::boolean,
+                        @BegindatumTijdvakGeldigheid::timestamptz,
+                        @EinddatumTijdvakGeldigheid::timestamptz,
+                        @DocumentNummer,
+                        @DocumentDatum::date,
+                        @Hoofdadres,
+                        @Ligplaatsstatus,
+                        null,
+                        ST_Multi(ST_GeomFromGML(@Geovlak, 28992))))";
 
+
+            return bAGObjects.Cast<Berth>();
+        }
+        /// <summary>
+        /// Loads the Number Indication (Nummer Indicatie) objects and also provides a sql query
+        /// </summary>
+        /// <param name="bAGObjects">The BAG objects to transform</param>
+        /// <param name="sqlstring">The SQL paramater that is created for this</param>
+        /// <returns>The converted BAG objects</returns>
+        private IEnumerable<NumberIndication> LoadNUM(List<BAGObject> bAGObjects, out string sqlstring)
+        {
+            sqlstring = @"
+                    INSERT INTO public.nummeraanduiding(
+                        identificatie,
+                        aanduidingrecordinactief,
+                        aanduidingrecordcorrectie,
+                        officieel,
+                        inonderzoek,
+                        begindatumtijdvakgeldigheid,
+                        einddatumtijdvakgeldigheid,
+                        documentnummer,
+                        documentdatum,
+                        huisnummer,
+                        huisletter,
+                        huisnummertoevoeging,
+                        postcode,
+                        nummeraanduidingstatus,
+                        typeadresseerbaarobject,
+                        gerelateerdeopenbareruimte,
+                        gerelateerdewoonplaats)
+                        VALUES
+                        (
+                        @Identificatie,
+                        @AanduidingRecordInactief::boolean,
+                        @AanduidingRecordCorrectie::int,
+                        @Officieel::boolean,
+                        @InOnderzoek::boolean,
+                        @BegindatumTijdvakGeldigheid::timestamptz,
+                        @EinddatumTijdvakGeldigheid::timestamptz,
+                        @DocumentNummer,
+                        @DocumentDatum::date,
+                        @Huisnummer::numeric,
+                        @Huisletter,
+                        @Huisnummertoevoeging,
+                        @Postcode,
+                        @Nummeraanduidingstatus::nummeraanduidingstatus,
+                        @Typeadresseerbaarobject::typeadresseerbaarobject,
+                        @Gerelateerdeopenbareruimte,
+                        @Gerelateerdewoonplaats)";
+            return bAGObjects.Cast<NumberIndication>();
         }
 
-        private void LoadNUM()
+        /// <summary>
+        /// Loads the Premises (Panden) objects and also provides a sql query
+        /// </summary>
+        /// <param name="bAGObjects">The BAG objects to transform</param>
+        /// <param name="sqlstring">The SQL paramater that is created for this</param>
+        /// <returns>The converted BAG objects</returns>
+        private IEnumerable<Premises> LoadPND(List<BAGObject> bAGObjects, out string sqlstring)
         {
-
-        }
-
-        private void LoadPND()
-        {
-
+            sqlstring = @"
+                    INSERT INTO public.pand(
+                        identificatie,
+                        aanduidingrecordinactief,
+                        aanduidingrecordcorrectie,
+                        officieel,
+                        inonderzoek,
+                        begindatumtijdvakgeldigheid,
+                        einddatumtijdvakgeldigheid,
+                        documentnummer,
+                        documentdatum,
+                        pandstatus,
+                        bouwjaar,
+                        geom_valid,
+                        geovlak)
+                        VALUES
+                        (
+                        @Identificatie,
+                        @AanduidingRecordInactief::boolean,
+                        @AanduidingRecordCorrectie::int,
+                        @Officieel::boolean,
+                        @InOnderzoek::boolean,
+                        @BegindatumTijdvakGeldigheid::timestamptz,
+                        NULLIF(@EinddatumTijdvakGeldigheid::timestamptz,'0001-01-01 00:00:00+00'::timestamptz),
+                        @DocumentNummer,
+                        @DocumentDatum::date,
+                        @Pandstatus::pandstatus,
+                        @Bouwjaar::numeric,
+                        null,
+                        ST_GeomFromGML(@Geovlak, 28992))";
+            return bAGObjects.Cast<Premises>();
         }
 
         private void LoadSTA()
         {
 
         }
-
-        private void LoadVBO()
+        /// <summary>
+        /// Loads the Accomodation(Verblijfs objecten) objects and also provides a sql query
+        /// </summary>
+        /// <param name="bAGObjects">The BAG objects to transform</param>
+        /// <param name="sqlstring">The SQL paramater that is created for this</param>
+        /// <returns>The converted BAG objects</returns>
+        private IEnumerable<Accommodation> LoadVBO(List<BAGObject> bAGObjects, out string sqlstring)
         {
+            sqlstring = $@"
+                    INSERT INTO public.verblijfsobject(
+                        identificatie,
+                        aanduidingrecordinactief,
+                        aanduidingrecordcorrectie,
+                        officieel,
+                        inonderzoek,
+                        begindatumtijdvakgeldigheid,
+                        einddatumtijdvakgeldigheid,
+                        documentnummer,
+                        documentdatum,
+                        hoofdadres,
+                        verblijfsobjectstatus,
+                        oppervlakteverblijfsobject,
+                        geom_valid,
+                        geopunt,
+                        geovlak)
+                    VALUES (
+                        @Identificatie,
+                        @AanduidingRecordInactief::boolean,
+                        @AanduidingRecordCorrectie::int,
+                        @Officieel::boolean,
+                        @InOnderzoek::boolean,
+                        @BegindatumTijdvakGeldigheid::timestamptz,
+                        @EinddatumTijdvakGeldigheid::timestamptz,
+                        @DocumentNummer,
+                        @DocumentDatum::date,
+                        @Hoofdadres,
+                        @Verblijfsobjectstatus::verblijfsobjectstatus,
+                        @Oppervlakteverblijfsobject::numeric,
+                        null,
+                        CASE 
+                            WHEN (@Geopunt IS NULL) THEN NULL
+                            ELSE ST_GeomFromGML(@Geopunt, 28992)
+                        END,
+                        CASE WHEN (@Geovlak IS NULL) THEN NULL 
+                            ELSE ST_GeomFromGML(@Geovlak, 28992)
+                        END)";
 
+            return bAGObjects.Cast<Accommodation>();
         }
     }
 }

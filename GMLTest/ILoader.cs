@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LaixerGMLTest
 {
     public interface ILoader
     {
-        void Load(List<BAG_Objects.BAGObject> bAGObjects);
+        Task LoadAsync(List<BAG_Objects.BAGObject> bAGObjects);
+        //Task Load(List<BAG_Objects.BAGObject> bAGObjects);
     }
 }

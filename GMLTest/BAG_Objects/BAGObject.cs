@@ -27,7 +27,7 @@ namespace LaixerGMLTest.BAG_Objects
         // the object type of this object
         private string _objectType;
 
-        public string Identification { get => GetAttribute("identificatie").GetValue(); }
+        public string Identificatie { get => GetAttribute("identificatie").GetValue(); }
         public bool AanduidingRecordInactief { get => GetAttribute("aanduidingRecordInactief").GetValue().AsBoolean(); }
         public string AanduidingRecordCorrectie { get => GetAttribute("aanduidingRecordCorrectie").GetValue(); }
         public bool Officieel { get => GetAttribute("officieel").GetValue().AsBoolean(); }
@@ -104,6 +104,11 @@ namespace LaixerGMLTest.BAG_Objects
             return result;
         }
 
+        public List<BAGrelationAttribute> GetListOfRelations()
+        {
+            return relations;
+        }
+
         public string GetTag() { return _tag; }
 
         /// <summary>
@@ -126,10 +131,20 @@ namespace LaixerGMLTest.BAG_Objects
         /// Checks if this object has the specified attribute
         /// </summary>
         /// <param name="name">The name of the attribute</param>
-        /// <returns></returns>
+        /// <returns>Boolean if the attribute exists</returns>
         public bool HasAttribute(string name)
         {
             return attributeList.Exists(x => x.GetName() == name);
+        }
+
+        /// <summary>
+        /// check if this object has the specific relation attribute
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>Boolean if the relation attribute exists</returns>
+        public bool HasRelationAttribute(string name)
+        {
+            return relations.Exists(x => x.GetName() == name);
         }
 
         /// <summary>
@@ -154,6 +169,16 @@ namespace LaixerGMLTest.BAG_Objects
 
         }
 
+        /// <summary>
+        /// Get a BAG relation attribute that matches the name
+        /// </summary>
+        /// <param name="name">Name of the relation attribute</param>
+        /// <returns></returns>
+        public BAGrelationAttribute GetRelationAttribute(string name)
+        {
+            return HasRelationAttribute(name) ? relations.Find(x => x.GetName() == name) : null;
+        }
+
         public List<BAGAttribute> GetListOfAttributes() { return attributeList; }
 
         /// <summary>
@@ -170,7 +195,6 @@ namespace LaixerGMLTest.BAG_Objects
                 SetAttribute(attribute.GetName(), values[i]);
                 i++;
             }
-
         }
 
         /// <summary>
@@ -196,6 +220,14 @@ namespace LaixerGMLTest.BAG_Objects
             if (HasAttribute(attributeName))
             {
                 GetAttribute(attributeName).SetDateTime(value);
+            }
+        }
+
+        public void SetRelationAttribute(string relationAttributeName, string value)
+        {
+            if(HasRelationAttribute(relationAttributeName))
+            {
+                GetRelationAttribute(relationAttributeName).SetValue(value);
             }
         }
 

@@ -88,6 +88,7 @@ namespace LaixerGMLTest
             Console.WriteLine($"Going to read the following file : {filePath}");
             
             myReader = new LaixerBagReader();
+
             // read the file
             myReader.ReadXML(filePath);
         }

@@ -12,10 +12,11 @@ namespace LaixerGMLTest.BAG_Objects
     {
         public string VerblijfsobjectStatus { get => GetAttribute("verblijfsobjectStatus").GetValue(); }
         public string OppervlakteVerblijfsobject { get => GetAttribute("oppervlakteVerblijfsobject").GetValue(); }
-        public string Geopunt { get => GetAttribute("geopunt").GetValue(); }
         public string LigplaatsStatus { get => GetAttribute("verblijfsobjectStatus").GetValue(); }
         public string GebruiksdoelVerblijfsobject { get => GetAttribute("gebruiksdoelVerblijfsobject").GetValue(); }
         public string GerelateerdPand { get => GetAttribute("gerelateerdPand").GetValue(); }
+        public string NevenAdres { get => GetAttribute("nevenadres").GetValue() == "" ? null : GetAttribute("nevenadres").GetValue(); }
+        public string Geopunt { get => GetAttribute("geopunt").GetValue(); }
         public string Geovlak { get => GetAttribute("geovlak").GetValue(); }
         public string Geom_valid { get => GetAttribute("geom_valid").GetValue() == "" ? null : GetAttribute("geom_valid").GetValue(); }
 
@@ -48,7 +49,9 @@ namespace LaixerGMLTest.BAG_Objects
         public Accommodation() : base("bag_LVC:Verblijfsobject", "verblijfsobject", "VBO")
         {
             Add(new BAGenumAttribute(accomodationStatus, accomodationStatus.Count, "verblijfsobjectStatus", "bag_LVC:verblijfsobjectStatus"));
+            Add(new BAGenumAttribute(accomodationPurpose, accomodationPurpose.Count, "gebruiksdoelVerblijfsobject", "bag_LVC:gebruiksdoelVerblijfsobject"));
             Add(new BAGnumericAttribute(6, "oppervlakteVerblijfsobject", "bag_LVC:oppervlakteVerblijfsobject"));
+            Add(new BAGstringAttribute(16, "gerelateerdPand","bag_LVC:gerelateerdPand/bag_LVC:identificatie"));
             Add(new BAGpoint(3, "geopunt", "bag_LVC:verblijfsobjectGeometrie"));
             Add(new BAGpolygon(3, "geovlak", "bag_LVC:verblijfsobjectGeometrie"));
             Add(new BAGgeometryValidation("geom_valid", "geovlak"));
@@ -79,10 +82,17 @@ namespace LaixerGMLTest.BAG_Objects
         public void ShowAllAttributes()
         {
             var myList = GetListOfAttributes();
-            Console.WriteLine($"{myList.Count} Attributes were found");
+            Console.WriteLine($"{myList.Count} Attributes were found.");
             foreach (var att in myList)
             {
-                Console.WriteLine($"Found: {att.GetName()} Value: {att.GetValue()}");
+                if (att.GetType() == typeof(BAGdatetimeAttribute))
+                {
+                    Console.WriteLine($"Found: {att.GetName()} Value: {att.GetDateTime()}");
+                }
+                else
+                {
+                    Console.WriteLine($"Found: {att.GetName()} Value: {att.GetValue()}");
+                }
             }
         }
 

@@ -11,7 +11,7 @@ namespace LaixerGMLTest.BAG_Objects
     class Premises : BAGObject
     {
 
-        public string PandStatus { get => GetAttribute("pandStatus").GetValue(); }
+        public string PandStatus { get => GetAttribute("pandstatus").GetValue(); }
         public string Bouwjaar { get => GetAttribute("bouwjaar").GetValue(); }
         public string Geovlak { get => GetAttribute("geovlak").GetValue(); }
         public string Geom_valid { get => GetAttribute("geom_valid").GetValue() == "" ? null : GetAttribute("geom_valid").GetValue(); }
@@ -34,7 +34,7 @@ namespace LaixerGMLTest.BAG_Objects
         /// </summary>
         public Premises() : base("bag_LVC:Pand", "pand", "PND")
         {
-            Add(new BAGenumAttribute(statusEnum,statusEnum.Count, "pandStatus", "bag_LVC:pandstatus"));
+            Add(new BAGenumAttribute(statusEnum,statusEnum.Count, "pandstatus", "bag_LVC:pandstatus"));
             Add(new BAGnumericAttribute(4, "bouwjaar", "bag_LVC:bouwjaar"));
             Add(new BAGpolygon(3, "geovlak", "bag_LVC:pandGeometrie"));
             Add(new BAGgeometryValidation("geom_valid", "geovlak"));
@@ -55,7 +55,14 @@ namespace LaixerGMLTest.BAG_Objects
             Console.WriteLine($"{myList.Count} Attributes were found");
             foreach (var att in myList)
             {
-                Console.WriteLine($"Found: {att.GetName()} Value: {att.GetValue()}");
+                if (att.GetType() == typeof(BAGdatetimeAttribute))
+                {
+                    Console.WriteLine($"Found: {att.GetName()} Value: {att.GetDateTime()}");
+                }
+                else
+                {
+                    Console.WriteLine($"Found: {att.GetName()} Value: {att.GetValue()}");
+                }
             }
         }
     }

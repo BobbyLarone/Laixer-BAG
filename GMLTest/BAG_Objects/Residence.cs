@@ -41,7 +41,14 @@ namespace LaixerGMLTest.BAG_Objects
             Console.WriteLine($"{myList.Count} Attributes were found");
             foreach (var att in myList)
             {
-                Console.WriteLine($"Found: {att.GetName()} Value: {att.GetValue()}");
+                if (att.GetType() == typeof(BAGdatetimeAttribute))
+                {
+                    Console.WriteLine($"Found: {att.GetName()} Value: {att.GetDateTime()}");
+                }
+                else
+                {
+                    Console.WriteLine($"Found: {att.GetName()} Value: {att.GetValue()}");
+                }
             }
         }
     }

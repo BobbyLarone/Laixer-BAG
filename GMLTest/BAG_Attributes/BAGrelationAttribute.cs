@@ -17,8 +17,8 @@ namespace LaixerGMLTest.BAG_Attributes
         {
             _parent = parent;
             _relationName = relationName;
-            _parent = parent;
             _extraAttributes = extraAttributes;
+            values = new List<string>();
         }
 
         /// <summary>
