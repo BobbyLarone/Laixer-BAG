@@ -18,7 +18,12 @@ namespace LaixerGMLTest
         {
             using (var connection = new NpgsqlConnection(""))
             {
-                var objects = LoadPND(bAGObjects,out string sql);
+                if (1 == 1)
+                {
+                    //
+                }
+
+                var objects = LoadWPL(bAGObjects, out string sql);
 
                 var orderDetails = await connection.ExecuteAsync(sql, objects);
             }
@@ -336,36 +341,42 @@ namespace LaixerGMLTest
         /// <param name="bagObjects"></param>
         private void GetLoadableObject(List<BAGObject> bagObjects)
         {
+            if (bagObjects.Count == 0)
+            {
+                throw new System.Exception("XYZ");
+            }
+
             // Check what type the object is
             // First check what type the first object is.
             var firstItem = bagObjects[0];
-            var typeOfFirstItem = bagObjects.GetType();
 
-            if(typeOfFirstItem == typeof(Residence))
+            // FUTURE: We can improve this in C# 8.0
+
+            if (firstItem is Residence)
+            {
+                //
+            }
+            else if (firstItem is PublicSpace)
             {
 
             }
-            if (typeOfFirstItem == typeof(PublicSpace))
+            else if (firstItem is Berth)
             {
 
             }
-            if (typeOfFirstItem == typeof(Berth))
+            else if (firstItem is NumberIndication)
             {
 
             }
-            if (typeOfFirstItem == typeof(NumberIndication))
+            else if (firstItem is Premises)
             {
 
             }
-            if (typeOfFirstItem == typeof(Premises))
+            else if (firstItem is Location)
             {
 
             }
-            if (typeOfFirstItem == typeof(Location))
-            {
-
-            }
-            if (typeOfFirstItem == typeof(Accommodation))
+            else if (firstItem is Accommodation)
             {
 
             }

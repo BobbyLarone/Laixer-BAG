@@ -85,7 +85,7 @@ namespace LaixerGMLTest
         /// <param name="filePath"></param>
         private void ReadFileAsync(string filePath)
         {
-            Console.WriteLine($"Going to read the following file : {filePath}");
+            Console.WriteLine($"Going to read the following file : {Path.GetFileName(filePath)}");
             
             myReader = new LaixerBagReader();
 

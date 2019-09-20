@@ -16,9 +16,6 @@ namespace LaixerGMLTest
     /// </summary>
     class LaixerBagReader
     {
-        public string logText;
-        public string xmlOutput;
-
         public List<BAGObject> listOfBAGObjects;
         BAGObjectFactory BAGObjectFactory = new BAGObjectFactory();
 
