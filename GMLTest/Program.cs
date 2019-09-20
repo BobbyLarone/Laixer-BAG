@@ -13,8 +13,8 @@ namespace LaixerGMLTest
         private ILoader loader;
         private List<BAGObject> list;
         private List<string> directories;
-        private static int batchSize = 2;
-        private static int dirToRead = 0;
+        private static int batchSize = 5;
+        private static int dirToRead = 4;
 
         private static int fileCount;
 

@@ -14,7 +14,7 @@ namespace LaixerGMLTest
         {
             using (var connection = new NpgsqlConnection(""))
             {
-                var objects = LoadLIG(bAGObjects,out string sql);
+                var objects = LoadSTA(bAGObjects,out string sql);
 
                 var orderDetails = await connection.ExecuteAsync(sql, objects);
             }
@@ -234,9 +234,40 @@ namespace LaixerGMLTest
             return bAGObjects.Cast<Premises>();
         }
 
-        private void LoadSTA()
+        private IEnumerable<Location> LoadSTA(List<BAGObject> bAGObjects, out string sqlstring)
         {
+            sqlstring = @"
+                    INSERT INTO public.standplaats(
+                        identificatie,
+                        aanduidingrecordinactief,
+                        aanduidingrecordcorrectie,
+                        officieel,
+                        inonderzoek,
+                        begindatumtijdvakgeldigheid,
+                        einddatumtijdvakgeldigheid,
+                        documentnummer,
+                        documentdatum,
+                        hoofdadres,
+                        standplaatsstatus,
+                        geom_valid,
+                        geovlak)
+                    VALUES
+                        (
+                        @Identificatie,
+                        @AanduidingRecordInactief::boolean,
+                        @AanduidingRecordCorrectie::int,
+                        @Officieel::boolean,
+                        @InOnderzoek::boolean,
+                        @BegindatumTijdvakGeldigheid::timestamptz,
+                        @EinddatumTijdvakGeldigheid::timestamptz,
+                        @DocumentNummer,
+                        @DocumentDatum::date,
+                        @Hoofdadres,
+                        @Standplaatsstatus::standplaatsstatus,
+                        null,
+                        ST_GeomFromGML(@Geovlak, 28992))";
 
+            return bAGObjects.Cast<Location>();
         }
         /// <summary>
         /// Loads the Accomodation(Verblijfs objecten) objects and also provides a sql query
