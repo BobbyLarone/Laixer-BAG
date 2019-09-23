@@ -11,11 +11,9 @@ namespace LaixerGMLTest.Object_Relations
     /// </summary>
     class MunicipalityResidenceRelation : BAGObject
     {
-        public string Begindatumtijdvakgeldigheid { get => GetAttribute("begindatumtijdvakgeldigheid").GetValue(); }
-        public string Einddatumtijdvakgeldigheid { get => GetAttribute("einddatumtijdvakgeldigheid").GetValue(); }
         public string Woonplaatscode { get => GetAttribute("woonplaatscode").GetValue(); }
         public string Gemeentecode { get => GetAttribute("gemeentecode").GetValue(); }
-        public string status { get => GetAttribute("status").GetValue(); }
+        public string Status { get => GetAttribute("status").GetValue(); }
 
         private List<string> statusEnum = new List<string>()
         {
@@ -25,8 +23,6 @@ namespace LaixerGMLTest.Object_Relations
 
         public MunicipalityResidenceRelation() : base("gwr_LVC:GemeenteWoonplaatsRelatie", "gemeente_woonplaats", "GWR")
         {
-            Add(new BAGdatetimeAttribute("begindatumtijdvakgeldigheid", "gwr_LVC:tijdvakgeldigheid/bagtype:begindatumTijdvakGeldigheid"));
-            Add(new BAGdatetimeAttribute("einddatumtijdvakgeldigheid", "gwr_LVC:tijdvakgeldigheid/bagtype:einddatumTijdvakGeldigheid"));
             Add(new BAGnumericAttribute(4, "woonplaatscode", "gwr_LVC:gerelateerdeWoonplaats/gwr_LVC:identificatie"));
             Add(new BAGnumericAttribute(4, "gemeentecode", "gwr_LVC:gerelateerdeGemeente/gwr_LVC:identificatie"));
             Add(new BAGenumAttribute(statusEnum,statusEnum.Count, "status", "gwr_LVC:status"));
@@ -39,6 +35,23 @@ namespace LaixerGMLTest.Object_Relations
         public bool HasGeometry()
         {
             return true;
+        }
+
+        public void ShowAllAttributes()
+        {
+            var myList = GetListOfAttributes();
+            Console.WriteLine($"{myList.Count} Attributes were found");
+            foreach (var att in myList)
+            {
+                if (att.GetType() == typeof(BAGdatetimeAttribute))
+                {
+                    Console.WriteLine($"Found: {att.GetName()} Value: {att.GetDateTime()}");
+                }
+                else
+                {
+                    Console.WriteLine($"Found: {att.GetName()} Value: {att.GetValue()}");
+                }
+            }
         }
     }
 }

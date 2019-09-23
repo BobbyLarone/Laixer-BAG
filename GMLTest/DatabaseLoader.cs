@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using LaixerGMLTest.BAG_Objects;
+using LaixerGMLTest.Object_Relations;
 using Npgsql;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace LaixerGMLTest
                     //
                 }
 
-                var objects = LoadWPL(bAGObjects, out string sql);
+                var objects = LoadGWR(bAGObjects, out string sql);
 
                 var orderDetails = await connection.ExecuteAsync(sql, objects);
             }
@@ -335,12 +336,40 @@ namespace LaixerGMLTest
         }
 
         /// <summary>
+        /// Loads the Accomodation(Verblijfs objecten) objects and also provides a sql query
+        /// </summary>
+        /// <param name="bAGObjects">The BAG objects to transform</param>
+        /// <param name="sqlstring">The SQL paramater that is created for this</param>
+        /// <returns>The converted BAG objects</returns>
+        private IEnumerable<MunicipalityResidenceRelation> LoadGWR(List<BAGObject> bAGObjects, out string sqlstring)
+        {
+            sqlstring = $@"
+                    INSERT INTO public.gemeente_woonplaats(
+                        begindatumtijdvakgeldigheid,
+                        einddatumtijdvakgeldigheid,
+                        woonplaatscode,
+                        gemeentecode,
+                        status)
+                    VALUES (
+                        @BegindatumTijdvakGeldigheid::timestamptz,
+                        @EinddatumTijdvakGeldigheid::timestamptz,
+                        @Woonplaatscode,
+                        @Gemeentecode,
+                        @Status::gemeentewoonplaatsstatus)";
+
+            return bAGObjects.Cast<MunicipalityResidenceRelation>();
+        }
+
+
+
+        /// <summary>
         /// This is WIP DO NOT USEEE
         /// This should give a SQL query and cast the object to the correct object time
         /// </summary>
         /// <param name="bagObjects"></param>
-        private void GetLoadableObject(List<BAGObject> bagObjects)
+        private void GetLoadableObject(List<BAGObject> bagObjects, out string sqlstring)
         {
+            sqlstring = "";
             if (bagObjects.Count == 0)
             {
                 throw new System.Exception("XYZ");
@@ -354,7 +383,8 @@ namespace LaixerGMLTest
 
             if (firstItem is Residence)
             {
-                //
+                // load parameters for "Woonplaats"
+                var residence = LoadWPL(bagObjects,out sqlstring);
             }
             else if (firstItem is PublicSpace)
             {
@@ -377,6 +407,10 @@ namespace LaixerGMLTest
 
             }
             else if (firstItem is Accommodation)
+            {
+
+            }
+            else 
             {
 
             }

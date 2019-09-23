@@ -8,13 +8,13 @@ namespace LaixerGMLTest
 {
     internal sealed class Program
     {
-        private static int batchSize = 10;
+        private static int batchSize = 1;
         private static DirectoryReader directoryReader;
         private string path;
         private ILoader loader;
         private List<BAGObject> list;
         private List<string> directories;
-        private static int dirToRead = 4;
+        private static int dirToRead = 7;
 
         private static int fileCount;
 
@@ -93,7 +93,7 @@ namespace LaixerGMLTest
             // loop through the files
             for (var x = 0; x < whole; ++x)
             {
-                for (var i = 0; i < (rest == 0 ? batchSize : rest); ++i)
+                for (var i = 0; i < batchSize; ++i)
                 {
                     taskList[i] = new Program()
                             .Process(numberOfFile)
@@ -104,18 +104,31 @@ namespace LaixerGMLTest
                 await Task.WhenAll(taskList);
             }
 
-            //if (rest > 0)
+            //for (var x = 0; x < whole; ++x)
             //{
-            //    // for the remaining files
-            //    for (int y = 0; y < rest; y++)
+            //    for (var i = 0; i < (rest == 0 ? batchSize : rest); ++i)
             //    {
-            //        taskList[y] = new Program()
+            //        taskList[i] = new Program()
             //                .Process(numberOfFile)
             //                .Load<DatabaseLoader>();
             //        numberOfFile++;
             //    }
+
             //    await Task.WhenAll(taskList);
             //}
+
+            if (rest > 0)
+            {
+                // for the remaining files
+                for (int y = 0; y < rest; y++)
+                {
+                    taskList[y] = new Program()
+                            .Process(numberOfFile)
+                            .Load<DatabaseLoader>();
+                    numberOfFile++;
+                }
+                await Task.WhenAll(taskList);
+            }
 
             timer.Stop();
             Console.WriteLine("Push complete!");

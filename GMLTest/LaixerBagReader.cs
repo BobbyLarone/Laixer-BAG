@@ -83,6 +83,11 @@ namespace LaixerGMLTest
                         await ReadXMLBody(reader).ConfigureAwait(false);
                         break;
                     }
+                case "BAG-GWR-Deelbestand-LVC":
+                    {
+                        await ReadXMLBody(reader).ConfigureAwait(false);
+                        break;
+                    }
                 case "BAG-Mutaties-Deelbestand-LVC":
                     {
                         break;
@@ -131,6 +136,11 @@ namespace LaixerGMLTest
                     }
 
                 case "bag_LVC":
+                    {
+                        await BAGObjectGenerator(reader).ConfigureAwait(false);
+                        break;
+                    }
+                case "gwr_LVC":
                     {
                         await BAGObjectGenerator(reader).ConfigureAwait(false);
                         break;
@@ -675,7 +685,6 @@ namespace LaixerGMLTest
                                         if (reader.LocalName == nameOfelement)
                                         {
                                             // We can get out of this function, because we reached the end tag of this element
-                                            myObject.ShowAllAttributes();
                                             return;
                                         }
                                         break;
@@ -705,6 +714,30 @@ namespace LaixerGMLTest
                                         elementName = reader.LocalName;
 
                                         await FillStandardAttributes(reader, elementName, reader.LocalName, myObject);
+
+                                        if(reader.LocalName.ToLower() == "gerelateerdewoonplaats")
+                                        {
+                                            //skip to "identificatie" node
+                                            reader.Read();
+                                            reader.Read();
+                                            // retrieve the value in the node
+                                            string value = await reader.GetValueAsync().ConfigureAwait(false);
+
+                                            // set the value for this node in the attribute "woonplaatscode"
+                                            myObject.SetAttribute("woonplaatscode", value);
+
+                                        }
+                                        if (reader.LocalName.ToLower() == "gerelateerdegemeente")
+                                        {
+                                            //skip to "identificatie" node
+                                            reader.Read();
+                                            reader.Read();
+                                            // retrieve the value in the node
+                                            string value = await reader.GetValueAsync().ConfigureAwait(false);
+
+                                            // set the value for this node in the attribute "gemeentecode"
+                                            myObject.SetAttribute("gemeentecode", value);
+                                        }
 
                                         break;
                                     }
