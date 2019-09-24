@@ -86,28 +86,6 @@ namespace LaixerGMLTest.BAG_Objects
 
         public string GetObjectType() { return _objectType; }
 
-        /// <summary>
-        /// Get the relations of this object
-        /// </summary>
-        /// <param name="relationName"></param>
-        public List<BAGrelationAttribute> GetRelations(string relationName = "")
-        {
-            var result = new List<BAGrelationAttribute>();
-
-            foreach (var relation in relations)
-            {
-                if (relation == null || relationName == relation.GetRelationName())
-                {
-                    result.Add(relation);
-                }
-            }
-            return result;
-        }
-
-        public List<BAGrelationAttribute> GetListOfRelations()
-        {
-            return relations;
-        }
 
         public string GetTag() { return _tag; }
 
@@ -180,22 +158,6 @@ namespace LaixerGMLTest.BAG_Objects
         }
 
         public List<BAGAttribute> GetListOfAttributes() { return attributeList; }
-
-        /// <summary>
-        /// Fill the attributes of this object
-        /// </summary>
-        /// <param name="values"></param>
-        public void SetAttributes(List<string> values)
-        {
-            int i = 0;
-
-            int max = values.Count;
-            foreach (var attribute in attributeList)
-            {
-                SetAttribute(attribute.GetName(), values[i]);
-                i++;
-            }
-        }
 
         /// <summary>
         /// Set the value for the attribute for this object

@@ -79,10 +79,6 @@ namespace LaixerGMLTest
             switch (reader.LocalName)
             {
                 case "BAG-Extract-Deelbestand-LVC":
-                    {
-                        await ReadXMLBody(reader).ConfigureAwait(false);
-                        break;
-                    }
                 case "BAG-GWR-Deelbestand-LVC":
                     {
                         await ReadXMLBody(reader).ConfigureAwait(false);
@@ -701,6 +697,7 @@ namespace LaixerGMLTest
                     {
                         var elementName = "";
                         var nameOfelement = reader.LocalName;
+                        // Create a new BAG Object
                         var myObject = (MunicipalityResidenceRelation)BAGObjectFactory.GetBagObjectByXML(nameOfelement);
                         listOfBAGObjects.Add(myObject);
 
@@ -725,7 +722,6 @@ namespace LaixerGMLTest
 
                                             // set the value for this node in the attribute "woonplaatscode"
                                             myObject.SetAttribute("woonplaatscode", value);
-
                                         }
                                         if (reader.LocalName.ToLower() == "gerelateerdegemeente")
                                         {

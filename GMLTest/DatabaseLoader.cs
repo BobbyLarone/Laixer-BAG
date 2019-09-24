@@ -17,18 +17,72 @@ namespace LaixerGMLTest
         /// <returns></returns>
         public async Task LoadAsync(List<BAGObject> bAGObjects)
         {
+            // Add connection details here
             using (var connection = new NpgsqlConnection(""))
             {
-                if (1 == 1)
+                // if the object count is 0
+                if (bAGObjects.Count == 0)
                 {
-                    //
+                    // something went wrong, soo throw an exception
+                    throw new System.Exception("XYZ");
                 }
 
-                var objects = LoadGWR(bAGObjects, out string sql);
+                // First check what type the first object is.
+                var firstItem = bAGObjects[0];
 
-                var orderDetails = await connection.ExecuteAsync(sql, objects);
+                // FUTURE: We can improve this in C# 8.0
+
+                if (firstItem is Residence)
+                {
+                    // load parameters for "Woonplaats"
+                    var loadableObjects = LoadWPL(bAGObjects, out string sql);
+                    await connection.ExecuteAsync(sql, loadableObjects);
+                }
+                else if (firstItem is PublicSpace)
+                {
+                    // load parameters for "Openbare ruimte"
+                    var loadableObjects = LoadOPR(bAGObjects, out string sql);
+                    await connection.ExecuteAsync(sql, loadableObjects);
+                }
+                else if (firstItem is Berth)
+                {
+                    // load parameters for "Ligplaats"
+                    var loadableObjects = LoadLIG(bAGObjects, out string sql);
+                    await connection.ExecuteAsync(sql, loadableObjects);
+                }
+                else if (firstItem is NumberIndication)
+                {
+                    // load parameters for "Nummer indicatie"
+                    var loadableObjects = LoadNUM(bAGObjects, out string sql);
+                    await connection.ExecuteAsync(sql, loadableObjects);
+                }
+                else if (firstItem is Premises)
+                {
+                    // load parameters for "Pand"
+                    var loadableObjects = LoadPND(bAGObjects, out string sql);
+                    await connection.ExecuteAsync(sql, loadableObjects);
+                }
+                else if (firstItem is Location)
+                {
+                    // load parameters for "Standplaats"
+                    var loadableObjects = LoadSTA(bAGObjects, out string sql);
+                    await connection.ExecuteAsync(sql, loadableObjects);
+                }
+                else if (firstItem is Accommodation)
+                {
+                    // load parameters for "Verblijfs object"
+                    var loadableObjects = LoadVBO(bAGObjects, out string sql);
+                    await connection.ExecuteAsync(sql, loadableObjects);
+                }
+                else if (firstItem is MunicipalityResidenceRelation)
+                {
+                    // load parameters for "Gemeente-Woonplaats relatie"
+                    var loadableObjects = LoadGWR(bAGObjects, out string sql);
+                    await connection.ExecuteAsync(sql, loadableObjects);
+                }
             }
         }
+
         /// <summary>
         /// Loads the Residence (Woonplaats) objects and also provides a sql query
         /// </summary>
@@ -358,62 +412,6 @@ namespace LaixerGMLTest
                         @Status::gemeentewoonplaatsstatus)";
 
             return bAGObjects.Cast<MunicipalityResidenceRelation>();
-        }
-
-
-
-        /// <summary>
-        /// This is WIP DO NOT USEEE
-        /// This should give a SQL query and cast the object to the correct object time
-        /// </summary>
-        /// <param name="bagObjects"></param>
-        private void GetLoadableObject(List<BAGObject> bagObjects, out string sqlstring)
-        {
-            sqlstring = "";
-            if (bagObjects.Count == 0)
-            {
-                throw new System.Exception("XYZ");
-            }
-
-            // Check what type the object is
-            // First check what type the first object is.
-            var firstItem = bagObjects[0];
-
-            // FUTURE: We can improve this in C# 8.0
-
-            if (firstItem is Residence)
-            {
-                // load parameters for "Woonplaats"
-                var residence = LoadWPL(bagObjects,out sqlstring);
-            }
-            else if (firstItem is PublicSpace)
-            {
-
-            }
-            else if (firstItem is Berth)
-            {
-
-            }
-            else if (firstItem is NumberIndication)
-            {
-
-            }
-            else if (firstItem is Premises)
-            {
-
-            }
-            else if (firstItem is Location)
-            {
-
-            }
-            else if (firstItem is Accommodation)
-            {
-
-            }
-            else 
-            {
-
-            }
         }
     }
 }

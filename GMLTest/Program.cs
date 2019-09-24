@@ -8,12 +8,12 @@ namespace LaixerGMLTest
 {
     internal sealed class Program
     {
-        private static int batchSize = 1;
+        private static int batchSize = 10;
         private static DirectoryReader directoryReader;
         private string path;
         private ILoader loader;
         private List<BAGObject> list;
-        private List<string> directories;
+        private static int amountOfDirectories;
         private static int dirToRead = 7;
 
         private static int fileCount;
@@ -33,10 +33,16 @@ namespace LaixerGMLTest
             // Then read the filepath
             directoryReader.readFolder(path);
 
-            // Adjust the directory to read from the specified directory
-            directoryReader.SetDirectoryNumber(dirToRead);
+            // Get a list of directories from that filepath from above
+            var directories = directoryReader.GetListOfDirectories();
 
-            // Get the amount of files in the directory
+            // Store the amount of directories in this variable
+            amountOfDirectories = directories.Count;
+
+            // Adjust the directory to read from the first directory found
+            directoryReader.SetDirectoryNumber(0);
+
+            // Get the amount of files in the first directory
             fileCount = directoryReader.GetFileCountInDirectory();
 
             return this;
@@ -44,12 +50,12 @@ namespace LaixerGMLTest
         private Program Process(int fileNumber)
         {
             // TODO: Step2
-            // Get a list of directories from that filepath from above
-            directories = directoryReader.GetListOfDirectories();
 
+            // Get a list of files from the directory
             var files = directoryReader.GetListOfFilesInDirectory();
 
-            // Generate a list of BAGObjects
+            // Generate a list of BAGObjects form the list of files 
+            // by reading the file in the position of the filenumber
             directoryReader.ReadFile(files[fileNumber]);
 
             // retrieve the list of BagObjects
@@ -65,7 +71,9 @@ namespace LaixerGMLTest
             await Task.Yield();
 
             loader = new TLoader();
+
             await loader.LoadAsync(list);
+
             return this;
         }
 
@@ -77,62 +85,64 @@ namespace LaixerGMLTest
                 return;
             }
 
-            var timer = new Stopwatch();
-            timer.Start();
-
-            // run Extract once
+            // run Extract once to get information about the root folder
             new Program().Extract(path: args[0]);
 
-            int whole = fileCount / batchSize;
-            int rest = fileCount % batchSize;
-            //int total = whole + rest;
-            int numberOfFile = 0;
-
-            Task[] taskList = new Task[batchSize];
-
-            // loop through the files
-            for (var x = 0; x < whole; ++x)
+            // Loop through the folders in the root map
+            for(var x = 0; x< amountOfDirectories;++x)
             {
-                for (var i = 0; i < batchSize; ++i)
+                // Adjust the directory to read from the directory
+                directoryReader.SetDirectoryNumber(x);
+
+                // Get the amount of files in the directory
+                fileCount = directoryReader.GetFileCountInDirectory();
+
+                // calculate how many batches it needs to run based on the batchSize
+                int whole = fileCount / batchSize;
+
+                // calculates howmany files there are left
+                int rest = fileCount % batchSize;; 
+
+                // counter to increment to the next file in a list
+                int numberOfFile = 0;
+
+                // loop through the files
+                if(whole>0)
                 {
-                    taskList[i] = new Program()
-                            .Process(numberOfFile)
-                            .Load<DatabaseLoader>();
-                    numberOfFile++;
+                    // Holds the amount of tasks
+                    Task[] taskList = new Task[batchSize];
+                    
+                    // loop through all the files
+                    for (var y = 0; y < whole; ++y)
+                    {
+                        for (var i = 0; i < batchSize; ++i)
+                        {
+                            taskList[i] = new Program()
+                                    .Process(numberOfFile)
+                                    .Load<DatabaseLoader>();
+                            numberOfFile++;
+                        }
+                        await Task.WhenAll(taskList);
+                    }
                 }
 
-                await Task.WhenAll(taskList);
-            }
-
-            //for (var x = 0; x < whole; ++x)
-            //{
-            //    for (var i = 0; i < (rest == 0 ? batchSize : rest); ++i)
-            //    {
-            //        taskList[i] = new Program()
-            //                .Process(numberOfFile)
-            //                .Load<DatabaseLoader>();
-            //        numberOfFile++;
-            //    }
-
-            //    await Task.WhenAll(taskList);
-            //}
-
-            if (rest > 0)
-            {
-                // for the remaining files
-                for (int y = 0; y < rest; y++)
+                if (rest > 0)
                 {
-                    taskList[y] = new Program()
-                            .Process(numberOfFile)
-                            .Load<DatabaseLoader>();
-                    numberOfFile++;
+                    // Create a list of task based on how many files there are left
+                    Task[] taskList2 = new Task[rest];
+                    // Loop through the remaining files
+                    for (int z = 0; z < rest; ++z)
+                    {
+                        taskList2[z] = new Program()
+                                .Process(numberOfFile)
+                                .Load<DatabaseLoader>();
+                        numberOfFile++;
+                    }
+                    await Task.WhenAll(taskList2);
                 }
-                await Task.WhenAll(taskList);
             }
 
-            timer.Stop();
             Console.WriteLine("Push complete!");
-            Console.WriteLine($"Read within {timer.Elapsed.TotalSeconds} seconds");
             Console.ReadLine();
         }
     }

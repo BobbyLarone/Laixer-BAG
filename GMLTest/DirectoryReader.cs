@@ -9,10 +9,9 @@ namespace LaixerGMLTest
     /// <summary>
     ///  Class to read the content of the specified directory
     /// </summary>
-    class DirectoryReader
+    internal class DirectoryReader
     {
-        private string[] splitFile;
-        private uint directoryDepth = 0;
+        private readonly uint directoryDepth = 0;
         private int readDirectoryFolder;
         private ILoader loader;
 
@@ -57,8 +56,6 @@ namespace LaixerGMLTest
                 // Keep a list of directories and files
                 listOfDirectories = Directory.EnumerateDirectories(filePath).ToList();
                 listOfFilesInDirectory = Directory.EnumerateFiles(filePath).ToList();
-
-                Console.WriteLine($"Current directory depth = {directoryDepth}");
                 Console.WriteLine($"Found: {listOfDirectories.Count} Directories and {listOfFilesInDirectory.Count} Files");
                 Console.WriteLine("These are the directories found in the current directory:");
 
@@ -86,9 +83,8 @@ namespace LaixerGMLTest
         private void ReadFileAsync(string filePath)
         {
             Console.WriteLine($"Going to read the following file : {Path.GetFileName(filePath)}");
-            
-            myReader = new LaixerBagReader();
 
+            myReader = new LaixerBagReader();
             // read the file
             myReader.ReadXML(filePath);
         }
@@ -114,7 +110,7 @@ namespace LaixerGMLTest
         public List<BAGObject> GetAllObjects()
         {
             // Making sure that a reader exists
-            if(myReader == null)
+            if (myReader == null)
             {
                 return null;
             }
@@ -127,17 +123,13 @@ namespace LaixerGMLTest
         /// <returns></returns>
         public int GetFileCountInDirectory()
         {
+            if (folderPath == string.Empty)
+            {
+                return 0;
+            }
             return Directory.EnumerateFiles(listOfDirectories[readDirectoryFolder]).ToList().Count;
         }
 
-        /// <summary>
-        /// Get the amount of directories
-        /// </summary>
-        /// <returns></returns>
-        public int GetAmountOfDirectories()
-        {
-            return 1;
-        }
 
         /// <summary>
         /// Get a list of directories
@@ -145,11 +137,19 @@ namespace LaixerGMLTest
         /// <returns></returns>
         public List<string> GetListOfDirectories()
         {
+            if (folderPath == string.Empty)
+            {
+                return null;
+            }
             return listOfDirectories;
         }
 
         public List<string> GetListOfFilesInDirectory()
         {
+            if (folderPath == string.Empty)
+            {
+                return null;
+            }
             return Directory.EnumerateFiles(listOfDirectories[readDirectoryFolder]).ToList();
         }
 

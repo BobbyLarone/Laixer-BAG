@@ -7,7 +7,7 @@ using System.Text;
 namespace LaixerGMLTest.Object_Relations
 {
     /// <summary>
-    /// In Dutch : Gemeente woonplaats relatie
+    /// In Dutch : Gemeente-Woonplaats relatie
     /// </summary>
     class MunicipalityResidenceRelation : BAGObject
     {
