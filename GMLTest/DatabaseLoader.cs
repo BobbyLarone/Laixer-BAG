@@ -18,7 +18,7 @@ namespace LaixerGMLTest
         public async Task LoadAsync(List<BAGObject> bAGObjects)
         {
             // Add connection details here
-            using (var connection = new NpgsqlConnection("Host=laixer-pg.postgres.database.azure.com;Username=topology_maint@laixer-pg;Password=d5dcd72fa0a9c09af6208f6295e1b67c;Database=topology;SSL Mode=Require"))
+            using (var connection = new NpgsqlConnection(""))
             {
                 // if the object count is 0
                 if (bAGObjects.Count == 0)
