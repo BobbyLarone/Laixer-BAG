@@ -1,6 +1,5 @@
 ﻿using LaixerGMLTest.BAG_Objects;
 using LaixerGMLTest.Object_Relations;
-using NetTopologySuite.IO.GML2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -813,23 +812,6 @@ namespace LaixerGMLTest
                 default:
                     break;
             }
-        }
-
-        private string ReadGMLAttributes(XmlReader reader)
-        {
-            var myReader = reader;
-            var gmlReader = new GMLReader(new NetTopologySuite.Geometries.GeometryFactory(new NetTopologySuite.Geometries.PrecisionModel(), 0));
-            var result = gmlReader.Read(myReader);
-            var temp = result.Coordinates.ToList();
-
-            string gmlString = "";
-            foreach (var item in temp)
-            {
-                if (gmlString == "") { gmlString = $"{item.CoordinateValue}"; }
-
-                gmlString = $"{gmlString},{item.CoordinateValue}";
-            }
-            return gmlString;
         }
 
         private void printAllAttributes()
