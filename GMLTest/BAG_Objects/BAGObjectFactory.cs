@@ -1,7 +1,5 @@
 ﻿using LaixerGMLTest.Object_Relations;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 
 namespace LaixerGMLTest.BAG_Objects
@@ -11,13 +9,8 @@ namespace LaixerGMLTest.BAG_Objects
     /// <summary>
     /// Factory to create new BAG objects
     /// </summary>
-    class BAGObjectFactory
+    internal class BAGObjectFactory
     {
-
-        public BAGObjectFactory()
-        {   
-        }
-
         /// <summary>
         /// Get a BagObject by specifying a type. This could be WPL or NUM or LIG or something else
         /// </summary>
@@ -119,11 +112,11 @@ namespace LaixerGMLTest.BAG_Objects
         public BAGObject GetBagObjectByIdentificationNumber(int id)
         {
             string stringId = id.ToString();
-            if(stringId.Length == 4)
+            if (stringId.Length == 4)
             {
                 return new Residence();
             }
-            
+
             // Split the string at the 3th index and after 2 characters split the string.
             string temp = stringId.Substring(3, 2);
             switch (temp)
@@ -166,10 +159,10 @@ namespace LaixerGMLTest.BAG_Objects
         {
             List<BAGObject> list = new List<BAGObject>();
 
-            foreach(var node in nodeList)
+            foreach (var node in nodeList)
             {
                 var bagObject = GetBagObjectByXML(node.LocalName);
-                if(bagObject != null)
+                if (bagObject != null)
                 {
                     list.Add(bagObject);
                 }

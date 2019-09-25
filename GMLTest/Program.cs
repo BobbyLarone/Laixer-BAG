@@ -15,7 +15,6 @@ namespace LaixerGMLTest
         private List<BAGObject> list;
         private static int amountOfDirectories;
         private static int dirToRead = 7;
-
         private static int fileCount;
 
         private Program Extract(string path)

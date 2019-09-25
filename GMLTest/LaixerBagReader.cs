@@ -74,7 +74,6 @@ namespace LaixerGMLTest
         /// <returns></returns>
         private async Task CheckRootElement(XmlReader reader)
         {
-            Console.WriteLine($"Root element: {reader.LocalName}");
             switch (reader.LocalName)
             {
                 case "BAG-Extract-Deelbestand-LVC":
