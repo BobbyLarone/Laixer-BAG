@@ -11,9 +11,6 @@ namespace LaixerGMLTest.BAG_Attributes
 
         }
 
-        public string GetType()
-        {
-            return "POLYGON";
-        }
+        public string GetType() => "POLYGON";
     }
 }

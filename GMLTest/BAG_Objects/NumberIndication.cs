@@ -55,17 +55,13 @@ namespace LaixerGMLTest.BAG_Objects
         {
             string typeAddressableObject = GetAttribute("typeAdresseerbaarObject").GetValue();
 
-            switch (typeAddressableObject)
+            return typeAddressableObject switch
             {
-                case "ligplaats": { return new Berth(); }
-
-                case "standplaats": { return new Location(); }
-
-                case "verblijfsobject": {return new Accommodation(); }
-
-                default:
-                    return null;
-            }
+                "ligplaats" => new Berth(),
+                "standplaats" => new Location(),
+                "verblijfsobject" => new Accommodation(),
+                _ => null,
+            };
         }
 
         public void ShowAllAttributes()

@@ -36,73 +36,49 @@ namespace LaixerGMLTest.BAG_Attributes
         /// Get the length of the object
         /// </summary>
         /// <returns></returns>
-        public int GetLength()
-        {
-            return _length;
-        }
+        public int GetLength() => _length;
 
         /// <summary>
         /// Get the name of the object
         /// </summary>
         /// <returns></returns>
-        public string GetName()
-        {
-            return _name;
-        }
+        public string GetName() => _name;
 
         /// <summary>
         /// Returns if the object has a relationName
         /// </summary>
         /// <returns></returns>
-        public string GetSingle()
-        {
-            return _relationName;
-        }
+        public string GetSingle() => _relationName;
 
         /// <summary>
         /// Get the tag of the object
         /// </summary>
         /// <returns></returns>
-        public string GetTag()
-        {
-            return _tag;
-        }
+        public string GetTag() => _tag;
 
         /// <summary>
         /// Return the value of the object
         /// </summary>
         /// <returns></returns>
-        public string GetValue()
-        {
-            return _value;
-        }
+        public string GetValue() => _value;
 
         /// <summary>
         /// Get the datetime
         /// </summary>
         /// <returns></returns>
-        public DateTime GetDateTime()
-        {
-            return dateTime;
-        }
+        public DateTime GetDateTime() => dateTime;
 
 
         /// <summary>
         /// Set the value for the object
         /// </summary>
         /// <param name="value">the string value</param>
-        public void SetValue(string value)
-        {
-            _value = value;
-        }
+        public void SetValue(string value) => _value = value;
 
         /// <summary>
         /// Set the date time for the object
         /// </summary>
         /// <param name="datetime">The time and date for the object</param>
-        public void SetDateTime(DateTime datetime)
-        {
-            dateTime = datetime;
-        }
+        public void SetDateTime(DateTime datetime) => dateTime = datetime;
     }
 }

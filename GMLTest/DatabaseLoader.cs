@@ -18,76 +18,78 @@ namespace LaixerGMLTest
         public async Task LoadAsync(List<BAGObject> bAGObjects)
         {
             // Add connection details here
-            using (var connection = new NpgsqlConnection(""))
+            using var connection = new NpgsqlConnection("");
+            // if the object count is 0
+            if (bAGObjects.Count == 0)
             {
-                // if the object count is 0
-                if (bAGObjects.Count == 0)
-                {
-                    // something went wrong, soo throw an exception
-                    throw new System.Exception("XYZ");
-                }
+                // something went wrong, soo throw an exception
+                throw new System.Exception("XYZ");
+            }
 
-                switch (bAGObjects[0])
-                {
-                    case Residence _:
-                        {
-                            // load parameters for "Woonplaats"
-                            var loadableObjects = LoadWPL(bAGObjects, out string sql);
-                            await connection.ExecuteAsync(sql, loadableObjects);
-                            break;
-                        }
-                    case PublicSpace _:
-                        {
-                            // load parameters for "Openbare ruimte"
-                            var loadableObjects = LoadOPR(bAGObjects, out string sql);
-                            await connection.ExecuteAsync(sql, loadableObjects);
-                            break;
-                        }
-                    case Berth _:
-                        {
-                            // load parameters for "Ligplaats"
-                            var loadableObjects = LoadLIG(bAGObjects, out string sql);
-                            await connection.ExecuteAsync(sql, loadableObjects);
-                            break;
-                        }
-                    case NumberIndication _:
-                        {
-                            // load parameters for "Nummer indicatie"
-                            var loadableObjects = LoadNUM(bAGObjects, out string sql);
-                            await connection.ExecuteAsync(sql, loadableObjects);
-                            break;
-                        }
-                    case Premises _:
-                        {
-                            // load parameters for "Pand"
-                            var loadableObjects = LoadPND(bAGObjects, out string sql);
-                            await connection.ExecuteAsync(sql, loadableObjects);
-                            break;
-                        }
-                    case Location _:
-                        {
-                            // load parameters for "Standplaats"
-                            var loadableObjects = LoadSTA(bAGObjects, out string sql);
-                            await connection.ExecuteAsync(sql, loadableObjects);
-                            break;
-                        }
-                    case Accommodation _:
-                        {
-                            // load parameters for "Verblijfs object"
-                            var loadableObjects = LoadVBO(bAGObjects, out string sql);
-                            await connection.ExecuteAsync(sql, loadableObjects);
-                            break;
-                        }
-                    case MunicipalityResidenceRelation _:
-                        {
-                            // load parameters for "Gemeente-Woonplaats relatie"
-                            var loadableObjects = LoadGWR(bAGObjects, out string sql);
-                            await connection.ExecuteAsync(sql, loadableObjects);
-                            break;
-                        }
-                    default:
+            // This can also be transformed into a method that returns diffrent kind of objects
+            // by creating a method with the dynamic type.
+
+            // This will do for now.
+            switch (bAGObjects[0])
+            {
+                case Residence _:
+                    {
+                        // load parameters for "Woonplaats"
+                        var loadableObjects = LoadWPL(bAGObjects, out string sql);
+                        await connection.ExecuteAsync(sql, loadableObjects).ConfigureAwait(false);
                         break;
-                }
+                    }
+                case PublicSpace _:
+                    {
+                        // load parameters for "Openbare ruimte"
+                        var loadableObjects = LoadOPR(bAGObjects, out string sql);
+                        await connection.ExecuteAsync(sql, loadableObjects).ConfigureAwait(false);
+                        break;
+                    }
+                case Berth _:
+                    {
+                        // load parameters for "Ligplaats"
+                        var loadableObjects = LoadLIG(bAGObjects, out string sql);
+                        await connection.ExecuteAsync(sql, loadableObjects).ConfigureAwait(false);
+                        break;
+                    }
+                case NumberIndication _:
+                    {
+                        // load parameters for "Nummer indicatie"
+                        var loadableObjects = LoadNUM(bAGObjects, out string sql);
+                        await connection.ExecuteAsync(sql, loadableObjects).ConfigureAwait(false);
+                        break;
+                    }
+                case Premises _:
+                    {
+                        // load parameters for "Pand"
+                        var loadableObjects = LoadPND(bAGObjects, out string sql);
+                        await connection.ExecuteAsync(sql, loadableObjects).ConfigureAwait(false);
+                        break;
+                    }
+                case Location _:
+                    {
+                        // load parameters for "Standplaats"
+                        var loadableObjects = LoadSTA(bAGObjects, out string sql);
+                        await connection.ExecuteAsync(sql, loadableObjects).ConfigureAwait(false);
+                        break;
+                    }
+                case Accommodation _:
+                    {
+                        // load parameters for "Verblijfs object"
+                        var loadableObjects = LoadVBO(bAGObjects, out string sql);
+                        await connection.ExecuteAsync(sql, loadableObjects).ConfigureAwait(false);
+                        break;
+                    }
+                case MunicipalityResidenceRelation _:
+                    {
+                        // load parameters for "Gemeente-Woonplaats relatie"
+                        var loadableObjects = LoadGWR(bAGObjects, out string sql);
+                        await connection.ExecuteAsync(sql, loadableObjects).ConfigureAwait(false);
+                        break;
+                    }
+                default:
+                    break;
             }
         }
 

@@ -32,10 +32,7 @@ namespace LaixerGMLTest.Object_Relations
         /// Returns a value if the object has geometry
         /// </summary>
         /// <returns></returns>
-        public bool HasGeometry()
-        {
-            return true;
-        }
+        public bool HasGeometry() => true;
 
         public void ShowAllAttributes()
         {

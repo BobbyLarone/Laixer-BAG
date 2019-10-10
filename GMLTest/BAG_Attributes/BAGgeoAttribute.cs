@@ -12,14 +12,8 @@ namespace LaixerGMLTest.BAG_Attributes
             _dimension = dimension;
         }
 
-        public int GetDimension()
-        {
-            return _dimension;
-        }
+        public int GetDimension() => _dimension;
 
-        public bool IsGeometry()
-        {
-            return true;
-        }
+        public bool IsGeometry() => true;
     }
 }

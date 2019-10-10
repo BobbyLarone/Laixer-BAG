@@ -11,14 +11,8 @@ namespace LaixerGMLTest.BAG_Attributes
 
         }
 
-        public string GetType()
-        {
-            return "POINT";
-        }
+        public string GetType() => "POINT";
 
-        public bool IsValid()
-        {
-            return true;
-        }
+        public bool IsValid() => true;
     }
 }

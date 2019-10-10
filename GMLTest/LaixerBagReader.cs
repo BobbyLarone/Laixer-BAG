@@ -47,22 +47,17 @@ namespace LaixerGMLTest
             };
 
             // used to start reading the file from top to bottom. 
-            using (XmlReader reader = XmlReader.Create(xmlFile, settings))
+            using XmlReader reader = XmlReader.Create(xmlFile, settings);
+            while (await reader.ReadAsync().ConfigureAwait(false))
             {
-                while (await reader.ReadAsync())
+                switch (reader.NodeType)
                 {
-                    switch (reader.NodeType)
-                    {
-                        case XmlNodeType.Element:
-                            {
-                                await CheckRootElement(reader).ConfigureAwait(false);
-                                break;
-                            }
-                        default:
-                            {
-                                break;
-                            }
-                    }
+                    case XmlNodeType.Element:
+                        await CheckRootElement(reader).ConfigureAwait(false);
+                        break;
+
+                    default:
+                        break;
                 }
             }
         }
@@ -78,73 +73,63 @@ namespace LaixerGMLTest
             {
                 case "BAG-Extract-Deelbestand-LVC":
                 case "BAG-GWR-Deelbestand-LVC":
-                    {
-                        await ReadXMLBody(reader).ConfigureAwait(false);
-                        break;
-                    }
+                    await ReadXMLBody(reader).ConfigureAwait(false);
+                    break;
+                    // removed the break statements so that the default behaviour is called
                 case "BAG-Mutaties-Deelbestand-LVC":
-                    {
-                        break;
-                    }
                 case "BAG-Extract-Levering":
-                    {
-                        break;
-                    }
-
                 default:
                     break;
             }
         }
 
+        /// <summary>
+        /// Read the XML Body
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
         private async Task ReadXMLBody(XmlReader reader)
         {
-            while (await reader.ReadAsync())
+            while (await reader.ReadAsync().ConfigureAwait(false))
             {
                 switch (reader.NodeType)
                 {
                     case XmlNodeType.Element:
-                        {
-                            await PrefixReader(reader).ConfigureAwait(false);
-                            break;
-                        }
+                        await PrefixReader(reader).ConfigureAwait(false);
+                        break;
 
                     default:
-                        {
-                            break;
-                        }
+                        break;
                 }
             }
         }
 
+        /// <summary>
+        /// Read the prefix of an element
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
         public async Task PrefixReader(XmlReader reader)
         {
             switch (reader.Prefix)
             {
-                case "xb - remove this to use it -":
-                    {
-                        break;
-                    }
-                case "selecties-extract":
-                    {
-                        break;
-                    }
-
                 case "bag_LVC":
-                    {
-                        await BAGObjectGenerator(reader).ConfigureAwait(false);
-                        break;
-                    }
                 case "gwr_LVC":
-                    {
                         await BAGObjectGenerator(reader).ConfigureAwait(false);
                         break;
-                    }
+
+                case "xb - remove this to use it -":
+                case "selecties-extract":
                 default:
                     break;
             }
         }
 
-
+        /// <summary>
+        /// Generate a BAG Object Based on the name
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
         public async Task BAGObjectGenerator(XmlReader reader)
         {
             switch (reader.LocalName)
@@ -783,6 +768,7 @@ namespace LaixerGMLTest
                     {
                         // Insert the list of position data into the attribute :geovlak
                         var value = await reader.ReadOuterXmlAsync();
+                        // Set the attribute
                         myObject.SetAttribute("geovlak", value);
                         break;
                     }

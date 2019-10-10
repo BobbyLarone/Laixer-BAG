@@ -16,93 +16,36 @@ namespace LaixerGMLTest.BAG_Objects
         /// </summary>
         /// <param name="type">The type of the object</param>
         /// <returns></returns>
-        public BAGObject GetBAGObjectByType(string type)
+        public BAGObject GetBAGObjectByType(string type) => type switch
         {
-            switch (type)
-            {
-                case "WPL":
-                    {
-                        return new Residence();
-                    }
-                case "OPR":
-                    {
-                        return new PublicSpace();
-                    }
-                case "NUM":
-                    {
-                        return new NumberIndication();
-                    }
-                case "LIG":
-                    {
-                        return new Berth();
-                    }
-                case "STA":
-                    {
-                        return new Location();
-                    }
-                case "VBO":
-                    {
-                        return new Accommodation();
-                    }
-                case "PND":
-                    {
-                        return new Premises();
-                    }
-                case "GWR":
-                    {
-                        return new MunicipalityResidenceRelation();
-                    }
-
-                default:
-                    return null;
-            }
-        }
+            "WPL" => new Residence(),
+            "OPR" => new PublicSpace(),
+            "NUM" => new NumberIndication(),
+            "LIG" => new Berth(),
+            "STA" => new Location(),
+            "VBO" => new Accommodation(),
+            "PND" => new Premises(),
+            "GWR" => new MunicipalityResidenceRelation(),
+            _ => null,
+        };
 
         /// <summary>
         /// Get a BAG object by name of the node
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        public BAGObject GetBagObjectByXML(string node)
+        public BAGObject GetBagObjectByXML(string node) => node switch
         {
-            switch (node)
-            {
-                case "Ligplaats":
-                    {
-                        return new Berth();
-                    }
-                case "Woonplaats":
-                    {
-                        return new Residence();
-                    }
-                case "Verblijfsobject":
-                    {
-                        return new Accommodation();
-                    }
-                case "OpenbareRuimte":
-                    {
-                        return new PublicSpace();
-                    }
-                case "Nummeraanduiding":
-                    {
-                        return new NumberIndication();
-                    }
-                case "Standplaats":
-                    {
-                        return new Location();
-                    }
-                case "Pand":
-                    {
-                        return new Premises();
-                    }
-                case "GemeenteWoonplaatsRelatie":
-                    {
-                        return new MunicipalityResidenceRelation();
-                    }
-                default:
-                    return null;
-            }
-        }
+            "Ligplaats" => new Berth(),
+            "Woonplaats" => new Residence(),
+            "Verblijfsobject" => new Accommodation(),
+            "OpenbareRuimte" => new PublicSpace(),
+            "Nummeraanduiding" => new NumberIndication(),
+            "Standplaats" => new Location(),
+            "Pand" => new Premises(),
+            "GemeenteWoonplaatsRelatie" => new MunicipalityResidenceRelation(),
+            _ => null,
+        };
 
         /// <summary>
         /// Get a BAG object by identification number
@@ -119,35 +62,16 @@ namespace LaixerGMLTest.BAG_Objects
 
             // Split the string at the 3th index and after 2 characters split the string.
             string temp = stringId.Substring(3, 2);
-            switch (temp)
+            return temp switch
             {
-                case "30":
-                    {
-                        return new PublicSpace();
-                    }
-                case "20":
-                    {
-                        return new NumberIndication();
-                    }
-                case "10":
-                    {
-                        return new Premises();
-                    }
-                case "03":
-                    {
-                        return new Location();
-                    }
-                case "02":
-                    {
-                        return new Berth();
-                    }
-                case "01":
-                    {
-                        return new Accommodation();
-                    }
-                default:
-                    return null;
-            }
+                "30" => new PublicSpace(),
+                "20" => new NumberIndication(),
+                "10" => new Premises(),
+                "03" => new Location(),
+                "02" => new Berth(),
+                "01" => new Accommodation(),
+                _ => null,
+            };
         }
 
         /// <summary>
@@ -157,6 +81,11 @@ namespace LaixerGMLTest.BAG_Objects
         /// <returns>Returns a list of BAG Objects</returns>
         public List<BAGObject> GetListOfBAGObjects(List<XmlNode> nodeList)
         {
+            if (nodeList is null)
+            {
+                throw new System.ArgumentNullException(nameof(nodeList));
+            }
+
             List<BAGObject> list = new List<BAGObject>();
 
             foreach (var node in nodeList)

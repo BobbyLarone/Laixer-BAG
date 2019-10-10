@@ -88,7 +88,7 @@ namespace LaixerGMLTest
             new Program().Extract(path: args[0]);
 
             // Loop through the folders in the root map
-            for(var x = 0; x< amountOfDirectories;++x)
+            for (var x = 0; x < amountOfDirectories; ++x)
             {
                 // Adjust the directory to read from the directory
                 directoryReader.SetDirectoryNumber(x);
@@ -100,13 +100,13 @@ namespace LaixerGMLTest
                 int whole = fileCount / batchSize;
 
                 // calculates howmany files there are left
-                int rest = fileCount % batchSize;; 
+                int rest = fileCount % batchSize; 
 
                 // counter to increment to the next file in a list
                 int numberOfFile = 0;
 
                 // loop through the files
-                if(whole>0)
+                if (whole > 0)
                 {
                     // Holds the amount of tasks
                     Task[] taskList = new Task[batchSize];
@@ -121,7 +121,7 @@ namespace LaixerGMLTest
                                     .Load<DatabaseLoader>();
                             numberOfFile++;
                         }
-                        await Task.WhenAll(taskList);
+                        await Task.WhenAll(taskList).ConfigureAwait(false);
                     }
                 }
 
@@ -137,7 +137,7 @@ namespace LaixerGMLTest
                                 .Load<DatabaseLoader>();
                         numberOfFile++;
                     }
-                    await Task.WhenAll(taskList2);
+                    await Task.WhenAll(taskList2).ConfigureAwait(false);
                 }
             }
 

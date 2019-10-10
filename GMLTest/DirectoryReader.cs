@@ -96,11 +96,7 @@ namespace LaixerGMLTest
         public int GetTotalObjects()
         {
             // Making sure that a reader exists
-            if (myReader == null)
-            {
-                return 0;
-            }
-            return myReader.listOfBAGObjects.Count;
+            return myReader == null ? 0 : myReader.listOfBAGObjects.Count;
         }
 
         /// <summary>
@@ -110,11 +106,7 @@ namespace LaixerGMLTest
         public List<BAGObject> GetAllObjects()
         {
             // Making sure that a reader exists
-            if (myReader == null)
-            {
-                return null;
-            }
-            return myReader.listOfBAGObjects;
+            return myReader == null ? null : myReader.listOfBAGObjects;
         }
 
         /// <summary>
@@ -123,11 +115,7 @@ namespace LaixerGMLTest
         /// <returns></returns>
         public int GetFileCountInDirectory()
         {
-            if (folderPath == string.Empty)
-            {
-                return 0;
-            }
-            return Directory.EnumerateFiles(listOfDirectories[readDirectoryFolder]).ToList().Count;
+            return string.IsNullOrEmpty(folderPath) ? 0 : Directory.EnumerateFiles(listOfDirectories[readDirectoryFolder]).ToList().Count;
         }
 
 
@@ -137,20 +125,12 @@ namespace LaixerGMLTest
         /// <returns></returns>
         public List<string> GetListOfDirectories()
         {
-            if (folderPath == string.Empty)
-            {
-                return null;
-            }
-            return listOfDirectories;
+            return string.IsNullOrEmpty(folderPath) ? null : listOfDirectories;
         }
 
         public List<string> GetListOfFilesInDirectory()
         {
-            if (folderPath == string.Empty)
-            {
-                return null;
-            }
-            return Directory.EnumerateFiles(listOfDirectories[readDirectoryFolder]).ToList();
+            return string.IsNullOrEmpty(folderPath) ? null : Directory.EnumerateFiles(listOfDirectories[readDirectoryFolder]).ToList();
         }
 
         /// <summary>

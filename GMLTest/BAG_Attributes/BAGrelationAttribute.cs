@@ -25,37 +25,25 @@ namespace LaixerGMLTest.BAG_Attributes
         /// Get the name of the relation of this object
         /// </summary>
         /// <returns></returns>
-        public string GetRelationName()
-        {
-            return _relationName;
-        }
+        public string GetRelationName() => _relationName;
 
         /// <summary>
         /// Set the value for this object. This will be added to the list of values of this object
         /// </summary>
         /// <param name="value"></param>
-        public void SetValue(string value)
-        {
-            values.Add(value);
-        }
+        public void SetValue(string value) => values.Add(value);
 
         /// <summary>
         /// Get a list of values 
         /// </summary>
         /// <returns></returns>
-        public List<string> GetValue()
-        {
-            return values;
-        }
+        public List<string> GetValue() => values;
 
         /// <summary>
         /// uuuhm? returns false since this object can have multiple values
         /// </summary>
         /// <returns></returns>
-        public bool IsSingle()
-        {
-            return false;
-        }
+        public bool IsSingle() => false;
 
     }
 }

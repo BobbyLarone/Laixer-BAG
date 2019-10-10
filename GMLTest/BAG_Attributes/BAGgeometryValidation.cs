@@ -14,9 +14,6 @@ namespace LaixerGMLTest.BAG_Attributes
             nameGeometryAttribute = nameGeoAttribute;
         }
 
-        public string GetType()
-        {
-            return "";
-        }
+        public string GetType() => "";
     }
 }

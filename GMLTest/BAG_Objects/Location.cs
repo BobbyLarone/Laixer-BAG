@@ -28,10 +28,7 @@ namespace LaixerGMLTest.BAG_Objects
             Add(new BAGgeometryValidation("geom_valid", "geovlak"));
         }
 
-        public bool HasGeometry()
-        {
-            return true;
-        }
+        public bool HasGeometry() => true;
 
         public void ShowAllAttributes()
         {

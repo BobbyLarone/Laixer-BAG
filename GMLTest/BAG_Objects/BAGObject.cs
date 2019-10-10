@@ -82,7 +82,7 @@ namespace LaixerGMLTest.BAG_Objects
         /// Add a relation to the object
         /// </summary>
         /// <param name="relation">The relation attribute</param>
-        public void AddRelation(BAGrelationAttribute relation) { relations.Add(relation); }
+        public void AddRelation(BAGrelationAttribute relation) => relations.Add(relation);
 
         public string GetObjectType() { return _objectType; }
 
@@ -110,52 +110,28 @@ namespace LaixerGMLTest.BAG_Objects
         /// </summary>
         /// <param name="name">The name of the attribute</param>
         /// <returns>Boolean if the attribute exists</returns>
-        public bool HasAttribute(string name)
-        {
-            return attributeList.Exists(x => x.GetName() == name);
-        }
+        public bool HasAttribute(string name) => attributeList.Exists(x => x.GetName() == name);
 
         /// <summary>
         /// check if this object has the specific relation attribute
         /// </summary>
         /// <param name="name"></param>
         /// <returns>Boolean if the relation attribute exists</returns>
-        public bool HasRelationAttribute(string name)
-        {
-            return relations.Exists(x => x.GetName() == name);
-        }
+        public bool HasRelationAttribute(string name) => relations.Exists(x => x.GetName() == name);
 
         /// <summary>
         /// Get a BAG attribute that matches the name
         /// </summary>
         /// <param name="name">Name of the attribute</param>
         /// <returns></returns>
-        public BAGAttribute GetAttribute(string name)
-        {
-            #region original if statement
-            /*
-             *  if(HasAttribute(name))
-             *  {
-             *      return attributeList.Find(x => x.GetName() == name);
-             *  }
-             *  return null;
-            */
-            #endregion
-
-            // Ternaery operator style for the if statement above
-            return HasAttribute(name) ? attributeList.Find(x => x.GetName() == name) : null;
-
-        }
+        public BAGAttribute GetAttribute(string name) => HasAttribute(name) ? attributeList.Find(x => x.GetName() == name) : null;
 
         /// <summary>
         /// Get a BAG relation attribute that matches the name
         /// </summary>
         /// <param name="name">Name of the relation attribute</param>
         /// <returns></returns>
-        public BAGrelationAttribute GetRelationAttribute(string name)
-        {
-            return HasRelationAttribute(name) ? relations.Find(x => x.GetName() == name) : null;
-        }
+        public BAGrelationAttribute GetRelationAttribute(string name) => HasRelationAttribute(name) ? relations.Find(x => x.GetName() == name) : null;
 
         public List<BAGAttribute> GetListOfAttributes() { return attributeList; }
 
