@@ -693,7 +693,7 @@ namespace LaixerGMLTest
                                     {
                                         elementName = reader.LocalName;
 
-                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject);
+                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject).ConfigureAwait(false);
 
                                         if(reader.LocalName.ToLower() == "gerelateerdewoonplaats")
                                         {
@@ -767,7 +767,7 @@ namespace LaixerGMLTest
                 case "polygon":
                     {
                         // Insert the list of position data into the attribute :geovlak
-                        var value = await reader.ReadOuterXmlAsync();
+                        var value = await reader.ReadOuterXmlAsync().ConfigureAwait(false);
                         // Set the attribute
                         myObject.SetAttribute("geovlak", value);
                         break;
@@ -778,7 +778,7 @@ namespace LaixerGMLTest
                         // Go to next part
                         reader.Read();
                         // Read the value and transform it into a DateTime object
-                        var r = normalizeDateTime(await reader.GetValueAsync());
+                        var r = normalizeDateTime(await reader.GetValueAsync().ConfigureAwait(false));
                         // Set the attribute
                         myObject.SetAttribute(elementName, r);
                         break;
@@ -788,7 +788,7 @@ namespace LaixerGMLTest
                         // Go to next part
                         reader.Read();
                         // Get the date string
-                        var r = normalizeDate(await reader.GetValueAsync());
+                        var r = normalizeDate(await reader.GetValueAsync().ConfigureAwait(false));
                         // Set the attribute
                         myObject.SetAttribute(elementName, r);
                         break;

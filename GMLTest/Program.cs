@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LaixerGMLTest
@@ -14,37 +15,45 @@ namespace LaixerGMLTest
         private ILoader loader;
         private List<BAGObject> list;
         private static int amountOfDirectories;
-        private static int dirToRead = 7;
         private static int fileCount;
 
-        private Program Extract(string path)
+        private Program Extract(string path, out bool succes)
         {
             // TODO: Step 1
-            // Make a new directory reader
-            directoryReader = new DirectoryReader();
 
             // Store the path to this folder
             this.path = path;
 
-            // First set the loader
-            directoryReader.SetLoader(loader);
+            // Make a new directory reader
+            directoryReader = new DirectoryReader();
 
             // Then read the filepath
-            directoryReader.readFolder(path);
+            directoryReader.readFolder(path,out bool exists);
 
-            // Get a list of directories from that filepath from above
-            var directories = directoryReader.GetListOfDirectories();
+            if(exists)
+            {
+                // First set the loader
+                directoryReader.SetLoader(loader);
 
-            // Store the amount of directories in this variable
-            amountOfDirectories = directories.Count;
+                // Store the amount of directories in this variable
+                amountOfDirectories = directoryReader.GetListOfDirectories().Count;
 
-            // Adjust the directory to read from the first directory found
-            directoryReader.SetDirectoryNumber(0);
+                // Adjust the directory to read from the first directory found
+                directoryReader.SetDirectoryNumber(0);
 
-            // Get the amount of files in the first directory
-            fileCount = directoryReader.GetFileCountInDirectory();
+                // Get the amount of files in the first directory
+                fileCount = directoryReader.GetFileCountInDirectory();
 
-            return this;
+                succes = true;
+                return this;
+            }
+            else
+            {
+                // return null if the directory doesn't exist
+                succes = false;
+                return null;
+            }
+
         }
         private Program Process(int fileNumber)
         {
@@ -63,6 +72,7 @@ namespace LaixerGMLTest
             return this;
         }
 
+        // TODO: Rewrite to not use Async as this will create race conditions for parallel threading.
         private async Task<Program> Load<TLoader>()
             where TLoader : ILoader, new()
         {
@@ -71,7 +81,7 @@ namespace LaixerGMLTest
 
             loader = new TLoader();
 
-            await loader.LoadAsync(list);
+            await loader.LoadAsync(list).ConfigureAwait(false);
 
             return this;
         }
@@ -80,12 +90,22 @@ namespace LaixerGMLTest
         {
             if (args.Length == 0)
             {
-                Console.WriteLine($"tool.exe [path]");
+                Console.WriteLine(Properties.Resources.NoPathAsArgument);
+                Console.ReadLine();
                 return;
             }
 
             // run Extract once to get information about the root folder
-            new Program().Extract(path: args[0]);
+            new Program().Extract(path: args[0], out bool succes);
+
+            // if the extract was not succesfull we can get out of the program
+            if(!succes)
+            {
+                Console.WriteLine(Properties.Resources.DirectoryNotFound);
+                return;
+            }
+
+            //TODO: Transform into Parallel loops
 
             // Loop through the folders in the root map
             for (var x = 0; x < amountOfDirectories; ++x)
@@ -117,8 +137,10 @@ namespace LaixerGMLTest
                         for (var i = 0; i < batchSize; ++i)
                         {
                             taskList[i] = new Program()
-                                    .Process(numberOfFile)
-                                    .Load<DatabaseLoader>();
+                                    .Process(numberOfFile) // process the data
+                                    .Load<DatabaseLoader>(); // load the data into the database
+
+                            // Increase the file number so that we read the next file
                             numberOfFile++;
                         }
                         await Task.WhenAll(taskList).ConfigureAwait(false);
@@ -141,8 +163,55 @@ namespace LaixerGMLTest
                 }
             }
 
-            Console.WriteLine("Push complete!");
+            Console.WriteLine(Properties.Resources.DatabasePushComplete);
             Console.ReadLine();
+        }
+
+        private Program ParalellReaderForBAG()
+        {
+
+            Parallel.For(0, amountOfDirectories, a =>
+            {
+                int directoryNumber = 1;
+                // Adjust the directory to read from the directory
+                directoryReader.SetDirectoryNumber(directoryNumber);
+
+                // Get the amount of files in the directory
+                fileCount = directoryReader.GetFileCountInDirectory();
+
+                //NOTE: This will be absolete if the paralell methods are implemented
+                // Calculate how many batches it needs to run based on the batchSize
+                int whole = fileCount / batchSize;
+
+                // calculates howmany files there are left
+                int rest = fileCount % batchSize;
+
+                // counter to increment to the next file in a list
+                int numberOfFile = 0;
+
+                // loop through all the files
+                Parallel.For(0, fileCount, b =>
+                {
+                    Interlocked.Increment(ref numberOfFile); // increase the file number
+                    new Program().Process(numberOfFile).Load<DatabaseLoader>();
+
+                });
+
+                for (var y = 0; y < whole; ++y)
+                {
+                    for (var i = 0; i < batchSize; ++i)
+                    {
+                        new Program().Process(numberOfFile).Load<DatabaseLoader>();
+
+                        // Increase the file number so that we read the next file
+                        numberOfFile++;
+                    }
+                }
+            });
+
+
+
+            return this;
         }
     }
 }

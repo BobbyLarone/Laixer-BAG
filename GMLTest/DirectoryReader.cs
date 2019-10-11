@@ -11,7 +11,6 @@ namespace LaixerGMLTest
     /// </summary>
     internal class DirectoryReader
     {
-        private readonly uint directoryDepth = 0;
         private int readDirectoryFolder;
         private ILoader loader;
 
@@ -25,7 +24,6 @@ namespace LaixerGMLTest
         /// </summary>
         public DirectoryReader()
         {
-            // This is a constructor.... (^.^)b
         }
 
         public void SetLoader(ILoader loader)
@@ -37,10 +35,19 @@ namespace LaixerGMLTest
         /// Read the content of an directory and show the amount of files and directories found
         /// </summary>
         /// <param name="filePath">The path to the directory</param>
-        public void readFolder(string filePath)
+        public void readFolder(string filePath, out bool exists)
         {
             folderPath = filePath;
-            readFolderContentAsync(filePath);
+            if (Directory.Exists(filePath))
+            {
+                exists = true;
+                readFolderContentAsync(filePath);
+            }
+            else
+            {
+                Console.WriteLine(Properties.Resources.DirectoryNotFound);
+                exists = false;
+            }
         }
 
         /// <summary>
@@ -51,18 +58,15 @@ namespace LaixerGMLTest
         /// <param name="readFirst">Enable reading the first map and first file in that map</param>
         private void readFolderContentAsync(string filePath)
         {
-            if (Directory.Exists(filePath))
-            {
-                // Keep a list of directories and files
-                listOfDirectories = Directory.EnumerateDirectories(filePath).ToList();
-                listOfFilesInDirectory = Directory.EnumerateFiles(filePath).ToList();
-                Console.WriteLine($"Found: {listOfDirectories.Count} Directories and {listOfFilesInDirectory.Count} Files");
-                Console.WriteLine("These are the directories found in the current directory:");
+            // Keep a list of directories and files
+            listOfDirectories = Directory.EnumerateDirectories(filePath).ToList();
+            listOfFilesInDirectory = Directory.EnumerateFiles(filePath).ToList();
+            Console.WriteLine($"Found: {listOfDirectories.Count} Directories and {listOfFilesInDirectory.Count} Files");
+            Console.WriteLine(Properties.Resources.DirectoriesFound);
 
-                foreach (var path in listOfDirectories)
-                {
-                    Console.WriteLine($"\tFound: {path}");
-                }
+            foreach (var path in listOfDirectories)
+            {
+                Console.WriteLine($"\tFound: {path}");
             }
         }
 
@@ -106,7 +110,7 @@ namespace LaixerGMLTest
         public List<BAGObject> GetAllObjects()
         {
             // Making sure that a reader exists
-            return myReader == null ? null : myReader.listOfBAGObjects;
+            return myReader?.listOfBAGObjects;
         }
 
         /// <summary>
@@ -122,7 +126,7 @@ namespace LaixerGMLTest
         /// <summary>
         /// Get a list of directories
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A list of directories if exists else return null</returns>
         public List<string> GetListOfDirectories()
         {
             return string.IsNullOrEmpty(folderPath) ? null : listOfDirectories;
