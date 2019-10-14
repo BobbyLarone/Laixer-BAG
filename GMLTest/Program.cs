@@ -1,7 +1,6 @@
 ﻿using LaixerGMLTest.BAG_Objects;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,7 +8,7 @@ namespace LaixerGMLTest
 {
     internal sealed class Program
     {
-        private static int batchSize = 10;
+        private static readonly int batchSize = 10;
         private static DirectoryReader directoryReader;
         private string path;
         private ILoader loader;
@@ -21,28 +20,21 @@ namespace LaixerGMLTest
         {
             // TODO: Step 1
 
-            // Store the path to this folder
-            this.path = path;
+            this.path = path;// Store the path to this folder
 
-            // Make a new directory reader
-            directoryReader = new DirectoryReader();
+            directoryReader = new DirectoryReader();// Make a new directory reader
 
-            // Then read the filepath
-            directoryReader.readFolder(path,out bool exists);
+            directoryReader.readFolder(path, out bool exists);// Then read the filepath
 
-            if(exists)
+            if (exists)
             {
-                // First set the loader
-                directoryReader.SetLoader(loader);
+                directoryReader.SetLoader(loader);// First set the loader
 
-                // Store the amount of directories in this variable
-                amountOfDirectories = directoryReader.GetListOfDirectories().Count;
+                amountOfDirectories = directoryReader.GetListOfDirectories().Count;// Store the amount of directories in this variable
 
-                // Adjust the directory to read from the first directory found
-                directoryReader.SetDirectoryNumber(0);
+                directoryReader.SetDirectoryNumber(0);// Adjust the directory to read from the first directory found
 
-                // Get the amount of files in the first directory
-                fileCount = directoryReader.GetFileCountInDirectory();
+                fileCount = directoryReader.GetFileCountInDirectory();// Get the amount of files in the first directory
 
                 succes = true;
                 return this;
@@ -99,7 +91,7 @@ namespace LaixerGMLTest
             new Program().Extract(path: args[0], out bool succes);
 
             // if the extract was not succesfull we can get out of the program
-            if(!succes)
+            if (!succes)
             {
                 Console.WriteLine(Properties.Resources.DirectoryNotFound);
                 return;
@@ -110,29 +102,22 @@ namespace LaixerGMLTest
             // Loop through the folders in the root map
             for (var x = 0; x < amountOfDirectories; ++x)
             {
-                // Adjust the directory to read from the directory
-                directoryReader.SetDirectoryNumber(x);
+                directoryReader.SetDirectoryNumber(x); // Adjust the directory to read from the directory
 
-                // Get the amount of files in the directory
-                fileCount = directoryReader.GetFileCountInDirectory();
+                fileCount = directoryReader.GetFileCountInDirectory();// Get the amount of files in the directory
 
-                // calculate how many batches it needs to run based on the batchSize
-                int whole = fileCount / batchSize;
+                int whole = fileCount / batchSize; // calculate how many batches it needs to run based on the batchSize
 
-                // calculates howmany files there are left
-                int rest = fileCount % batchSize; 
+                int rest = fileCount % batchSize; // calculates howmany files there are left
 
-                // counter to increment to the next file in a list
-                int numberOfFile = 0;
+                int numberOfFile = 0; // counter to increment to the next file in a list
 
-                // loop through the files
-                if (whole > 0)
+
+                if (whole > 0)// loop through the files
                 {
-                    // Holds the amount of tasks
-                    Task[] taskList = new Task[batchSize];
-                    
-                    // loop through all the files
-                    for (var y = 0; y < whole; ++y)
+                    Task[] taskList = new Task[batchSize];// Holds the amount of tasks based on the batchsize
+
+                    for (var y = 0; y < whole; ++y)// loop through all the files
                     {
                         for (var i = 0; i < batchSize; ++i)
                         {
@@ -149,10 +134,9 @@ namespace LaixerGMLTest
 
                 if (rest > 0)
                 {
-                    // Create a list of task based on how many files there are left
-                    Task[] taskList2 = new Task[rest];
-                    // Loop through the remaining files
-                    for (int z = 0; z < rest; ++z)
+                    Task[] taskList2 = new Task[rest];// Create a list of task based on how many files there are left
+
+                    for (int z = 0; z < rest; ++z)// Loop through the remaining files
                     {
                         taskList2[z] = new Program()
                                 .Process(numberOfFile)
@@ -173,21 +157,18 @@ namespace LaixerGMLTest
             Parallel.For(0, amountOfDirectories, a =>
             {
                 int directoryNumber = 1;
-                // Adjust the directory to read from the directory
-                directoryReader.SetDirectoryNumber(directoryNumber);
 
-                // Get the amount of files in the directory
-                fileCount = directoryReader.GetFileCountInDirectory();
+                directoryReader.SetDirectoryNumber(directoryNumber);// Adjust the directory to read from the directory
+
+                fileCount = directoryReader.GetFileCountInDirectory();// Get the amount of files in the directory
 
                 //NOTE: This will be absolete if the paralell methods are implemented
-                // Calculate how many batches it needs to run based on the batchSize
-                int whole = fileCount / batchSize;
 
-                // calculates howmany files there are left
-                int rest = fileCount % batchSize;
+                int whole = fileCount / batchSize;// Calculate how many batches it needs to run based on the batchSize
 
-                // counter to increment to the next file in a list
-                int numberOfFile = 0;
+                int rest = fileCount % batchSize;// calculates howmany files there are left
+
+                int numberOfFile = 0;// counter to increment to the next file in a list
 
                 // loop through all the files
                 Parallel.For(0, fileCount, b =>
@@ -203,8 +184,7 @@ namespace LaixerGMLTest
                     {
                         new Program().Process(numberOfFile).Load<DatabaseLoader>();
 
-                        // Increase the file number so that we read the next file
-                        numberOfFile++;
+                        numberOfFile++;// Increase the file number so that we read the next file
                     }
                 }
             });

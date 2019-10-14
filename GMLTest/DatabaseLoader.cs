@@ -26,6 +26,8 @@ namespace LaixerGMLTest
                 throw new System.Exception("XYZ");
             }
 
+            //TODO: Transform to Dynamic method
+
             // This can also be transformed into a method that returns diffrent kind of objects
             // by creating a method with the dynamic type.
 

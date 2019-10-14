@@ -10,6 +10,8 @@ using System.Xml;
 
 namespace LaixerGMLTest
 {
+
+    //TODO: Rewrite this to make less calls to the XML reader.
     /// <summary>
     /// A custom reader for BAG XML Files
     /// </summary>
@@ -618,34 +620,6 @@ namespace LaixerGMLTest
                                 case XmlNodeType.Element:
                                     {
                                         elementName = reader.LocalName;
-                                        #region test
-                                        //if (reader.LocalName.ToLower() == "polygon")
-                                        //{
-                                        //    // Insert the list of position data into the attribute :geovlak
-                                        //    var value = await reader.ReadOuterXmlAsync();
-                                        //    myObject.SetAttribute("geovlak", value);
-                                        //}
-                                        //// Transform the date-time string to a DateTime object when these two names are found
-                                        //if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
-                                        //{
-                                        //    // Go to next part
-                                        //    reader.Read();
-                                        //    // Read the value and transform it into a DateTime object
-                                        //    var r = normalizeDateTime(await reader.GetValueAsync());
-                                        //    // Set the attribute
-                                        //    myObject.SetAttribute(elementName, r);
-                                        //}
-                                        //// Transform the date string to a DateTime object
-                                        //if (reader.LocalName.ToLower() == "documentdatum")
-                                        //{
-                                        //    // Go to next part
-                                        //    reader.Read();
-                                        //    // Get the date string
-                                        //    var r = normalizeDate(await reader.GetValueAsync());
-                                        //    // Set the attribute
-                                        //    myObject.SetAttribute(elementName, r);
-                                        //}
-                                        #endregion
 
                                         await FillStandardAttributes(reader, elementName, reader.LocalName, myObject);
                                         break;
