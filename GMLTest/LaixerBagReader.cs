@@ -180,7 +180,7 @@ namespace LaixerGMLTest
                                         //}
                                         #endregion
 
-                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject);
+                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject).ConfigureAwait(false);
 
                                         if (reader.LocalName.ToLower() == "hoofdadres")
                                         {
@@ -258,7 +258,7 @@ namespace LaixerGMLTest
                                         //    myObject.SetAttribute(elementName, r);
                                         //}
                                         #endregion
-                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject);
+                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject).ConfigureAwait(false);
 
                                         break;
                                     }
@@ -310,7 +310,7 @@ namespace LaixerGMLTest
 
                                         if (reader.LocalName.ToLower() == "point")
                                         {
-                                            string value = await reader.ReadOuterXmlAsync();
+                                            string value = await reader.ReadOuterXmlAsync().ConfigureAwait(false);
                                             // Store the value in the property geovlak and point of this object
                                             var value2 = value.Replace("<gml:pos>", "<gml:pos srsDimension=\"3\">");
                                             myObject.SetAttribute("geopunt", value2);
@@ -418,7 +418,7 @@ namespace LaixerGMLTest
                                         //    myObject.SetAttribute(elementName, r);
                                         //}
                                         #endregion
-                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject);
+                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject).ConfigureAwait(false);
 
                                         break;
                                     }
@@ -487,14 +487,14 @@ namespace LaixerGMLTest
                                         //}
                                         #endregion
 
-                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject);
+                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject).ConfigureAwait(false);
 
                                         if (reader.LocalName == "gerelateerdeOpenbareRuimte" || reader.LocalName == "gerelateerdeWoonplaats")
                                         {
                                             // Go to next part of the element
                                             reader.Read();
 
-                                            var value = await reader.GetValueAsync();
+                                            var value = await reader.GetValueAsync().ConfigureAwait(false);
                                             myObject.SetAttribute(elementName, value);
                                         }
                                         break;
@@ -621,7 +621,7 @@ namespace LaixerGMLTest
                                     {
                                         elementName = reader.LocalName;
 
-                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject);
+                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject).ConfigureAwait(false);
                                         break;
                                     }
                                 case XmlNodeType.Text:

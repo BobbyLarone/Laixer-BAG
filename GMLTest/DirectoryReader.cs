@@ -12,7 +12,6 @@ namespace LaixerGMLTest
     internal class DirectoryReader
     {
         private int readDirectoryFolder;
-        private ILoader loader;
 
         private LaixerBagReader myReader;
         private string folderPath;
@@ -26,28 +25,14 @@ namespace LaixerGMLTest
         {
         }
 
-        public void SetLoader(ILoader loader)
-        {
-            this.loader = loader;
-        }
-
         /// <summary>
         /// Read the content of an directory and show the amount of files and directories found
         /// </summary>
         /// <param name="filePath">The path to the directory</param>
-        public void readFolder(string filePath, out bool exists)
+        public void readFolder(string filePath)
         {
             folderPath = filePath;
-            if (Directory.Exists(filePath))
-            {
-                exists = true;
-                readFolderContentAsync(filePath);
-            }
-            else
-            {
-                Console.WriteLine(Properties.Resources.DirectoryNotFound);
-                exists = false;
-            }
+            readFolderContentAsync(filePath);
         }
 
         /// <summary>
@@ -93,15 +78,6 @@ namespace LaixerGMLTest
             myReader.ReadXML(filePath);
         }
 
-        /// <summary>
-        /// Return the total amount of objects
-        /// </summary>
-        /// <returns></returns>
-        public int GetTotalObjects()
-        {
-            // Making sure that a reader exists
-            return myReader == null ? 0 : myReader.listOfBAGObjects.Count;
-        }
 
         /// <summary>
         /// Return a list of objects
