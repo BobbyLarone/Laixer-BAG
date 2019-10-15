@@ -52,36 +52,21 @@ namespace LaixerGMLTest
             using XmlReader reader = XmlReader.Create(xmlFile, settings);
             while (await reader.ReadAsync().ConfigureAwait(false))
             {
-                switch (reader.NodeType)
+                if(reader.NodeType == XmlNodeType.Element)
                 {
-                    case XmlNodeType.Element:
-                        await CheckRootElement(reader).ConfigureAwait(false);
-                        break;
-
-                    default:
-                        break;
+                    switch (reader.LocalName)
+                    {
+                        case "BAG-Extract-Deelbestand-LVC":
+                        case "BAG-GWR-Deelbestand-LVC":
+                            await ReadXMLBody(reader).ConfigureAwait(false);
+                            break;
+                        // removed the break statements so that the default behaviour is called
+                        case "BAG-Mutaties-Deelbestand-LVC":
+                        case "BAG-Extract-Levering":
+                        default:
+                            break;
+                    }
                 }
-            }
-        }
-
-        /// <summary>
-        /// Checks the roottype of the XML file
-        /// </summary>
-        /// <param name="reader">The xml reader</param>
-        /// <returns></returns>
-        private async Task CheckRootElement(XmlReader reader)
-        {
-            switch (reader.LocalName)
-            {
-                case "BAG-Extract-Deelbestand-LVC":
-                case "BAG-GWR-Deelbestand-LVC":
-                    await ReadXMLBody(reader).ConfigureAwait(false);
-                    break;
-                    // removed the break statements so that the default behaviour is called
-                case "BAG-Mutaties-Deelbestand-LVC":
-                case "BAG-Extract-Levering":
-                default:
-                    break;
             }
         }
 
@@ -94,36 +79,21 @@ namespace LaixerGMLTest
         {
             while (await reader.ReadAsync().ConfigureAwait(false))
             {
-                switch (reader.NodeType)
+                if(reader.NodeType == XmlNodeType.Element)
                 {
-                    case XmlNodeType.Element:
-                        await PrefixReader(reader).ConfigureAwait(false);
-                        break;
+                    switch (reader.Prefix)
+                    {
+                        case "bag_LVC":
+                        case "gwr_LVC":
+                            await BAGObjectGenerator(reader).ConfigureAwait(false);
+                            break;
 
-                    default:
-                        break;
+                        case "xb - remove this to use it -":
+                        case "selecties-extract":
+                        default:
+                            break;
+                    }
                 }
-            }
-        }
-
-        /// <summary>
-        /// Read the prefix of an element
-        /// </summary>
-        /// <param name="reader"></param>
-        /// <returns></returns>
-        public async Task PrefixReader(XmlReader reader)
-        {
-            switch (reader.Prefix)
-            {
-                case "bag_LVC":
-                case "gwr_LVC":
-                        await BAGObjectGenerator(reader).ConfigureAwait(false);
-                        break;
-
-                case "xb - remove this to use it -":
-                case "selecties-extract":
-                default:
-                    break;
             }
         }
 
@@ -149,39 +119,34 @@ namespace LaixerGMLTest
                             switch (reader.NodeType)
                             {
                                 case XmlNodeType.Element:
+                                    elementName = reader.LocalName;
+
+                                    await FillStandardAttributes(reader, elementName, reader.LocalName, myObject).ConfigureAwait(false);
+
+                                    if (reader.LocalName.ToLower() == "hoofdadres")
                                     {
-                                        elementName = reader.LocalName;
-
-                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject).ConfigureAwait(false);
-
-                                        if (reader.LocalName.ToLower() == "hoofdadres")
-                                        {
-                                            //skip one node to read the text
-                                            reader.Read();
-                                        }
-                                        break;
+                                        //skip one node to read the text
+                                        reader.Read();
                                     }
+                                    break;
+
                                 case XmlNodeType.Text:
-                                    {
-                                        // retrieve the value in the node
-                                        string value = await reader.GetValueAsync().ConfigureAwait(false);
-                                        myObject.SetAttribute(elementName, value);
-                                        break;
-                                    }
+                                    // retrieve the value in the node
+                                    string value = await reader.GetValueAsync().ConfigureAwait(false);
+                                    myObject.SetAttribute(elementName, value);
+                                    break;
+
                                 case XmlNodeType.EndElement:
+                                    // If the end element is reached
+                                    if (reader.LocalName == nameOfelement)
                                     {
-                                        // If the end element is reached
-                                        if (reader.LocalName == nameOfelement)
-                                        {
-                                            // We can get out of this function, because we reached the end tag of this element
-                                            return;
-                                        }
-                                        break;
+                                        // We can get out of this function, because we reached the end tag of this element
+                                        return;
                                     }
+                                    break;
+
                                 default:
-                                    {
-                                        break;
-                                    }
+                                    break;
                             }
                         }
                         break;
@@ -199,62 +164,28 @@ namespace LaixerGMLTest
                             switch (reader.NodeType)
                             {
                                 case XmlNodeType.Element:
-                                    {
-                                        // Store the name of the current element
-                                        elementName = reader.LocalName;
-                                        #region test
-                                        //if (reader.LocalName.ToLower() == "polygon")
-                                        //{
-                                        //    var value = await reader.ReadOuterXmlAsync();
-                                        //    // Store the value in the property geovlak of this object
-                                        //    myObject.SetAttribute("geovlak", value);
-                                        //}
-                                        //// Transform the date-time string to a DateTime object when these two names are found
-                                        //if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
-                                        //{
-                                        //    // Go to next part
-                                        //    reader.Read();
-                                        //    // Read the value and transform it into a DateTime object
-                                        //    var r = normalizeDateTime(await reader.GetValueAsync());
-                                        //    // Set the attribute
-                                        //    myObject.SetAttribute(elementName, r);
-                                        //}
-                                        //// Transform the date string to a DateTime object
-                                        //if(reader.LocalName.ToLower() == "documentdatum")
-                                        //{
-                                        //    // Go to next part
-                                        //    reader.Read();
-                                        //    // Get the date string
-                                        //    var r = normalizeDate(await reader.GetValueAsync());
-                                        //    // Set the attribute
-                                        //    myObject.SetAttribute(elementName, r);
-                                        //}
-                                        #endregion
-                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject).ConfigureAwait(false);
+                                    // Store the name of the current element
+                                    elementName = reader.LocalName;
+                                    await FillStandardAttributes(reader, elementName, reader.LocalName, myObject).ConfigureAwait(false);
+                                    break;
 
-                                        break;
-                                    }
                                 case XmlNodeType.Text:
-                                    {
-                                        // retrieve the value in the node
-                                        string value = await reader.GetValueAsync().ConfigureAwait(false);
-                                        myObject.SetAttribute(elementName, value);
-                                        break;
-                                    }
+                                    // retrieve the value in the node
+                                    string value = await reader.GetValueAsync().ConfigureAwait(false);
+                                    myObject.SetAttribute(elementName, value);
+                                    break;
+
                                 case XmlNodeType.EndElement:
+                                    // write the end element name. For testing purpouse
+                                    if (reader.LocalName == nameOfelement)
                                     {
-                                        // write the end element name. For testing purpouse
-                                        if (reader.LocalName == nameOfelement)
-                                        {
-                                            // We can get out of this function, because we reached the end tag of this element
-                                            return;
-                                        }
-                                        break;
+                                        // We can get out of this function, because we reached the end tag of this element
+                                        return;
                                     }
+                                    break;
+
                                 default:
-                                    {
-                                        break;
-                                    }
+                                    break;
                             }
                         }
                         break;
@@ -272,76 +203,43 @@ namespace LaixerGMLTest
                             switch (reader.NodeType)
                             {
                                 case XmlNodeType.Element:
+                                    elementName = reader.LocalName;
+
+                                    if (reader.LocalName == "gerelateerdPand" || reader.LocalName == "hoofdadres")
                                     {
-                                        elementName = reader.LocalName;
-                                        if (reader.LocalName == "gerelateerdPand" || reader.LocalName == "hoofdadres")
-                                        {
-                                            // skip once to get to the id
-                                            reader.Read();
-                                        }
-
-                                        if (reader.LocalName.ToLower() == "point")
-                                        {
-                                            string value = await reader.ReadOuterXmlAsync().ConfigureAwait(false);
-                                            // Store the value in the property geovlak and point of this object
-                                            var value2 = value.Replace("<gml:pos>", "<gml:pos srsDimension=\"3\">");
-                                            myObject.SetAttribute("geopunt", value2);
-                                        }
-
-                                        #region test
-                                        //// Transform the date-time string to a DateTime object when these two names are found
-                                        //if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
-                                        //{
-                                        //    // Go to next part
-                                        //    reader.Read();
-                                        //    // Read the value and transform it into a DateTime object
-                                        //    var r = normalizeDateTime(await reader.GetValueAsync());
-                                        //    // Set the attribute
-                                        //    myObject.SetAttribute(elementName, r);
-                                        //}
-                                        //if (reader.LocalName.ToLower() == "polygon")
-                                        //{
-                                        //    string value = await reader.ReadOuterXmlAsync();
-                                        //    // Store the value in the property geovlak of this object
-                                        //    myObject.SetAttribute("geovlak", value);
-                                        //}
-                                        //// Transform the date string to a DateTime object
-                                        //if (reader.LocalName.ToLower() == "documentdatum")
-                                        //{
-                                        //    // Go to next part
-                                        //    reader.Read();
-                                        //    // Get the date string
-                                        //    var r = normalizeDate(await reader.GetValueAsync());
-                                        //    // Set the attribute
-                                        //    myObject.SetAttribute(elementName, r);
-                                        //}
-                                        #endregion
-                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject);
-
-                                        break;
+                                        // skip once to get to the id
+                                        reader.Read();
                                     }
+
+                                    if (reader.LocalName.ToLower() == "point")
+                                    {
+                                        string pointValue = await reader.ReadOuterXmlAsync().ConfigureAwait(false);
+                                        // Store the value in the property geovlak and point of this object
+                                        var value = pointValue.Replace("<gml:pos>", "<gml:pos srsDimension=\"3\">");
+                                        myObject.SetAttribute("geopunt", value);
+                                    }
+
+                                    await FillStandardAttributes(reader, elementName, reader.LocalName, myObject).ConfigureAwait(false);
+
+                                    break;
+
                                 case XmlNodeType.Text:
-                                    {
-                                        // Retrieve the value in the node
-                                        string value = await reader.GetValueAsync().ConfigureAwait(false);
+                                    // Retrieve the value in the node
+                                    string text = await reader.GetValueAsync().ConfigureAwait(false);
 
-                                        myObject.SetAttribute(elementName, value);
-                                        break;
-                                    }
+                                    myObject.SetAttribute(elementName, text);
+                                    break;
+
                                 case XmlNodeType.EndElement:
+                                    if (reader.LocalName == nameOfelement)
                                     {
-                                        if (reader.LocalName == nameOfelement)
-                                        {
-                                            // We can get out of this function, because we reached the end tag of this element
-                                            return;
-                                        }
+                                        // We can get out of this function, because we reached the end tag of this element
+                                        return;
+                                    }
+                                    break;
 
-                                        break;
-                                    }
                                 default:
-                                    {
-                                        break;
-                                    }
+                                    break;
                             }
                         }
                         break;
@@ -359,63 +257,35 @@ namespace LaixerGMLTest
                             switch (reader.NodeType)
                             {
                                 case XmlNodeType.Element:
+                                    elementName = reader.LocalName;
+                                    if (reader.LocalName.ToLower() == "gerelateerdewoonplaats")
                                     {
-                                        elementName = reader.LocalName;
-                                        if (reader.LocalName.ToLower() == "gerelateerdewoonplaats")
-                                        {
-                                            // read next node
-                                            reader.Read();
-                                        }
-
-                                        #region test
-                                        //// Transform the date-time string to a DateTime object when these two names are found
-                                        //if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
-                                        //{
-                                        //    // Go to next part
-                                        //    reader.Read();
-                                        //    // Read the value and transform it into a DateTime object
-                                        //    var r = normalizeDateTime(await reader.GetValueAsync());
-                                        //    // Set the attribute
-                                        //    myObject.SetAttribute(elementName, r);
-                                        //}
-
-                                        //// Transform the date string to a DateTime object
-                                        //if (reader.LocalName.ToLower() == "documentdatum")
-                                        //{
-                                        //    // Go to next part
-                                        //    reader.Read();
-                                        //    // Get the date string
-                                        //    var r = normalizeDate(await reader.GetValueAsync());
-                                        //    // Set the attribute
-                                        //    myObject.SetAttribute(elementName, r);
-                                        //}
-                                        #endregion
-                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject).ConfigureAwait(false);
-
-                                        break;
+                                        // read next node
+                                        reader.Read();
                                     }
+
+                                    await FillStandardAttributes(reader, elementName, reader.LocalName, myObject).ConfigureAwait(false);
+
+                                    break;
+
                                 case XmlNodeType.Text:
-                                    {
-                                        // retrieve the value in the node
-                                        string value = await reader.GetValueAsync().ConfigureAwait(false);
+                                    // retrieve the value in the node
+                                    string value = await reader.GetValueAsync().ConfigureAwait(false);
 
-                                        myObject.SetAttribute(elementName, value);
-                                        break;
-                                    }
+                                    myObject.SetAttribute(elementName, value);
+                                    break;
+
                                 case XmlNodeType.EndElement:
+                                    // write the end element name. For testing purpouse
+                                    if (reader.LocalName == nameOfelement)
                                     {
-                                        // write the end element name. For testing purpouse
-                                        if (reader.LocalName == nameOfelement)
-                                        {
-                                            // We can get out of this function, because we reached the end tag of this element
-                                            return;
-                                        }
-                                        break;
+                                        // We can get out of this function, because we reached the end tag of this element
+                                        return;
                                     }
+                                    break;
+
                                 default:
-                                    {
-                                        break;
-                                    }
+                                    break;
                             }
                         }
                         break;
@@ -433,65 +303,37 @@ namespace LaixerGMLTest
                             switch (reader.NodeType)
                             {
                                 case XmlNodeType.Element:
+                                    elementName = reader.LocalName;
+
+                                    await FillStandardAttributes(reader, elementName, reader.LocalName, myObject).ConfigureAwait(false);
+
+                                    if (reader.LocalName == "gerelateerdeOpenbareRuimte" || reader.LocalName == "gerelateerdeWoonplaats")
                                     {
-                                        elementName = reader.LocalName;
-                                        #region test
-                                        //// Transform the date-time string to a DateTime object when these two names are found
-                                        //if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
-                                        //{
-                                        //    // Go to next part
-                                        //    reader.Read();
-                                        //    // Read the value and transform it into a DateTime object
-                                        //    var r = normalizeDateTime(await reader.GetValueAsync());
-                                        //    // Set the attribute
-                                        //    myObject.SetAttribute(elementName, r);
-                                        //}
+                                        // Go to next part of the element
+                                        reader.Read();
 
-                                        //// Transform the date string to a DateTime object
-                                        //if (reader.LocalName.ToLower() == "documentdatum")
-                                        //{
-                                        //    // Go to next part
-                                        //    reader.Read();
-                                        //    // Get the date string
-                                        //    var r = normalizeDate(await reader.GetValueAsync());
-                                        //    // Set the attribute
-                                        //    myObject.SetAttribute(elementName, r);
-                                        //}
-                                        #endregion
-
-                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject).ConfigureAwait(false);
-
-                                        if (reader.LocalName == "gerelateerdeOpenbareRuimte" || reader.LocalName == "gerelateerdeWoonplaats")
-                                        {
-                                            // Go to next part of the element
-                                            reader.Read();
-
-                                            var value = await reader.GetValueAsync().ConfigureAwait(false);
-                                            myObject.SetAttribute(elementName, value);
-                                        }
-                                        break;
-                                    }
-                                case XmlNodeType.Text:
-                                    {
-                                        // retrieve the value in the node
-                                        string value = await reader.GetValueAsync().ConfigureAwait(false);
+                                        var value = await reader.GetValueAsync().ConfigureAwait(false);
                                         myObject.SetAttribute(elementName, value);
-                                        break;
                                     }
+                                    break;
+
+                                case XmlNodeType.Text:
+                                    // retrieve the value in the node
+                                    string text = await reader.GetValueAsync().ConfigureAwait(false);
+                                    myObject.SetAttribute(elementName, text);
+                                    break;
+
                                 case XmlNodeType.EndElement:
+                                    // write the end element name. For testing purpouse
+                                    if (reader.LocalName == nameOfelement)
                                     {
-                                        // write the end element name. For testing purpouse
-                                        if (reader.LocalName == nameOfelement)
-                                        {
-                                            // We can get out of this function, because we reached the end tag of this element
-                                            return;
-                                        }
-                                        break;
+                                        // We can get out of this function, because we reached the end tag of this element
+                                        return;
                                     }
+                                    break;
+
                                 default:
-                                    {
-                                        break;
-                                    }
+                                    break;
                             }
                         }
                         break;
@@ -509,66 +351,34 @@ namespace LaixerGMLTest
                             switch (reader.NodeType)
                             {
                                 case XmlNodeType.Element:
-                                    {
-                                        elementName = reader.LocalName;
-                                        #region test
-                                        //if (reader.LocalName.ToLower() == "polygon")
-                                        //{
-                                        //    var value = await reader.ReadOuterXmlAsync();
-                                        //    // Store the value in the property geovlak of this object
-                                        //    myObject.SetAttribute("geovlak", value);
-                                        //}
-                                        //// Transform the date-time string to a DateTime object when these two names are found
-                                        //if (reader.LocalName.ToLower() == "begindatumtijdvakgeldigheid" || reader.LocalName.ToLower() == "einddatumtijdvakgeldigheid")
-                                        //{
-                                        //    // Go to next part
-                                        //    reader.Read();
-                                        //    // Read the value and transform it into a DateTime object
-                                        //    var r = normalizeDateTime(await reader.GetValueAsync());
-                                        //    // Set the attribute
-                                        //    myObject.SetAttribute(elementName, r);
-                                        //}
-                                        //// Transform the date string to a DateTime object
-                                        //if (reader.LocalName.ToLower() == "documentdatum")
-                                        //{
-                                        //    // Go to next part
-                                        //    reader.Read();
-                                        //    // Get the date string
-                                        //    var r = normalizeDate(await reader.GetValueAsync());
-                                        //    // Set the attribute
-                                        //    myObject.SetAttribute(elementName, r);
-                                        //}
-                                        #endregion
-                                        await FillStandardAttributes(reader, elementName, reader.LocalName, myObject);
+                                    elementName = reader.LocalName;
 
-                                        if (reader.LocalName.ToLower() == "hoofdadres")
-                                        {
-                                            //skip one node to read the text
-                                            reader.Read();
-                                        }
-                                        break;
+                                    if (reader.LocalName.ToLower() == "hoofdadres")
+                                    {
+                                        //skip one node to read the text
+                                        reader.Read();
                                     }
+                                    await FillStandardAttributes(reader, elementName, reader.LocalName, myObject).ConfigureAwait(false);
+
+                                    break;
+
                                 case XmlNodeType.Text:
-                                    {
-                                        // retrieve the value in the node
-                                        string value = await reader.GetValueAsync().ConfigureAwait(false);
-                                        myObject.SetAttribute(elementName, value);
-                                        break;
-                                    }
+                                    // retrieve the value in the node
+                                    string value = await reader.GetValueAsync().ConfigureAwait(false);
+                                    myObject.SetAttribute(elementName, value);
+                                    break;
+
                                 case XmlNodeType.EndElement:
+                                    // write the end element name. For testing purpouse
+                                    if (reader.LocalName == nameOfelement)
                                     {
-                                        // write the end element name. For testing purpouse
-                                        if (reader.LocalName == nameOfelement)
-                                        {
-                                            // We can get out of this function, because we reached the end tag of this element
-                                            return;
-                                        }
-                                        break;
+                                        // We can get out of this function, because we reached the end tag of this element
+                                        return;
                                     }
+                                    break;
+
                                 default:
-                                    {
-                                        break;
-                                    }
+                                    break;
                             }
                         }
                         break;
@@ -707,38 +517,34 @@ namespace LaixerGMLTest
         /// <returns></returns>
         private async Task FillStandardAttributes(XmlReader reader, string elementName, string name, BAGObject myObject)
         {
-            name = name.ToLower();
-            switch (name)
+            //name = name.ToLower();
+            switch (name.ToLower())
             {
                 case "polygon":
-                    {
                         // Insert the list of position data into the attribute :geovlak
                         var value = await reader.ReadOuterXmlAsync().ConfigureAwait(false);
                         // Set the attribute
                         myObject.SetAttribute("geovlak", value);
                         break;
-                    }
+
                 case "begindatumtijdvakgeldigheid":
                 case "einddatumtijdvakgeldigheid":
-                    {
                         // Go to next part
                         reader.Read();
                         // Read the value and transform it into a DateTime object
-                        var r = normalizeDateTime(await reader.GetValueAsync().ConfigureAwait(false));
+                        var dt = normalizeDateTime(await reader.GetValueAsync().ConfigureAwait(false));
                         // Set the attribute
-                        myObject.SetAttribute(elementName, r);
+                        myObject.SetAttribute(elementName, dt);
                         break;
-                    }
+
                 case "documentdatum":
-                    {
                         // Go to next part
                         reader.Read();
                         // Get the date string
-                        var r = normalizeDate(await reader.GetValueAsync().ConfigureAwait(false));
+                        var d = normalizeDate(await reader.GetValueAsync().ConfigureAwait(false));
                         // Set the attribute
-                        myObject.SetAttribute(elementName, r);
+                        myObject.SetAttribute(elementName, d);
                         break;
-                    }
 
                 default:
                     break;
