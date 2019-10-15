@@ -55,6 +55,7 @@ namespace LaixerGMLTest
         private Program Transform(string filePath)
         {
             // TODO: Step2
+            directoryReader = new DirectoryReader();// Make a new directory reader
 
             // Generate a list of BAGObjects form the list of files 
             // by reading the file in the position of the filenumber
@@ -104,20 +105,19 @@ namespace LaixerGMLTest
 
             var timer = new Stopwatch();
             timer.Start();
+
             new Program().ParalellReaderForBAG(args[0]);
+
             timer.Stop();
             Console.WriteLine($@"Run through folder in : {timer.Elapsed.TotalSeconds}");
             #endregion
 
             // RUNS THROUGH ENTIRE FOLDER IN : 2275 seconds -> 37 minuten
-            //NOTE: Bottleneck is the database connection
+
+            //NOTE: Bottleneck is the database connection and computer memory and maybe the amount of cores
             //TODO: Implement Dapper Transaction
 
-
             var useless = 1;
-
-
-
 
             Console.WriteLine(Properties.Resources.DatabasePushComplete);
             Console.ReadLine();
@@ -193,10 +193,6 @@ namespace LaixerGMLTest
         private Program ParalellReaderForBAG(string rootPath)
         {
             var listOfDirectories = Directory.EnumerateDirectories(rootPath).ToList(); // Get a list of directories in the rootmap
-            directoryReader = new DirectoryReader();// Make a new directory reader
-
-            // Parallel for each of the files in the directories
-            // paralell foreach ( List, body a.k.a the stuff to execute)
 
             //var options = new ParallelOptions { MaxDegreeOfParallelism = 1 };
 
