@@ -6,7 +6,10 @@ namespace LaixerGMLTest.BAG_Objects
 {
     public static class StringExtensions
     {
-        public static bool AsBoolean(this string str) => str[0] == 'J';
+        public static bool AsBoolean(this string str)
+        {
+            return str[0] == 'J';
+        }
     }
 
     /// <summary>
@@ -14,28 +17,28 @@ namespace LaixerGMLTest.BAG_Objects
     /// </summary>
     public class BAGObject
     {
-        private Dictionary<string, BAGAttribute> dictionaryBAGObjects;
-        private List<BAGAttribute> attributeList;
-        private List<BAGrelationAttribute> relations;
+        private readonly Dictionary<string, BAGAttribute> dictionaryBAGObjects;
+        private readonly List<BAGAttribute> attributeList;
+        private readonly List<BAGrelationAttribute> relations;
 
         // The XML tag of this object
-        private string _tag;
+        private readonly string _tag;
 
         // The name of this object
-        private string _name;
+        private readonly string _name;
 
         // the object type of this object
-        private string _objectType;
+        private readonly string _objectType;
 
-        public string Identificatie { get => GetAttribute("identificatie").GetValue(); }
-        public bool AanduidingRecordInactief { get => GetAttribute("aanduidingRecordInactief").GetValue().AsBoolean(); }
-        public string AanduidingRecordCorrectie { get => GetAttribute("aanduidingRecordCorrectie").GetValue(); }
-        public bool Officieel { get => GetAttribute("officieel").GetValue().AsBoolean(); }
-        public bool InOnderzoek { get => GetAttribute("inOnderzoek").GetValue().AsBoolean(); }
-        public DateTime BegindatumTijdvakGeldigheid { get => GetAttribute("begindatumTijdvakGeldigheid").GetDateTime(); }
-        public DateTime EinddatumTijdvakGeldigheid { get => GetAttribute("einddatumTijdvakGeldigheid").GetDateTime(); }
-        public string DocumentNummer { get => GetAttribute("documentnummer").GetValue(); }
-        public DateTime DocumentDatum { get => GetAttribute("documentdatum").GetDateTime(); }
+        public string Identificatie => GetAttribute("identificatie").GetValue();
+        public bool AanduidingRecordInactief => GetAttribute("aanduidingRecordInactief").GetValue().AsBoolean();
+        public string AanduidingRecordCorrectie => GetAttribute("aanduidingRecordCorrectie").GetValue();
+        public bool Officieel => GetAttribute("officieel").GetValue().AsBoolean();
+        public bool InOnderzoek => GetAttribute("inOnderzoek").GetValue().AsBoolean();
+        public DateTime BegindatumTijdvakGeldigheid => GetAttribute("begindatumTijdvakGeldigheid").GetDateTime();
+        public DateTime EinddatumTijdvakGeldigheid => GetAttribute("einddatumTijdvakGeldigheid").GetDateTime();
+        public string DocumentNummer => GetAttribute("documentnummer").GetValue();
+        public DateTime DocumentDatum => GetAttribute("documentdatum").GetDateTime();
 
         public BAGObject(string tag = "", string name = "", string objectType = "")
         {
@@ -82,7 +85,10 @@ namespace LaixerGMLTest.BAG_Objects
         /// Add a relation to the object
         /// </summary>
         /// <param name="relation">The relation attribute</param>
-        public void AddRelation(BAGrelationAttribute relation) => relations.Add(relation);
+        public void AddRelation(BAGrelationAttribute relation)
+        {
+            relations.Add(relation);
+        }
 
         public string GetObjectType() { return _objectType; }
 
@@ -110,28 +116,40 @@ namespace LaixerGMLTest.BAG_Objects
         /// </summary>
         /// <param name="name">The name of the attribute</param>
         /// <returns>Boolean if the attribute exists</returns>
-        public bool HasAttribute(string name) => attributeList.Exists(x => x.GetName() == name);
+        public bool HasAttribute(string name)
+        {
+            return attributeList.Exists(x => x.GetName() == name);
+        }
 
         /// <summary>
         /// check if this object has the specific relation attribute
         /// </summary>
         /// <param name="name"></param>
         /// <returns>Boolean if the relation attribute exists</returns>
-        public bool HasRelationAttribute(string name) => relations.Exists(x => x.GetName() == name);
+        public bool HasRelationAttribute(string name)
+        {
+            return relations.Exists(x => x.GetName() == name);
+        }
 
         /// <summary>
         /// Get a BAG attribute that matches the name
         /// </summary>
         /// <param name="name">Name of the attribute</param>
         /// <returns></returns>
-        public BAGAttribute GetAttribute(string name) => HasAttribute(name) ? attributeList.Find(x => x.GetName() == name) : null;
+        public BAGAttribute GetAttribute(string name)
+        {
+            return HasAttribute(name) ? attributeList.Find(x => x.GetName() == name) : null;
+        }
 
         /// <summary>
         /// Get a BAG relation attribute that matches the name
         /// </summary>
         /// <param name="name">Name of the relation attribute</param>
         /// <returns></returns>
-        public BAGrelationAttribute GetRelationAttribute(string name) => HasRelationAttribute(name) ? relations.Find(x => x.GetName() == name) : null;
+        public BAGrelationAttribute GetRelationAttribute(string name)
+        {
+            return HasRelationAttribute(name) ? relations.Find(x => x.GetName() == name) : null;
+        }
 
         public List<BAGAttribute> GetListOfAttributes() { return attributeList; }
 
@@ -163,7 +181,7 @@ namespace LaixerGMLTest.BAG_Objects
 
         public void SetRelationAttribute(string relationAttributeName, string value)
         {
-            if(HasRelationAttribute(relationAttributeName))
+            if (HasRelationAttribute(relationAttributeName))
             {
                 GetRelationAttribute(relationAttributeName).SetValue(value);
             }

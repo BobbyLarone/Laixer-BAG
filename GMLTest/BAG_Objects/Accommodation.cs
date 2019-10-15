@@ -1,24 +1,23 @@
 ﻿using LaixerGMLTest.BAG_Attributes;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace LaixerGMLTest.BAG_Objects
 {
     /// <summary>
     /// Translation to Dutch: Verblijfs object
     /// </summary>
-    class Accommodation : BAGAddressableObject
+    internal class Accommodation : BAGAddressableObject
     {
-        public string VerblijfsobjectStatus { get => GetAttribute("verblijfsobjectStatus").GetValue(); }
-        public string OppervlakteVerblijfsobject { get => GetAttribute("oppervlakteVerblijfsobject").GetValue(); }
-        public string LigplaatsStatus { get => GetAttribute("verblijfsobjectStatus").GetValue(); }
-        public string GebruiksdoelVerblijfsobject { get => GetAttribute("gebruiksdoelVerblijfsobject").GetValue(); }
-        public string GerelateerdPand { get => GetAttribute("gerelateerdPand").GetValue(); }
-        public string NevenAdres { get => GetAttribute("nevenadres").GetValue() == "" ? null : GetAttribute("nevenadres").GetValue(); }
-        public string Geopunt { get => GetAttribute("geopunt").GetValue(); }
-        public string Geovlak { get => GetAttribute("geovlak").GetValue(); }
-        public string Geom_valid { get => GetAttribute("geom_valid").GetValue() == "" ? null : GetAttribute("geom_valid").GetValue(); }
+        public string VerblijfsobjectStatus => GetAttribute("verblijfsobjectStatus").GetValue();
+        public string OppervlakteVerblijfsobject => GetAttribute("oppervlakteVerblijfsobject").GetValue();
+        public string LigplaatsStatus => GetAttribute("verblijfsobjectStatus").GetValue();
+        public string GebruiksdoelVerblijfsobject => GetAttribute("gebruiksdoelVerblijfsobject").GetValue();
+        public string GerelateerdPand => GetAttribute("gerelateerdPand").GetValue();
+        public string NevenAdres => GetAttribute("nevenadres").GetValue() == "" ? null : GetAttribute("nevenadres").GetValue();
+        public string Geopunt => GetAttribute("geopunt").GetValue();
+        public string Geovlak => GetAttribute("geovlak").GetValue();
+        public string Geom_valid => GetAttribute("geom_valid").GetValue() == "" ? null : GetAttribute("geom_valid").GetValue();
 
 
         public List<string> accomodationStatus = new List<string>()
@@ -31,7 +30,7 @@ namespace LaixerGMLTest.BAG_Objects
             "Verblijfsobject buiten gebruik"
         };
 
-        public List<string> accomodationPurpose= new List<string>()
+        public List<string> accomodationPurpose = new List<string>()
         {
             "woonfunctie",
             "bijeenkomstfunctie",
@@ -51,30 +50,24 @@ namespace LaixerGMLTest.BAG_Objects
             Add(new BAGenumAttribute(accomodationStatus, accomodationStatus.Count, "verblijfsobjectStatus", "bag_LVC:verblijfsobjectStatus"));
             Add(new BAGenumAttribute(accomodationPurpose, accomodationPurpose.Count, "gebruiksdoelVerblijfsobject", "bag_LVC:gebruiksdoelVerblijfsobject"));
             Add(new BAGnumericAttribute(6, "oppervlakteVerblijfsobject", "bag_LVC:oppervlakteVerblijfsobject"));
-            Add(new BAGstringAttribute(16, "gerelateerdPand","bag_LVC:gerelateerdPand/bag_LVC:identificatie"));
+            Add(new BAGstringAttribute(16, "gerelateerdPand", "bag_LVC:gerelateerdPand/bag_LVC:identificatie"));
             Add(new BAGpoint(3, "geopunt", "bag_LVC:verblijfsobjectGeometrie"));
             Add(new BAGpolygon(3, "geovlak", "bag_LVC:verblijfsobjectGeometrie"));
             Add(new BAGgeometryValidation("geom_valid", "geovlak"));
 
-            AddRelation(new BAGenumRelationAttribute(this, 
+            AddRelation(new BAGenumRelationAttribute(this,
                 "verblijfsobjectgebruiksdoel",
                 "gebruiksdoelVerblijfsobject",
-                "bag_LVC:gebruiksdoelVerblijfsobject", 
-                new List<string>() { "verblijfsobjectStatus", "geom_valid"} , 
+                "bag_LVC:gebruiksdoelVerblijfsobject",
+                new List<string>() { "verblijfsobjectStatus", "geom_valid" },
                 accomodationPurpose));
 
-            AddRelation(new BAGrelationAttribute(this, 
+            AddRelation(new BAGrelationAttribute(this,
                 "verblijfsobjectpand",
                 16, "gerelateerdPand",
                 "bag_LVC:gerelateerdPand/bag_LVC:identificatie",
-                new List<string>(){ "verblijfsobjectStatus", "geom_valid" }));
+                new List<string>() { "verblijfsobjectStatus", "geom_valid" }));
         }
-
-        /// <summary>
-        /// Returns a value if the object has geometry
-        /// </summary>
-        /// <returns></returns>
-        public bool HasGeometry() => true;
 
         public void ShowAllAttributes()
         {

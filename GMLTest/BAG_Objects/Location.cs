@@ -1,19 +1,18 @@
 ﻿using LaixerGMLTest.BAG_Attributes;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace LaixerGMLTest.BAG_Objects
 {
     /// <summary>
     /// Translation to Dutch: standplaats
     /// </summary>
-    class Location : BAGAddressableObject
+    internal class Location : BAGAddressableObject
     {
 
-        public string StandplaatsStatus { get => GetAttribute("standplaatsStatus").GetValue(); }
-        public string Geovlak { get => GetAttribute("geovlak").GetValue(); }
-        public string Geom_valid { get => GetAttribute("geom_valid").GetValue() == "" ? null : GetAttribute("geom_valid").GetValue(); }
+        public string StandplaatsStatus => GetAttribute("standplaatsStatus").GetValue();
+        public string Geovlak => GetAttribute("geovlak").GetValue();
+        public string Geom_valid => GetAttribute("geom_valid").GetValue() == "" ? null : GetAttribute("geom_valid").GetValue();
 
         public List<string> locationStatusType = new List<string>()
         {
@@ -28,7 +27,10 @@ namespace LaixerGMLTest.BAG_Objects
             Add(new BAGgeometryValidation("geom_valid", "geovlak"));
         }
 
-        public bool HasGeometry() => true;
+        public bool HasGeometry()
+        {
+            return true;
+        }
 
         public void ShowAllAttributes()
         {

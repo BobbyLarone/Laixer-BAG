@@ -1,21 +1,20 @@
 ﻿using LaixerGMLTest.BAG_Attributes;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace LaixerGMLTest.BAG_Objects
 {
     /// <summary>
     /// Translation to Dutch: Openbare ruimte
     /// </summary>
-    class PublicSpace : BAGObject
+    internal class PublicSpace : BAGObject
     {
-        public string OpenbareRuimteNaam { get => GetAttribute("openbareRuimteNaam").GetValue(); }
-        public string OpenbareruimteStatus { get => GetAttribute("openbareruimteStatus").GetValue(); }
-        public string OpenbareRuimteType { get => GetAttribute("openbareRuimteType").GetValue(); }
-        public string GerelateerdeWoonplaats { get => GetAttribute("gerelateerdeWoonplaats").GetValue(); }
-        public string VerkorteOpenbareruimteNaam { get => GetAttribute("VerkorteOpenbareruimteNaam").GetValue() == "" ? 
-                null : GetAttribute("VerkorteOpenbareruimteNaam").GetValue(); }
+        public string OpenbareRuimteNaam => GetAttribute("openbareRuimteNaam").GetValue();
+        public string OpenbareruimteStatus => GetAttribute("openbareruimteStatus").GetValue();
+        public string OpenbareRuimteType => GetAttribute("openbareRuimteType").GetValue();
+        public string GerelateerdeWoonplaats => GetAttribute("gerelateerdeWoonplaats").GetValue();
+        public string VerkorteOpenbareruimteNaam => GetAttribute("VerkorteOpenbareruimteNaam").GetValue() == "" ?
+                null : GetAttribute("VerkorteOpenbareruimteNaam").GetValue();
 
 
         public List<string> publicSpaceTypes = new List<string>()
@@ -38,8 +37,8 @@ namespace LaixerGMLTest.BAG_Objects
         public PublicSpace() : base("bag_LVC:OpenbareRuimte", "openbareruimte", "OPR")
         {
             Add(new BAGstringAttribute(80, "openbareRuimteNaam", "bag_LVC:openbareRuimteNaam"));
-            Add(new BAGenumAttribute(publicSpaceStatusTypes,publicSpaceStatusTypes.Count, "openbareruimteStatus", "bag_LVC:openbareruimteStatus"));
-            Add(new BAGenumAttribute(publicSpaceTypes,publicSpaceTypes.Count, "openbareRuimteType", "bag_LVC:openbareRuimteType"));
+            Add(new BAGenumAttribute(publicSpaceStatusTypes, publicSpaceStatusTypes.Count, "openbareruimteStatus", "bag_LVC:openbareruimteStatus"));
+            Add(new BAGenumAttribute(publicSpaceTypes, publicSpaceTypes.Count, "openbareRuimteType", "bag_LVC:openbareRuimteType"));
             Add(new BAGstringAttribute(16, "gerelateerdeWoonplaats", "bag_LVC:gerelateerdeWoonplaats/bag_LVC:identificatie"));
             Add(new BAGAttribute(80, "VerkorteOpenbareruimteNaam", "nen5825:VerkorteOpenbareruimteNaam"));
         }

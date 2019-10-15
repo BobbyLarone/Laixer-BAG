@@ -110,13 +110,29 @@ namespace LaixerGMLTest
             #endregion
 
             // RUNS THROUGH ENTIRE FOLDER IN : 2275 seconds -> 37 minuten
+            //NOTE: Bottleneck is the database connection
+            //TODO: Implement Dapper Transaction
+
+
             var useless = 1;
 
+
+
+
+            Console.WriteLine(Properties.Resources.DatabasePushComplete);
+            Console.ReadLine();
+        }
+
+        /// <summary>
+        /// Run the BAG reader as an Asynch Task based program
+        /// </summary>
+        /// <param name="rootPath"></param>
+        /// <returns></returns>
+        private async Task<Program> AsyncTaskBasedBAGReader(string rootPath)
+        {
             // run Extract once to get information about the root folder
-            new Program().Extract(path: args[0]);
+            new Program().Extract(path: rootPath);
 
-
-            //TODO: Transform into Parallel loops
 
             // Loop through the folders in the root map
             for (var x = 0; x < amountOfDirectories; ++x)
@@ -166,10 +182,14 @@ namespace LaixerGMLTest
                 }
             }
 
-            Console.WriteLine(Properties.Resources.DatabasePushComplete);
-            Console.ReadLine();
+            return this;
         }
 
+        /// <summary>
+        /// Run the BAG Reader as a Paralell Task based program
+        /// </summary>
+        /// <param name="rootPath"></param>
+        /// <returns></returns>
         private Program ParalellReaderForBAG(string rootPath)
         {
             var listOfDirectories = Directory.EnumerateDirectories(rootPath).ToList(); // Get a list of directories in the rootmap

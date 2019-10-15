@@ -1,20 +1,19 @@
 ﻿using LaixerGMLTest.BAG_Attributes;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace LaixerGMLTest.BAG_Objects
 {
     /// <summary>
     /// Translation to Dutch: Pand
     /// </summary>
-    class Premises : BAGObject
+    internal class Premises : BAGObject
     {
 
-        public string PandStatus { get => GetAttribute("pandstatus").GetValue(); }
-        public string Bouwjaar { get => GetAttribute("bouwjaar").GetValue(); }
-        public string Geovlak { get => GetAttribute("geovlak").GetValue(); }
-        public string Geom_valid { get => GetAttribute("geom_valid").GetValue() == "" ? null : GetAttribute("geom_valid").GetValue(); }
+        public string PandStatus => GetAttribute("pandstatus").GetValue();
+        public string Bouwjaar => GetAttribute("bouwjaar").GetValue();
+        public string Geovlak => GetAttribute("geovlak").GetValue();
+        public string Geom_valid => GetAttribute("geom_valid").GetValue() == "" ? null : GetAttribute("geom_valid").GetValue();
 
         public List<string> statusEnum = new List<string>()
         {
@@ -34,7 +33,7 @@ namespace LaixerGMLTest.BAG_Objects
         /// </summary>
         public Premises() : base("bag_LVC:Pand", "pand", "PND")
         {
-            Add(new BAGenumAttribute(statusEnum,statusEnum.Count, "pandstatus", "bag_LVC:pandstatus"));
+            Add(new BAGenumAttribute(statusEnum, statusEnum.Count, "pandstatus", "bag_LVC:pandstatus"));
             Add(new BAGnumericAttribute(4, "bouwjaar", "bag_LVC:bouwjaar"));
             Add(new BAGpolygon(3, "geovlak", "bag_LVC:pandGeometrie"));
             Add(new BAGgeometryValidation("geom_valid", "geovlak"));

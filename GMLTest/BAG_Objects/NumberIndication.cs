@@ -1,23 +1,22 @@
 ﻿using LaixerGMLTest.BAG_Attributes;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace LaixerGMLTest.BAG_Objects
 {
     /// <summary>
     /// Translation to Dutch: Nummer indicatie
     /// </summary>
-    class NumberIndication : BAGObject
+    internal class NumberIndication : BAGObject
     {
-        public string Huisnummer { get => GetAttribute("huisnummer").GetValue(); }
-        public string Huisletter { get => GetAttribute("huisletter").GetValue(); }
-        public string Huisnummertoevoeging { get => GetAttribute("huisnummertoevoeging").GetValue(); }
-        public string Postcode { get => GetAttribute("postcode").GetValue(); }
-        public string NummeraanduidingStatus { get => GetAttribute("nummeraanduidingStatus").GetValue(); }
-        public string TypeAdresseerbaarObject { get => GetAttribute("typeAdresseerbaarObject").GetValue(); }
-        public string GerelateerdeOpenbareRuimte { get => GetAttribute("gerelateerdeOpenbareRuimte").GetValue(); }
-        public string GerelateerdeWoonplaats { get => GetAttribute("gerelateerdeWoonplaats").GetValue(); }
+        public string Huisnummer => GetAttribute("huisnummer").GetValue();
+        public string Huisletter => GetAttribute("huisletter").GetValue();
+        public string Huisnummertoevoeging => GetAttribute("huisnummertoevoeging").GetValue();
+        public string Postcode => GetAttribute("postcode").GetValue();
+        public string NummeraanduidingStatus => GetAttribute("nummeraanduidingStatus").GetValue();
+        public string TypeAdresseerbaarObject => GetAttribute("typeAdresseerbaarObject").GetValue();
+        public string GerelateerdeOpenbareRuimte => GetAttribute("gerelateerdeOpenbareRuimte").GetValue();
+        public string GerelateerdeWoonplaats => GetAttribute("gerelateerdeWoonplaats").GetValue();
 
         public List<string> numberIndicationTypes = new List<string>()
         {
@@ -32,7 +31,7 @@ namespace LaixerGMLTest.BAG_Objects
             "Ligplaats"
         };
 
-        public NumberIndication() : base ("bag_LVC:Nummeraanduiding", "nummeraanduiding", "NUM")
+        public NumberIndication() : base("bag_LVC:Nummeraanduiding", "nummeraanduiding", "NUM")
         {
             Add(new BAGnumericAttribute(5, "huisnummer", "bag_LVC:huisnummer"));
             // Attributes
@@ -40,11 +39,11 @@ namespace LaixerGMLTest.BAG_Objects
             Add(new BAGAttribute(4, "huisnummertoevoeging", "bag_LVC:huisnummertoevoeging"));
             Add(new BAGAttribute(6, "postcode", "bag_LVC:postcode"));
             // Enums
-            Add(new BAGenumAttribute(numberIndicationTypes, numberIndicationTypes.Count, "nummeraanduidingStatus","bag_LVC:nummeraanduidingStatus"));
-            Add(new BAGenumAttribute(residenceTypes, residenceTypes.Count, "typeAdresseerbaarObject","bag_LVC:typeAdresseerbaarObject"));
+            Add(new BAGenumAttribute(numberIndicationTypes, numberIndicationTypes.Count, "nummeraanduidingStatus", "bag_LVC:nummeraanduidingStatus"));
+            Add(new BAGenumAttribute(residenceTypes, residenceTypes.Count, "typeAdresseerbaarObject", "bag_LVC:typeAdresseerbaarObject"));
             // String
-            Add(new BAGstringAttribute(16, "gerelateerdeOpenbareRuimte","bag_LVC:gerelateerdeOpenbareRuimte/bag_LVC:identificatie"));
-            Add(new BAGstringAttribute(16, "gerelateerdeWoonplaats","bag_LVC:gerelateerdeWoonplaats/bag_LVC:identificatie"));
+            Add(new BAGstringAttribute(16, "gerelateerdeOpenbareRuimte", "bag_LVC:gerelateerdeOpenbareRuimte/bag_LVC:identificatie"));
+            Add(new BAGstringAttribute(16, "gerelateerdeWoonplaats", "bag_LVC:gerelateerdeWoonplaats/bag_LVC:identificatie"));
         }
 
         /// <summary>

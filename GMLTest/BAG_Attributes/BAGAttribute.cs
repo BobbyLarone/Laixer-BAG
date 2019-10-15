@@ -18,9 +18,6 @@ namespace LaixerGMLTest.BAG_Attributes
         private DateTime dateTime;
 
         // The parent of this object
-        /// <summary>
-        /// 
-        /// </summary>
         public BAGObject parentObject; 
 
         public BAGAttribute(int length, string name, string tag)
@@ -33,28 +30,10 @@ namespace LaixerGMLTest.BAG_Attributes
         }
 
         /// <summary>
-        /// Get the length of the object
-        /// </summary>
-        /// <returns></returns>
-        public int GetLength() => _length;
-
-        /// <summary>
         /// Get the name of the object
         /// </summary>
         /// <returns></returns>
         public string GetName() => _name;
-
-        /// <summary>
-        /// Returns if the object has a relationName
-        /// </summary>
-        /// <returns></returns>
-        public string GetSingle() => _relationName;
-
-        /// <summary>
-        /// Get the tag of the object
-        /// </summary>
-        /// <returns></returns>
-        public string GetTag() => _tag;
 
         /// <summary>
         /// Return the value of the object

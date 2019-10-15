@@ -1,19 +1,18 @@
 ﻿using LaixerGMLTest.BAG_Attributes;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace LaixerGMLTest.BAG_Objects
 {
     /// <summary>
     /// Translation to Dutch: Woonplaats
     /// </summary>
-    class Residence : BAGObject
+    internal class Residence : BAGObject
     {
-        public string WoonplaatsNaam { get => GetAttribute("woonplaatsNaam").GetValue(); }
-        public string WoonplaatsStatus { get => GetAttribute("woonplaatsStatus").GetValue(); }
-        public string Geovlak { get => GetAttribute("geovlak").GetValue(); }
-        public string Geom_valid { get => GetAttribute("geom_valid").GetValue() == "" ? null : GetAttribute("geom_valid").GetValue(); }
+        public string WoonplaatsNaam => GetAttribute("woonplaatsNaam").GetValue();
+        public string WoonplaatsStatus => GetAttribute("woonplaatsStatus").GetValue();
+        public string Geovlak => GetAttribute("geovlak").GetValue();
+        public string Geom_valid => GetAttribute("geom_valid").GetValue() == "" ? null : GetAttribute("geom_valid").GetValue();
 
 
 
@@ -22,7 +21,7 @@ namespace LaixerGMLTest.BAG_Objects
             "Woonplaats aangewezen", "Woonplaats ingetrokken"
         };
 
-        public Residence() : base("bag_LVC:Woonplaats", "woonplaats","WPL")
+        public Residence() : base("bag_LVC:Woonplaats", "woonplaats", "WPL")
         {
             Add(new BAGstringAttribute(80, "woonplaatsNaam", "bag_LVC:woonplaatsNaam"));
             Add(new BAGenumAttribute(residenceStatusType, residenceStatusType.Count, "woonplaatsStatus", "bag_LVC:woonplaatsStatus"));
