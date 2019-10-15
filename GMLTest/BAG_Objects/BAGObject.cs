@@ -90,26 +90,6 @@ namespace LaixerGMLTest.BAG_Objects
             relations.Add(relation);
         }
 
-        public string GetObjectType() { return _objectType; }
-
-
-        public string GetTag() { return _tag; }
-
-        /// <summary>
-        /// Get the unique id of the BAG_Object
-        /// </summary>
-        /// <returns></returns>
-        public string GetIdentification()
-        {
-            // Find the attribute by Id
-            var result = GetAttribute("identificatie");
-            if (result == null)
-            {
-                return ""; // return an empty string if there is no Id
-            }
-            // else we can return the value
-            return result.GetValue();
-        }
 
         /// <summary>
         /// Checks if this object has the specified attribute
@@ -122,16 +102,6 @@ namespace LaixerGMLTest.BAG_Objects
         }
 
         /// <summary>
-        /// check if this object has the specific relation attribute
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns>Boolean if the relation attribute exists</returns>
-        public bool HasRelationAttribute(string name)
-        {
-            return relations.Exists(x => x.GetName() == name);
-        }
-
-        /// <summary>
         /// Get a BAG attribute that matches the name
         /// </summary>
         /// <param name="name">Name of the attribute</param>
@@ -139,16 +109,6 @@ namespace LaixerGMLTest.BAG_Objects
         public BAGAttribute GetAttribute(string name)
         {
             return HasAttribute(name) ? attributeList.Find(x => x.GetName() == name) : null;
-        }
-
-        /// <summary>
-        /// Get a BAG relation attribute that matches the name
-        /// </summary>
-        /// <param name="name">Name of the relation attribute</param>
-        /// <returns></returns>
-        public BAGrelationAttribute GetRelationAttribute(string name)
-        {
-            return HasRelationAttribute(name) ? relations.Find(x => x.GetName() == name) : null;
         }
 
         public List<BAGAttribute> GetListOfAttributes() { return attributeList; }
@@ -178,21 +138,5 @@ namespace LaixerGMLTest.BAG_Objects
                 GetAttribute(attributeName).SetDateTime(value);
             }
         }
-
-        public void SetRelationAttribute(string relationAttributeName, string value)
-        {
-            if (HasRelationAttribute(relationAttributeName))
-            {
-                GetRelationAttribute(relationAttributeName).SetValue(value);
-            }
-        }
-
-
-        /// <summary>
-        /// Return the name of this object
-        /// </summary>
-        /// <returns></returns>
-        public string GetName() { return _name; }
-
     }
 }

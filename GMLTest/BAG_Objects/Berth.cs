@@ -19,6 +19,9 @@ namespace LaixerGMLTest.BAG_Objects
             "Plaats aangewezen", "Plaats ingetrokken"
         };
 
+
+
+        //ctor
         public Berth(string tag = "bag_LVC:Ligplaats", string name = "ligplaats", string objectType = "LIG")
             : base(tag, name, objectType)
         {
@@ -27,6 +30,8 @@ namespace LaixerGMLTest.BAG_Objects
             Add(new BAGgeometryValidation("geom_valid", "geovlak"));
         }
 
+
+        //methods
         public bool HasGeometry() => true;
 
         public void ShowAllAttributes()

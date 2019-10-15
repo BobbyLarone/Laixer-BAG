@@ -6,11 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 
-
-
 namespace LaixerGMLTest
 {
-
     //TODO: Rewrite this to make less calls to the XML reader.
     /// <summary>
     /// A custom reader for BAG XML Files

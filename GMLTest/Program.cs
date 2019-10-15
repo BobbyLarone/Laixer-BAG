@@ -205,7 +205,7 @@ namespace LaixerGMLTest
                 {
                     Console.WriteLine(fileInList);
 
-                    new Program().Transform(fileInList); //.Load<DatabaseLoader>();
+                    new Program().Transform(fileInList).Load<DatabaseLoader>(); //.Load<DatabaseLoader>();
                 });
             });
 
